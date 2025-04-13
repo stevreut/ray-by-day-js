@@ -52,6 +52,15 @@ textarea {
     font-size: 10pt;
     border-radius: 1.5mm;
 }
+input {
+    padding: 1mm;
+    background-color: #e9f7ff;
+    color: #00f;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12pt;
+    border-radius: 1.5mm;
+    border-style: inset 2px #cce;
+}
 .imgdiv {
     border: solid 1px #ddd;
     padding: 2cm;
@@ -59,6 +68,19 @@ textarea {
 }
 .imgdiv img, .imgdiv svg {
     box-shadow: 0 10px 50px #000;
+}
+.innerdiv {
+    padding: 5mm;
+    margin: 5mm 5mm 5mm 0;
+    border: solid 1px #ccc;
+    border-radius: 1.5mm;
+}
+.labeldiv {
+    display: grid;
+    grid-template-columns: auto auto;
+}
+.labeldiv>* {
+    margin: 2mm;
 }
 .hopdiv {
     margin-top: 1.5cm;
