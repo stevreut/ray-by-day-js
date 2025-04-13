@@ -1,0 +1,42 @@
+* {
+    color: #444;
+    background-color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+body {
+    margin: 1cm;
+    padding: 1.5cm;
+    border: solid 1px #aaa;
+    border-radius: 3mm;
+}
+.subduedh1 {
+    color: #aaa;
+    margin-bottom: 1cm;
+    padding: 2mm;
+    border: solid 4px #ddd;
+    border-radius: 2mm;
+    display: inline-block;
+}
+.main-ul>li {
+    background-color: #e8e8ef;
+    padding: 2mm;
+    margin: 2.5mm;
+    width: 70%;
+    border-radius: 1.5mm;
+}
+.main-ul>li a {
+    background-color: inherit;
+}
+.dayh2 {
+    color: #44f;
+    text-shadow: 2px 4px 8px rgba(68,68,255,0.75)
+}
+.hopdiv {
+    margin-top: 1.5cm;
+}
+.lefthopbtn, .righthopbtn {
+    padding: 3mm;
+    color: #fff;
+    background-color: #44f;
+    border-radius: 1.5mm;
+}
