@@ -20,12 +20,12 @@ onload = () => {
 
 function createSvgElemAt(anch) {
     let graph = new BiVariantGrapher(200,150,4,60.2)
-    graph.setFunction(localFunc)
+    graph.setFunction(localFunc2)
     let svgElem = graph.drawGraph()
     return svgElem
 }
 
-function localFunc(x,y) {
+function localFunc1(x,y) {
     let insideCircle = (x*x+y*y<=1)
     if (insideCircle) {
         return [(x+1)/2,0.5,(y+1)/2]
@@ -34,4 +34,25 @@ function localFunc(x,y) {
     }
 }
 
+let lightVector = [5,3,1]
+
+function localFunc2(x,y) {
+    const r2 = x*x+y*y
+    const insideCircle = (r2<=1)
+    if (!insideCircle) {
+        return [0,0,0]
+    }
+    const z = Math.sqrt(1-r2)
+    const globeVector = [x,y,z]
+    let sum = 0
+    for (let i=0;i<3;i++) {
+        sum += globeVector[i]*lightVector[i]
+    }
+    if (sum <= 0) {
+        return [0.2,0.2,0.2] 
+    } else {
+        let m = sum*0.1+0.2
+        return [m,m*1.1,m*1.2]
+    }
+}
 
