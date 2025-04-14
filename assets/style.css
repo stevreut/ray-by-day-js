@@ -103,3 +103,7 @@ code {
     font-family: 'Courier New', Courier, monospace;
     color: #6363cd;
 }
+em {
+    color: #0087ff;
+    font-size: 110%;
+}
