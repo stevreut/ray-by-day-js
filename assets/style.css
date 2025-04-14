@@ -99,3 +99,7 @@ input, select {
 #chgbtn {
     margin: 1cm 0;
 }
+code {
+    font-family: 'Courier New', Courier, monospace;
+    color: #6363cd;
+}

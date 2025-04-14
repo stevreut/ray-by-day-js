@@ -31,3 +31,5 @@ function makeSvgRectangle (x0,y0,width,height,attribs,svgParent) {
     let rect = makeSvgElem("rect",newAttribs,svgParent)
     return rect
 }
+
+export { makeSvgElem, makeSvgRectangle }
