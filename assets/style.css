@@ -52,7 +52,7 @@ textarea {
     font-size: 10pt;
     border-radius: 1.5mm;
 }
-input {
+input, select {
     padding: 1mm;
     background-color: #e9f7ff;
     color: #00f;
