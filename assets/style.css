@@ -94,3 +94,6 @@ input {
 .righthopbtn {
     float: right;
 }
+#chgbtn {
+    margin: 1cm 0;
+}
