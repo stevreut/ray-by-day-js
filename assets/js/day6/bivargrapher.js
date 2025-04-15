@@ -53,12 +53,12 @@ class BiVariantGrapher {
                 if (!this.usingAntiAlias) {
                     realColorArray = this.colorFunction(x,y)
                 } else {
-                    let realColorArray = [0,0,0]
+                    realColorArray = [0,0,0]
                     for (let ii=0;ii<this.antiAlias;ii++) {
                         let xx = x+ii*this.antiAliasDelta+this.antiAliasOffset
                         for (let jj=0;jj<this.antiAlias;jj++) {
                             let yy = y+jj*this.antiAliasDelta+this.antiAliasOffset
-                            let addendColor = this.colorFunction(x,y)
+                            let addendColor = this.colorFunction(xx,yy)
                             for (let k=0;k<3;k++) {
                                 realColorArray[k] += addendColor[k]
                             }

@@ -7,6 +7,8 @@ const PIXELS_WIDTH = 160
 const PIXELS_HEIGHT = 120
 const PIXEL_SIZE = 5  // One VIRTUAL pixel = 5 screen pixels
 
+let functionToGraph = 1
+
 onload = () => {
     const svgAnchor = document.getElementById(svgAnchorID)
     if (!svgAnchor) {
@@ -15,11 +17,20 @@ onload = () => {
     svgAnchor.innerHTML = ''
     let svgElem = createSvgElemAt(svgAnchor)
     svgAnchor.appendChild(svgElem)
+    const changeButton = document.getElementById("chgbtn")
+    if (changeButton) {
+        changeButton.addEventListener('click',()=>{
+            functionToGraph = 3-functionToGraph
+            svgAnchor.innerHTML = ''
+            let svgElem = createSvgElemAt(svgAnchor)
+            svgAnchor.appendChild(svgElem)
+        })
+    }
 }
 
 function createSvgElemAt(anch) {
-    let graph = new BiVariantGrapher(200,150,4,60.2,null,3)
-    graph.setFunction(localFunc2)
+    let graph = new BiVariantGrapher(200,150,4,60.2,null,5)
+    graph.setFunction(functionToGraph === 2?localFunc2:localFunc1)
     let svgElem = graph.drawGraph()
     return svgElem
 }
@@ -33,7 +44,7 @@ function localFunc1(x,y) {
     }
 }
 
-let lightVector = [5,3,1]
+let lightVector = [5,3,3]
 
 function localFunc2(x,y) {
     const r2 = x*x+y*y
@@ -48,10 +59,10 @@ function localFunc2(x,y) {
         sum += globeVector[i]*lightVector[i]
     }
     if (sum <= 0) {
-        return [0.2,0.2,0.2] 
+        return [0.2,0.2*1.2,0.2*1.6] 
     } else {
-        let m = sum*0.1+0.2
-        return [m,m*1.1,m*1.2]
+        let m = sum*0.07+0.2
+        return [m,m*1.2,m*1.6]
     }
 }
 
