@@ -4,10 +4,11 @@ onload = async function() {
     const makeSvgButton = document.getElementById('makesvgbtn')
     const textAreaElem = document.getElementById('svgtextarea')
     const clearButton = document.getElementById('clearbtn')
-    const svgImgRef = this.document.getElementById('imgrefcode')
+    const svgImgRef = document.getElementById('imgrefcode')
     const svgCodeElem = document.getElementById('svgcode')
+    const makeSvgCodeElem = this.document.getElementById('makesvgcode')
     if (!(makeSvgButton && textAreaElem && clearButton && svgImgRef && 
-        svgCodeElem)) {
+        svgCodeElem && makeSvgCodeElem)) {
             throw 'missing expected id(s)'
     }
     makeSvgButton.addEventListener('click',()=>{
@@ -18,8 +19,10 @@ onload = async function() {
     let codex = new CodeExtractor()
     let str1 = await codex.getCodeLines('./day1.html',13,14)
     svgImgRef.textContent = str1 + ' ...'
-    let str2 = await codex.getCodeLines('../assets/images/day1-static.svg',1,10)  // TODO
+    let str2 = await codex.getCodeLines('../assets/images/day1-static.svg',1,10)
     svgCodeElem.textContent = str2 + '  ...'
+    let str3 = await codex.getCodeLines('../assets/js/day1/script-day1.js',28,52)
+    makeSvgCodeElem.textContent = str3
 }
 
 function getSvgContent() {
