@@ -25,8 +25,8 @@ class Vector3D {
     }
     toString() {
         return this.#arr[0] + 'i' + 
-            (this.#arr[1]<0?'-':'+') + Math.abs(this.#arr[1]) + 'j' + 
-            (this.#arr[2]<0?'-':'+') + Math.abs(this.#arr[2]) + 'k'
+            (this.#arr[1]<0?' - ':' + ') + Math.abs(this.#arr[1]) + 'j' + 
+            (this.#arr[2]<0?' - ':' + ') + Math.abs(this.#arr[2]) + 'k'
     }
     add(vectorAddend) {
         let sum = []
@@ -91,7 +91,15 @@ class Vector3D {
         return Math.acos(this.cosAngleBetween(vec))
     }
     componentInDirectionOf(vec) {
-        // TODO - finesse by preventing division by zero
+        const m2 = vec.magnSqr()
+        if (m2 === 0 || Number.isNaN(m2)) {
+            // If the magnitude of 'vec' is zero then requesting
+            // the component of 'this' in the direction of 'vec' has
+            // no meaning.  For the sake of not unnecessarily crashing
+            // processing, we'll return 'this' as the result 
+            // rather than throw an exception.
+            return this
+        }
         return vec.scalarMult(this.dot(vec)/vec.magnSqr())  // TODO - must confirm
     }
 }
