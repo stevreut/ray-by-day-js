@@ -14,7 +14,6 @@
     <div class="imgdiv">
         <h3>SVG Content embedded directly in HTML</h3>
         <p>
-            <!-- <?xml version="1.0" encoding="utf-8"?> (document header not needed when embedded) -->
             <svg width="300" height="300" viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">
                 <rect x="0" y="0" width="10" height="10" stroke="#888" fill="#0088ff" />
                 <rect x="10" y="0" width="10" height="10" stroke="#888" fill="#0088ff" />
@@ -253,13 +252,17 @@
             <input type="number" size="3" min="0" max="14" step="1" value="0" id="txtcol"/>
             <button id="setcolorbtn">Set Color at Position</button>
         </div>
+        <div class="innerdiv">
+            <h3>Excerpt showing SVG content as embedded in the HTML code</h3>
+            <pre id="svgcode">[Code not loaded]</pre>
+        </div>
     </div>
     <div class="hopdiv">
         <a href="./day1.html">Prev</a>
         <a href="../index.html">Home</a>
         <a href="./day3.html">Next</a>
     </div>
-    <script src="../assets/js/day2/script-day2.js"></script>
+    <script src="../assets/js/day2/script-day2.js" type="module"></script>
 </body>
 
 </html>

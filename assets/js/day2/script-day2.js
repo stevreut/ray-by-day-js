@@ -1,4 +1,6 @@
-onload = () => {
+import CodeExtractor from "../utils/code-extractor.js"
+
+onload = async function() {
     const randomChangeButton = document.getElementById('chgbtn')
     if (!randomChangeButton) {
         throw 'no chgbtn id on page'
@@ -22,6 +24,13 @@ onload = () => {
                 parseInt(document.getElementById('txtcol').value)
             rects[idx].setAttribute('fill',document.getElementById('txtcolor').value)    
         })
+    }
+    const svgCodeElem = document.getElementById('svgcode')
+    if (svgCodeElem) {
+        const codex = new CodeExtractor()
+        let linesStr = await codex.getCodeLines('./day2.html',14,26)
+        linesStr += '  ...'
+        svgCodeElem.textContent = linesStr
     }
 }
 
