@@ -17,7 +17,16 @@ onload = () => {
     logToPage('crossVec = ' + crossVec)
     logToPage('mgn:crossVec = ' + crossVec.magn())
     logToPage('mgn2:crossVec = ' + crossVec.magnSqr())
-
+    let a = new Vector3D(3,5,0)
+    let b = new Vector3D(1,1,0)
+    let c = a.componentInDirectionOf(b)
+    logToPage ('a=' + a + ' b=' + b + ' c=' + c)
+    b = new Vector3D(10,10,0)
+    c = a.componentInDirectionOf(b)
+    logToPage ('a=' + a + ' b=' + b + ' c=' + c)
+    b = new Vector3D(10,0,0)
+    c = a.componentInDirectionOf(b)
+    logToPage ('a=' + a + ' b=' + b + ' c=' + c)
 }
 
 function logToPage(str) {

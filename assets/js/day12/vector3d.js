@@ -25,8 +25,8 @@ class Vector3D {
     }
     toString() {
         return this.#arr[0] + 'i' + 
-            (this.#arr[1]<0?'-':'-') + Math.abs(this.#arr[1]) + 'j' + 
-            (this.#arr[2]<0?'-':'-') + Math.abs(this.#arr[2]) + 'k'
+            (this.#arr[1]<0?'-':'+') + Math.abs(this.#arr[1]) + 'j' + 
+            (this.#arr[2]<0?'-':'+') + Math.abs(this.#arr[2]) + 'k'
     }
     add(vectorAddend) {
         let sum = []
@@ -89,6 +89,10 @@ class Vector3D {
     }
     angleBetween(vec) {
         return Math.acos(this.cosAngleBetween(vec))
+    }
+    componentInDirectionOf(vec) {
+        // TODO - finesse by preventing division by zero
+        return vec.scalarMult(this.dot(vec)/vec.magnSqr())  // TODO - must confirm
     }
 }
 
