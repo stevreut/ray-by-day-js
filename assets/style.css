@@ -68,6 +68,7 @@ input, select {
 }
 .imgdiv img, .imgdiv svg {
     box-shadow: 0 10px 50px #000;
+    margin-bottom: 1.5cm;
 }
 .innerdiv {
     padding: 5mm;
@@ -88,16 +89,13 @@ input, select {
     background-color: #eee;
     padding: 5mm;
     border-radius: 1.5mm;
-    margin-top: 1.5cm;
+    margin-top: 1cm;
 }
 .hopdiv>a, .hopdiv>button {
     padding: 3mm;
     color: #fff;
     background-color: #44f;
     border-radius: 1.5mm;
-}
-#chgbtn {
-    margin: 1cm 0;
 }
 code {
     font-family: 'Courier New', Courier, monospace;
