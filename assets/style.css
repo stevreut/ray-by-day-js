@@ -102,7 +102,7 @@ input, select {
     background-color: #44f;
     border-radius: 1.5mm;
 }
-code {
+code, pre {
     font-family: 'Courier New', Courier, monospace;
     color: #6363cd;
 }
