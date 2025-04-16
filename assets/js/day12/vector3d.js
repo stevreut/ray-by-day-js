@@ -100,7 +100,7 @@ class Vector3D {
             // rather than throw an exception.
             return this
         }
-        return vec.scalarMult(this.dot(vec)/vec.magnSqr())  // TODO - must confirm
+        return vec.scalarMult(this.dot(vec)/vec.magnSqr())
     }
 }
 
