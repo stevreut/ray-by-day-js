@@ -16,7 +16,21 @@
             applies anti-aliasing to smooth out jaggedness.
         </h3>
         <p id="svghere">SVG should be produced here on script load.</p>
-        <p><button id="chgbtn">Toggle graphed function</button></p>
+        <p>
+            <label for="aasel">Anti-alias factor: </label>
+            <select id="aasel">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3" selected>3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+            <button id="chgbtn">Toggle graphed function</button>
+        </p>
+        <p>
+            <label for="dur">Duration to redraw: </label>
+            <input type="text" id="dur" readonly>
+        </p>
     </div>
     <div class="hopdiv">
         <a href="./day5.html">Prev</a>

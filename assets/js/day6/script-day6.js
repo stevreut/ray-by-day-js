@@ -29,10 +29,32 @@ onload = () => {
 }
 
 function createSvgElemAt(anch) {
-    let graph = new BiVariantGrapher(200,150,4,60.2,null,5)
+    let graph = new BiVariantGrapher(200,150,4,60.2,null,getPageAntiAlias())
     graph.setFunction(functionToGraph === 2?localFunc2:localFunc1)
+    const startTime = new Date()
     let svgElem = graph.drawGraph()
+    const endTime = new Date()
+    const diffMs = endTime.getTime() - startTime.getTime()
+    document.getElementById('dur').value = (diffMs/1000) + ' seconds'
     return svgElem
+}
+
+function getPageAntiAlias() {
+    const aaElem = document.getElementById('aasel')
+    if (aaElem) {
+        try {
+            const val = parseInt(aaElem.value)
+            if ([1,2,3,4,5].includes(val)) {
+                return val
+            }
+            return 1
+        } catch (err) {
+            console.error('err on aa = ', err)
+            return 1
+        }
+    } else {
+        return 1
+    }
 }
 
 function localFunc1(x,y) {
