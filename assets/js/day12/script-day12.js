@@ -28,7 +28,10 @@ onload = () => {
             if (targetId.slice(1) === 'Ranger') {
                 const prefix = targetId[0]
                 if ('xyz'.includes(prefix)) {
-                    document.getElementById('lightvect').value = getLightingVector(false)
+                    const outputElem = document.getElementById('lightvect')
+                    outputElem.value = getLightingVector(false)
+                    outputElem.classList.add('outputhilite')
+                    setInterval(()=>outputElem.classList.remove('outputhilite'),800)
                 } else {
                     console.error('What is id ' + id + '?')
                 }
