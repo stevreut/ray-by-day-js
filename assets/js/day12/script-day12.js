@@ -9,29 +9,47 @@ onload = () => {
         throw 'no ' + svgAnchorID + 'id found on page'
     }
     svgAnchor.innerHTML = ''
-    const lightingVector = getLightingVector()
+    const lightingVector = getLightingVector(true)
     let svgElem = createLitSvgElemAt(svgAnchor,lightingVector)
     svgAnchor.appendChild(svgElem)
     const redrawButton = document.getElementById('redrawBtn')
     if (redrawButton) {
         redrawButton.addEventListener('click',()=>{
             svgAnchor.innerHTML = ''
-            const lightingVector = getLightingVector()
+            const lightingVector = getLightingVector(true)
             let svgElem = createLitSvgElemAt(svgAnchor,lightingVector)
             svgAnchor.appendChild(svgElem)
         })
     }
+    const controlDiv = document.getElementById("controldiv")
+    if (controlDiv) {
+        controlDiv.addEventListener('change',(ev)=>{
+            const targetId = ev.target.id 
+            if (targetId.slice(1) === 'Ranger') {
+                const prefix = targetId[0]
+                if ('xyz'.includes(prefix)) {
+                    document.getElementById('lightvect').value = getLightingVector(false)
+                } else {
+                    console.error('What is id ' + id + '?')
+                }
+            }
+        })
+    }
 }
 
-function getLightingVector() {
+function getLightingVector(doResize) {
     const x = rectifyRanger('x')
     const y = rectifyRanger('y')
     const z = rectifyRanger('z')
     const workingVector = new Vector3D(x,y,z)
     // const workingVector = new Vector3D(1,2,3) // TODO
-    const k = 1/workingVector.magn()
-    const resultVector = workingVector.scalarMult(k)
-    return resultVector
+    if (doResize) {
+        const k = 1/workingVector.magn()
+        const resultVector = workingVector.scalarMult(k)
+        return resultVector
+    } else {
+        return workingVector
+    }
     function rectifyRanger(idPrefix) {
         const id = idPrefix + 'Ranger'
         const rangeSliderElem = document.getElementById(id)

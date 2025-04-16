@@ -13,13 +13,15 @@
         <h3>Graphic created making use of <code>class Vector3D</code> in 
             module <code>vector3d.js</code>
         </h3>
-        <div class="innerdiv labeldiv">
+        <div id="controldiv" class="innerdiv labeldiv">
             <label for="xRanger">x component of light source</label>
             <input type="range" min="-100" max="100" value="50" id="xRanger" />
             <label for="yRanger">y component of light source</label>
             <input type="range" min="-100" max="100" value="50" id="yRanger" />
             <label for="zRanger">z component of light source</label>
             <input type="range" min="-100" max="100" value="50" id="zRanger" />
+            <label for="lightvect">Lighting Vector</label>
+            <input type="text" id="lightvect" value="50i + 50j + 50k" readonly/>
             <button id="redrawBtn">Render with this Lighting Vector</button>
         </div>
         <p id="svghere">SVG should be produced here on script load.</p>
