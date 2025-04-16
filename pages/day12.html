@@ -9,6 +9,22 @@
 <body>
     <h1 class="subduedh1">Ray by Day</h1>
     <h2><span class="dayh2">Day 12</span> - class Vector3D</h2>
+    <div class="imgdiv">
+        <h3>Graphic created making use of <code>class Vector3D</code> in 
+            module <code>vector3d.js</code>
+        </h3>
+        <div class="innerdiv labeldiv">
+            <label for="xRanger">x component of light source</label>
+            <input type="range" min="-100" max="100" value="50" id="xRanger" />
+            <label for="yRanger">y component of light source</label>
+            <input type="range" min="-100" max="100" value="50" id="yRanger" />
+            <label for="zRanger">z component of light source</label>
+            <input type="range" min="-100" max="100" value="50" id="zRanger" />
+            <button id="redrawBtn">Render with this Lighting Vector</button>
+        </div>
+        <p id="svghere">SVG should be produced here on script load.</p>
+    </div>
+
     <div class="hopdiv">
         <a href="./day11.html">Prev</a>
         <a href="../index.html">Home</a>

@@ -1,37 +1,75 @@
 import Vector3D from "./vector3d.js"
+import BiVariantGrapher from "../day6/bivargrapher.js"
+
+const svgAnchorID = 'svghere'
 
 onload = () => {
-    let vFromArr = new Vector3D([1,2,3])
-    logToPage('vFromArr = ' + vFromArr)
-    let vNull = new Vector3D()
-    logToPage('vNull = ' + vNull)
-    let vNums = new Vector3D(4,5,-5)
-    logToPage('vNums = ' + vNums)
-    let vSum = vFromArr.add(vNums)
-    logToPage('vSum = ' + vSum)
-    let vMult = vSum.scalarMult(3)
-    logToPage('vMult = ' + vMult)
-    let dotVec = vFromArr.dot(vNums)
-    logToPage('dotVec = ' + dotVec)
-    let crossVec = vFromArr.cross(vNums)
-    logToPage('crossVec = ' + crossVec)
-    logToPage('mgn:crossVec = ' + crossVec.magn())
-    logToPage('mgn2:crossVec = ' + crossVec.magnSqr())
-    let a = new Vector3D(3,5,0)
-    let b = new Vector3D(1,1,0)
-    let c = a.componentInDirectionOf(b)
-    logToPage ('a=' + a + ' b=' + b + ' c=' + c)
-    b = new Vector3D(10,10,0)
-    c = a.componentInDirectionOf(b)
-    logToPage ('a=' + a + ' b=' + b + ' c=' + c)
-    b = new Vector3D(10,0,0)
-    c = a.componentInDirectionOf(b)
-    logToPage ('a=' + a + ' b=' + b + ' c=' + c)
+    const svgAnchor = document.getElementById(svgAnchorID)
+    if (!svgAnchor) {
+        throw 'no ' + svgAnchorID + 'id found on page'
+    }
+    svgAnchor.innerHTML = ''
+    const lightingVector = getLightingVector()
+    let svgElem = createLitSvgElemAt(svgAnchor,lightingVector)
+    svgAnchor.appendChild(svgElem)
+    const redrawButton = document.getElementById('redrawBtn')
+    if (redrawButton) {
+        redrawButton.addEventListener('click',()=>{
+            svgAnchor.innerHTML = ''
+            const lightingVector = getLightingVector()
+            let svgElem = createLitSvgElemAt(svgAnchor,lightingVector)
+            svgAnchor.appendChild(svgElem)
+        })
+    }
 }
 
-function logToPage(str) {
-    let para = document.createElement('p')
-    let body = document.querySelector('body')
-    para.textContent = 'Logged: ' + str
-    body.appendChild(para)
+function getLightingVector() {
+    const x = rectifyRanger('x')
+    const y = rectifyRanger('y')
+    const z = rectifyRanger('z')
+    const workingVector = new Vector3D(x,y,z)
+    // const workingVector = new Vector3D(1,2,3) // TODO
+    const k = 1/workingVector.magn()
+    const resultVector = workingVector.scalarMult(k)
+    return resultVector
+    function rectifyRanger(idPrefix) {
+        const id = idPrefix + 'Ranger'
+        const rangeSliderElem = document.getElementById(id)
+        if (!rangeSliderElem) {
+            throw 'no element for id ' + id
+        }
+        let val = rangeSliderElem.value
+        try {
+            val = parseInt(val)
+            if (Number.isNaN(val)) {
+                val = 1
+            }
+        } catch (err) {
+            val = 1
+        }
+        console.log('value for ' + id + ' = ', val, typeof val)
+        return val
+    }
 }
+
+function createLitSvgElemAt(svgAnchor,lightVector) {
+    const grapher = new BiVariantGrapher(200,200,3,70,f,3)
+    const svg = grapher.drawGraph()
+    return svg
+    //
+    function f(x,y) {
+        const SHADE = 0.2
+        const r2 = x*x+y*y
+        if (r2 >= 1) {
+            return [0.03,0.1,0.3]
+        } else {
+            const z = Math.sqrt(1-r2)
+            const surfaceVector = new Vector3D(x,y,z)
+            let dotProd = surfaceVector.dot(lightVector)
+            dotProd = Math.max(0,dotProd)
+            dotProd = dotProd*(1-SHADE)+SHADE
+            return [dotProd*1,dotProd*0.3,dotProd*0.05]
+        }
+    }    
+}
+
