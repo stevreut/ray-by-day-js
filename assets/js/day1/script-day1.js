@@ -1,8 +1,11 @@
-onload = () => {
+import CodeExtractor from "../utils/code-extractor.js"
+
+onload = async function() {
     const makeSvgButton = document.getElementById('makesvgbtn')
     const textAreaElem = document.getElementById('svgtextarea')
     const clearButton = document.getElementById('clearbtn')
-    if (!(makeSvgButton && textAreaElem && clearButton)) {
+    const svgCodeElem = document.getElementById('svgcode')
+    if (!(makeSvgButton && textAreaElem && clearButton && svgCodeElem)) {
         throw 'missing expected id(s)'
     }
     makeSvgButton.addEventListener('click',()=>{
@@ -10,6 +13,9 @@ onload = () => {
         textAreaElem.value = svgStr
     })
     clearButton.addEventListener('click',()=>textAreaElem.value='')
+    let codex = new CodeExtractor()
+    let str = await codex.getCodeLines('../assets/images/day1-static.svg',3,10)  // TODO
+    console.log('str = ', str)  // TODO
 }
 
 function getSvgContent() {
