@@ -80,7 +80,16 @@ input, select {
     display: grid;
     grid-template-columns: auto auto;
 }
-.labeldiv>* {
+.label3div {
+    display: grid;
+    grid-template-columns: auto auto auto;
+}
+.label3div>input[type=number] {
+    width: 2cm;
+    border: none;
+    text-align: center;
+}
+.labeldiv>*, .label3div>* {
     margin: 2mm;
 }
 .outputhilite {

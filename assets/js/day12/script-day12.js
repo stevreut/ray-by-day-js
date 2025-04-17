@@ -12,17 +12,20 @@ onload = () => {
     const lightingVector = getLightingVector(true)
     let svgElem = createLitSvgElemAt(svgAnchor,lightingVector)
     svgAnchor.appendChild(svgElem)
-    const redrawButton = document.getElementById('redrawBtn')
-    if (redrawButton) {
-        redrawButton.addEventListener('click',()=>{
-            svgAnchor.innerHTML = ''
-            const lightingVector = getLightingVector(true)
-            let svgElem = createLitSvgElemAt(svgAnchor,lightingVector)
-            svgAnchor.appendChild(svgElem)
-        })
-    }
     const controlDiv = document.getElementById("controldiv")
     if (controlDiv) {
+        controlDiv.addEventListener('input',(ev)=>{
+            const targetId = ev.target.id
+            if (targetId.slice(1) === 'Ranger') {
+                const prefix = targetId[0]
+                if ('xyz'.includes(prefix)) {
+                    const numbBox = document.getElementById(prefix+'Rnumb')
+                    if (numbBox) {
+                        numbBox.value = ev.target.value
+                    }
+                }
+            }
+        })
         controlDiv.addEventListener('change',(ev)=>{
             const targetId = ev.target.id 
             if (targetId.slice(1) === 'Ranger') {
@@ -32,6 +35,10 @@ onload = () => {
                     outputElem.value = getLightingVector(false)
                     outputElem.classList.add('outputhilite')
                     setInterval(()=>outputElem.classList.remove('outputhilite'),800)
+                    svgAnchor.innerHTML = ''
+                    const lightingVector = getLightingVector(true)
+                    let svgElem = createLitSvgElemAt(svgAnchor,lightingVector)
+                    svgAnchor.appendChild(svgElem)
                 } else {
                     console.error('What is id ' + id + '?')
                 }
