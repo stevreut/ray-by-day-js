@@ -82,7 +82,11 @@ function createLitSvgElemAt(svgAnchor,lightVector) {
         const SHADE = 0.2
         const r2 = x*x+y*y
         if (r2 >= 1) {
-            return [0.03,0.1,0.3]
+            let skyVector = new Vector3D(x/8,y/8,-1)
+            skyVector = skyVector.scalarMult(1/skyVector.magn())
+            const skyDotProd = skyVector.dot(lightVector)
+            const k = ((skyDotProd+1)/2)**10*7
+            return [0.03*k,0.1*k,0.3*k]
         } else {
             const z = Math.sqrt(1-r2)
             const surfaceVector = new Vector3D(x,y,z)
