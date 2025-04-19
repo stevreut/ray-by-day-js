@@ -1,12 +1,11 @@
 import Gridder from './gridder.js'
 
-class TextGraph extends Gridder {
+class TableGridGraph extends Gridder {
     constructor() {
         super()
-        console.log('TextGraph instantiated as super at ', new Date()) // TODO
     }
     init(width,height,pixelSize) {
-        // ignore pixelSize
+        this.tdDim = pixelSize-1
         this.width = width 
         this.height = height 
         this.pixelCount = this.width*this.height
@@ -32,15 +31,14 @@ class TextGraph extends Gridder {
                 let bgColr = '#'
                 this.arr[idx].forEach(itm=>bgColr+=itm.toString(16).padStart(2,'0'))
                 tdata.style.backgroundColor = bgColr
-                tdata.style.margin = '1px'
-                tdata.style.width = '15px'
-                tdata.style.height = '15px'
+                tdata.style.margin = '0.5px'
+                tdata.style.width = this.tdDim + 'px'
+                tdata.style.height = this.tdDim + 'px'
                 trow.appendChild(tdata)
             }
             tbody.appendChild(trow)
         }
         tbl.appendChild(tbody)
-        tbl.style.boxShadow = '0 0 15mm #789'
         tbl.style.backgroundColor = '#888'
         return tbl
     }
@@ -55,4 +53,4 @@ class TextGraph extends Gridder {
 
 }
 
-export default TextGraph
+export default TableGridGraph

@@ -2,9 +2,9 @@ import Gridder from './gridder.js'
 import { makeSvgElem, makeSvgRectangle } from "../day4/svgutils.js"
 
 class GridGraph extends Gridder {
-    constructor (width, height, pixelSize = 1) {
+    constructor () {
         super()
-        this.init(width,height,pixelSize)
+        // this.init(width,height,pixelSize)
     }
     init(width,height,pixelSize) { 
         const MAXDIM = 1024 // TODO

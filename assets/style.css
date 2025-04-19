@@ -61,12 +61,15 @@ input, select {
     border-radius: 1.5mm;
     border-style: inset 2px #cce;
 }
+input:read-only {
+    border: none;
+}
 .imgdiv {
     border: solid 1px #ddd;
     padding: 2cm;
     margin: 2cm 0cm;
 }
-.imgdiv img, .imgdiv svg {
+.imgdiv img, .imgdiv svg, .imgdiv table {
     box-shadow: 0 10px 50px #000;
     margin-bottom: 1.5cm;
 }
@@ -75,6 +78,9 @@ input, select {
     margin: 5mm 5mm 5mm 0;
     border: solid 1px #ccc;
     border-radius: 1.5mm;
+}
+label {
+    margin-right: 1em;
 }
 .labeldiv {
     display: grid;
