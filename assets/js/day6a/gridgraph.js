@@ -66,8 +66,8 @@ class GridGraph extends Gridder {
                     i*this.pixelSize,j*this.pixelSize,
                     this.pixelSize,this.pixelSize,
                     {
-                        stroke$width: this.pixelSize/16,
-                        stroke: '#888888',
+                        // stroke$width: this.pixelSize/16,
+                        // stroke: '#888888',
                         fill: this.defaultColor
                     },this.svg)
                 row.push(pixRect)

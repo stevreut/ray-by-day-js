@@ -12,7 +12,7 @@ class TextGraph extends Gridder {
         this.pixelCount = this.width*this.height
         console.log('this (tgraph) = ', this)
         console.log('pixelCount = ', this.pixelCount)
-        this.arr = Array(this.pixelCount).fill(false)
+        this.arr = Array(this.pixelCount).fill([0,0,0])
     }
 
     getHTMLElement() {
@@ -20,15 +20,6 @@ class TextGraph extends Gridder {
             throw 'unexpected length'
         }
         let valid = true
-        this.arr.forEach((itm,idx)=>{
-            if ((itm !== true && itm !== false) || typeof itm !== 'boolean') {
-                valid = false
-                console.error('bad value ', itm, ' at ', idx)
-            }
-        })
-        if (!valid) {
-            throw 'invalid arr item(s)'
-        }
         const tbl = document.createElement('table')
         const tbody = document.createElement('tbody')
         for (let row=0;row<this.height;row++) {
@@ -36,9 +27,11 @@ class TextGraph extends Gridder {
             for (let col=0;col<this.width;col++) {
                 const tdata = document.createElement('td')
                 const idx = row*this.width+col
-                tdata.textContent = (this.arr[idx]?'*':'.')
-                tdata.style.color = 'cyan'
-                tdata.style.backgroundColor = 'black'
+                tdata.textContent = 'X'
+                tdata.style.color = 'black'
+                let bgColr = '#'
+                this.arr[idx].forEach(itm=>bgColr+=itm.toString(16).padStart(2,'0'))
+                tdata.style.backgroundColor = bgColr
                 tdata.style.margin = '1px'
                 tdata.style.width = '15px'
                 tdata.style.height = '15px'
@@ -47,6 +40,8 @@ class TextGraph extends Gridder {
             tbody.appendChild(trow)
         }
         tbl.appendChild(tbody)
+        tbl.style.boxShadow = '0 0 15mm #789'
+        tbl.style.backgroundColor = '#888'
         return tbl
     }
 
@@ -55,7 +50,7 @@ class TextGraph extends Gridder {
         if (idx < 0 || idx >= this.pixelCount) {
             throw 'idx out of range'
         }
-        this.arr[idx] = (gg >= 128)
+        this.arr[idx] = [rr,gg,bb]
     }
 
 }
