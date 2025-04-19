@@ -34,6 +34,8 @@ function setUpGraphOnPage(imgParent) {
     imgParent.innerHTML = ''
     const gridder = (useTextGridder?new GridGraph():new TableGridGraph())
     gridTypeInput.value = (useTextGridder?'GridGraph':'TableGridGraph')
+    document.getElementById('imgh3').textContent = (useTextGridder?'SVG':'Table') +
+        ' dynamically created ...'
     const bvg = new BiVariantGrapher(gridder,30,30,20,4.5,f,3)
     const imgElement = bvg.drawGraph()
     imgParent.appendChild(imgElement)
