@@ -74,7 +74,7 @@ function initRandomSpheres() {
         }
     } else {
         for (let i=0;i<SPH_COUNT;i++) {
-            let sphere = new Sphere(orderlyCenter(i),1.2,randomColor(),lightV)
+            let sphere = new Sphere(orderlyCenter(i),2,randomColor(),lightV)
             spheres.push(sphere)
         }
     }
@@ -94,8 +94,8 @@ function orderlyCenter(n) {
     n = Math.round(n)
     n = n%12
     let theta = (n+0.3)*Math.PI/6
-    let x = Math.cos(theta)*4
-    let baseSin = Math.sin(theta)*4
+    let x = Math.cos(theta)*7
+    let baseSin = Math.sin(theta)*7
     let z = baseSin*12/13
     let y = baseSin*5/13
     return new Vector3D(x,y,z)
