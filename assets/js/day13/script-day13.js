@@ -21,10 +21,10 @@ onload = () => {
 
 let spheres = []
 
-const universalOrigin = new Vector3D(0,0,-13)
+const universalOrigin = new Vector3D(0,0,-30)
 
 function f(x,y) {
-    const ray = new Ray(universalOrigin,new Vector3D(x,y,1.5))
+    const ray = new Ray(universalOrigin,new Vector3D(x,y,4))
     let leastDist = null
     let leastSphere = null
     spheres.forEach((sph,idx)=>{
