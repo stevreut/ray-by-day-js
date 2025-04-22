@@ -9,8 +9,6 @@ class TableGridGraph extends Gridder {
         this.width = width 
         this.height = height 
         this.pixelCount = this.width*this.height
-        console.log('this (tgraph) = ', this)
-        console.log('pixelCount = ', this.pixelCount)
         this.arr = Array(this.pixelCount).fill([0,0,0])
     }
 

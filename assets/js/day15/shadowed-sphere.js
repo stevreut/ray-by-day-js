@@ -35,7 +35,6 @@ class ShadowedSphere extends Sphere {
             if (obj != this) {  // 
                 let dist = obj.interceptDistance(ray)
                 if (dist !== null && dist > 0) {
-                    console.log('shadowed check')
                     isShadowed = true  // TODO - inefficient - loop still continues
                 }
             }

@@ -10,7 +10,6 @@ let useTextGridder = true
 let gridTypeInput = null
 
 onload = () => {
-    console.log('script 6a invoked at ', new Date())  // TODO - temporary
     const imgParentElem = document.getElementById(IMG_ID)
     if (!imgParentElem) {
         throw 'no ' + IMG_ID + ' id found on page'

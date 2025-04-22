@@ -68,7 +68,6 @@ function setDropDown(id) {
         }
     })
     selectElem.addEventListener('change',()=>{
-        console.log('select value = ', selectElem.value)  // TODO
         const elem = document.getElementById(selectElem.value)
         if (elem) {
             elem.setAttribute('fill','red')

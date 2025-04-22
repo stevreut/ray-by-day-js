@@ -2,7 +2,7 @@
 
 class Gridder {
     constructor() {
-        console.log('Gridder instantiated as super at ', new Date()) // TODO
+        // TODO?
     }
     init(width,height,pixelSize) { /* abstract */ }
 

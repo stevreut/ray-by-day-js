@@ -1,12 +1,14 @@
-import Vector3D from "./vector3d.js"
+import Vector3D from "../day12/vector3d.js"
 import GridGraph from "../day6a/gridgraph.js"
 import BiVariantGrapher from "../day6a/bivargrapher.js"
-import ReflectiveSphere from "./reflective-sphere.js"
-import Ray from "./ray.js"
+import Ray from "../day13/ray.js"
+import ShadowedSphere from "../day15/shadowed-sphere.js"
 
 const IMG_PARA_ID = 'imgpara'
 const DURATION_TEXT_ID = 'dur'
 const REPEAT_BUTTON_ID = 'rptbtn'
+
+let modeIsRandom = true
 
 onload = () => {
     let imgParagraph = document.getElementById(IMG_PARA_ID)
@@ -61,18 +63,19 @@ function f(x,y) {
 }
 
 function initRandomSpheres() {
-    const SPH_COUNT = 15
+    const SPH_COUNT = 25
     spheres = []
+    // const lightV = new Vector3D(1,1,-0.5)
     const lightV = randomLightDirection()
     for (let i=0;i<SPH_COUNT;i++) {
-        let sphere = new ReflectiveSphere(randomCenter(),(Math.random()+1)*1.125,randomColor(),lightV,spheres)
+        let sphere = new ShadowedSphere(randomCenter(),(Math.random()+1)*1.125,randomColor(),lightV,spheres)
         spheres.push(sphere)
     }
     //
     function randomLightDirection() {
         let arr = []
         for (let i=0;i<3;i++) {
-            arr.push(Math.random()*(i<2?1:0.5))
+            arr.push((Math.random()-0.5)*2*(i<2?1:0.5))
         }
         let vect = new Vector3D(arr)
         if (vect.magnSqr === 0) {
@@ -96,7 +99,7 @@ function randomCenter() {
 function randomColor() {
     let arr = []
     for (let i=0;i<3;i++) {
-        arr.push(Math.round(Math.random()*120+120)/256)
+        arr.push(Math.round(Math.random()*120+120)/255)
     }
     return arr
 }

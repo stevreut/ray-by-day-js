@@ -75,7 +75,6 @@ function getLightingVector(doResize) {
         } catch (err) {
             val = 1
         }
-        console.log('value for ' + id + ' = ', val, typeof val)
         return val
     }
 }
