@@ -13,11 +13,11 @@ class Sphere extends OpticalObject {
     }
 
     interceptDistance(ray) {
-        return this.#rayDistToSphere(ray)
+        return this.rayDistToSphere(ray)
     }
 
     handle(ray) {
-        let dist = this.#rayDistToSphere(ray)  // TODO - how to eliminate duplicate calculation?
+        let dist = this.rayDistToSphere(ray)  // TODO - how to eliminate duplicate calculation?
         if (dist === null || dist <= 0) {
             return ray.color
         }
@@ -32,7 +32,7 @@ class Sphere extends OpticalObject {
         return newColor
     }
 
-    #rayDistToSphere(ray) {
+    rayDistToSphere(ray) {
         let C = this.center.subt(ray.getOrigin())
         let D = ray.getDirection()
         let CD = C.dot(D)
