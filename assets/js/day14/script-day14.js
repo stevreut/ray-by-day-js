@@ -6,19 +6,37 @@ import Ray from "../day13/ray.js"
 import Sphere from "./sphere.js"
 
 const IMG_PARA_ID = 'imgpara'
-let imgParagraph = null
+const DURATION_TEXT_ID = 'dur'
+const REPEAT_BUTTON_ID = 'rptbtn'
+
+let modeIsRandom = true
 
 onload = () => {
-    imgParagraph = document.getElementById(IMG_PARA_ID)
+    let imgParagraph = document.getElementById(IMG_PARA_ID)
+    let goAgainButton = document.getElementById(REPEAT_BUTTON_ID)
+    let durationElem = document.getElementById(DURATION_TEXT_ID)
     if (!imgParagraph) {
         throw 'no ' + IMG_PARA_ID + ' id found on page'
     }
+    if (!goAgainButton) {
+        throw 'no ' + REPEAT_BUTTON_ID + ' id found on page'
+    }
+    processImage(imgParagraph,durationElem)
+    goAgainButton.addEventListener('click',()=>processImage(imgParagraph,durationElem))
+}
+
+function processImage(imgParagraph,durationElem) {
     initRandomSpheres()
     imgParagraph.innerHTML = ''
     const gridder = new GridGraph()
+    const startTime = new Date()
     const grapher = new BiVariantGrapher(gridder,800,600,1,260,f,3)
     let svgElem = grapher.drawGraph()
+    const finTime = new Date()
+    const durationMs = finTime.getTime()-startTime.getTime()
+    const durationSecs = durationMs/1000
     imgParagraph.appendChild(svgElem)
+    durationElem.textContent = 'Image generation duration: ' + durationSecs + ' seconds'
 }
 
 let spheres = []
@@ -46,12 +64,21 @@ function f(x,y) {
 }
 
 function initRandomSpheres() {
-    spheres = []
     const SPH_COUNT = 12
-    for (let i=0;i<SPH_COUNT;i++) {
-        let sphere = new Sphere(randomCenter(),(Math.random()+1)*1.125,randomColor(),new Vector3D(1,1,-0.5))
-        spheres.push(sphere)
+    spheres = []
+    const lightV = new Vector3D(1,1,-0.5)
+    if (modeIsRandom) {
+        for (let i=0;i<SPH_COUNT;i++) {
+            let sphere = new Sphere(randomCenter(),(Math.random()+1)*1.125,randomColor(),lightV)
+            spheres.push(sphere)
+        }
+    } else {
+        for (let i=0;i<SPH_COUNT;i++) {
+            let sphere = new Sphere(orderlyCenter(i),1.2,randomColor(),lightV)
+            spheres.push(sphere)
+        }
     }
+    modeIsRandom = !modeIsRandom
 }
 
 function randomCenter() {
@@ -61,6 +88,17 @@ function randomCenter() {
     }
     let ctr = new Vector3D(arr)
     return ctr
+}
+
+function orderlyCenter(n) {
+    n = Math.round(n)
+    n = n%12
+    let theta = (n+0.3)*Math.PI/6
+    let x = Math.cos(theta)*4
+    let baseSin = Math.sin(theta)*4
+    let z = baseSin*12/13
+    let y = baseSin*5/13
+    return new Vector3D(x,y,z)
 }
 
 function randomColor() {
