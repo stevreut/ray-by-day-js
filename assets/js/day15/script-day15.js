@@ -29,8 +29,7 @@ function processImage(imgParagraph,durationElem) {
     imgParagraph.innerHTML = ''
     const gridder = new GridGraph()
     const startTime = new Date()
-    // const grapher = new BiVariantGrapher(gridder,800,600,1,260,f,3)  // TODO - restore after testing
-    const grapher = new BiVariantGrapher(gridder,160,120,5,52,f,2)  // TODO - delete after testing
+    const grapher = new BiVariantGrapher(gridder,800,600,1,260,f,3)
     let svgElem = grapher.drawGraph()
     const finTime = new Date()
     const durationMs = finTime.getTime()-startTime.getTime()
@@ -57,7 +56,7 @@ function f(x,y) {
         }
     })
     if (leastSphere === null) {
-        return [0.2,0.2,0.4]
+        return [0.1,0.1,0.3]
     } else {
         return spheres[leastSphere].handle(ray)
     }

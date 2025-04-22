@@ -6,9 +6,6 @@ class ShadowedSphere extends Sphere {
     constructor(center,radius,color,lightingVector,opticalObjectArray) {
         super(center,radius,color,lightingVector)
         this.optObjArr = opticalObjectArray
-        // if (!this.#validObjArray(this.obtObjArr)) {
-        //     throw 'invalid opticalObjectArray parameter'
-        // }
     }
     handle(ray) {
         let dist = this.rayDistToSphere(ray)  // TODO - how to eliminate duplicate calculation?
