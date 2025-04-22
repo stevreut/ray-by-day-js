@@ -32,8 +32,8 @@ class Ray {
         return this.color
     }
     toString() {
-        let res = '{origin=(' + this.origin 
-            + ') direction=(' + this.direction
+        let res = '{origin=(' + this.orig
+            + ') direction=(' + this.dir
             + ') color=' + this.color.toString() + '}'
         return res
     }

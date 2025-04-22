@@ -2,14 +2,13 @@ import Vector3D from "../day12/vector3d.js"
 import GridGraph from "../day6a/gridgraph.js"
 import BiVariantGrapher from "../day6a/bivargrapher.js"
 import Ray from "../day13/ray.js"
-import ShadowedSphere from "../day15/shadowed-sphere.js"
+// import ShadowedSphere from "../day15/shadowed-sphere.js"
 import OpticalEnvironment from "./optical-env.js"
+import Sphere from "../day14/sphere.js"
 
 const IMG_PARA_ID = 'imgpara'
 const DURATION_TEXT_ID = 'dur'
 const REPEAT_BUTTON_ID = 'rptbtn'
-
-let modeIsRandom = true
 
 onload = () => {
     try {
@@ -31,11 +30,11 @@ onload = () => {
 }
 
 function processImage(imgParagraph,durationElem) {
+    initEnvironment()
     initRandomSpheres()
     imgParagraph.innerHTML = ''
     const gridder = new GridGraph()
     const startTime = new Date()
-    initEnvironment()
     const grapher = new BiVariantGrapher(gridder,160,120,5,52,f,2)
     let svgElem = grapher.drawGraph()
     const finTime = new Date()
@@ -45,19 +44,18 @@ function processImage(imgParagraph,durationElem) {
     durationElem.textContent = 'Image generation duration: ' + durationSecs + ' seconds'
 }
 
-let spheres = []
-
-const universalOrigin = new Vector3D(0,0,-30)
+const universalOrigin = new Vector3D(0,-30,0)
 
 let optEnv = null  // TODO
 
 function initEnvironment() {
     optEnv = new OpticalEnvironment()
     const cameraRay = new Ray(
-        new Vector3D(0,-30,0),
+        universalOrigin,
         new Vector3D(0,1,0)
     )
     optEnv.setCamera(cameraRay)
+    initRandomSpheres()
 }
 
 function f(x,y) {
@@ -67,30 +65,30 @@ function f(x,y) {
     const ray = new Ray(universalOrigin,new Vector3D(x,y,4))
     let leastDist = null
     let leastSphere = null
-    spheres.forEach((sph,idx)=>{
-        let dist = sph.interceptDistance(ray)
-        if (dist !== null) {
-            if (dist > 0 && (leastDist == null || dist < leastDist)) {
-                leastDist = dist
-                leastSphere = idx
-            }
-        }
-    })
-    if (leastSphere === null) {
-        return [0.1,0.1,0.3]
-    } else {
-        return spheres[leastSphere].handle(ray)
-    }
+    return optEnv.colorFromXY(x,y)
+    // spheres.forEach((sph,idx)=>{
+    //     let dist = sph.interceptDistance(ray)
+    //     if (dist !== null) {
+    //         if (dist > 0 && (leastDist == null || dist < leastDist)) {
+    //             leastDist = dist
+    //             leastSphere = idx
+    //         }
+    //     }
+    // })
+    // if (leastSphere === null) {
+    //     return [0.1,0.1,0.3]
+    // } else {
+    //     return spheres[leastSphere].handle(ray)
+    // }
 }
 
 function initRandomSpheres() {
     const SPH_COUNT = 25
-    spheres = []
     // const lightV = new Vector3D(1,1,-0.5)
     const lightV = randomLightDirection()
     for (let i=0;i<SPH_COUNT;i++) {
-        let sphere = new ShadowedSphere(randomCenter(),(Math.random()+1)*1.125,randomColor(),lightV,spheres)
-        spheres.push(sphere)
+        let sphere = new Sphere(randomCenter(),(Math.random()+1)*1.125,randomColor(),lightV)
+        optEnv.addOpticalObject(sphere)
     }
     //
     function randomLightDirection() {
