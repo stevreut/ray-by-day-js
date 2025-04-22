@@ -5,6 +5,7 @@ import Ray from "../day13/ray.js"
 // import ShadowedSphere from "../day15/shadowed-sphere.js"
 import OpticalEnvironment from "./optical-env.js"
 import Sphere from "../day14/sphere.js"
+import Plane from "./plane.js"
 
 const IMG_PARA_ID = 'imgpara'
 const DURATION_TEXT_ID = 'dur'
@@ -31,11 +32,11 @@ onload = () => {
 
 function processImage(imgParagraph,durationElem) {
     initEnvironment()
-    initRandomSpheres()
     imgParagraph.innerHTML = ''
     const gridder = new GridGraph()
     const startTime = new Date()
-    const grapher = new BiVariantGrapher(gridder,160,120,5,52,f,2)
+    // const grapher = new BiVariantGrapher(gridder,160,120,5,52,f,3)
+    const grapher = new BiVariantGrapher(gridder,800,600,1,260,f,2)
     let svgElem = grapher.drawGraph()
     const finTime = new Date()
     const durationMs = finTime.getTime()-startTime.getTime()
@@ -44,7 +45,7 @@ function processImage(imgParagraph,durationElem) {
     durationElem.textContent = 'Image generation duration: ' + durationSecs + ' seconds'
 }
 
-const universalOrigin = new Vector3D(0,-30,0)
+const universalOrigin = new Vector3D(8,-30,5)
 
 let optEnv = null  // TODO
 
@@ -52,10 +53,11 @@ function initEnvironment() {
     optEnv = new OpticalEnvironment()
     const cameraRay = new Ray(
         universalOrigin,
-        new Vector3D(0,1,0)
+        universalOrigin.scalarMult(-1)
     )
     optEnv.setCamera(cameraRay)
     initRandomSpheres()
+    optEnv.addOpticalObject(new Plane(-3))
 }
 
 function f(x,y) {
@@ -63,28 +65,11 @@ function f(x,y) {
         throw 'optEnv not initiated'
     }
     const ray = new Ray(universalOrigin,new Vector3D(x,y,4))
-    let leastDist = null
-    let leastSphere = null
     return optEnv.colorFromXY(x,y)
-    // spheres.forEach((sph,idx)=>{
-    //     let dist = sph.interceptDistance(ray)
-    //     if (dist !== null) {
-    //         if (dist > 0 && (leastDist == null || dist < leastDist)) {
-    //             leastDist = dist
-    //             leastSphere = idx
-    //         }
-    //     }
-    // })
-    // if (leastSphere === null) {
-    //     return [0.1,0.1,0.3]
-    // } else {
-    //     return spheres[leastSphere].handle(ray)
-    // }
 }
 
 function initRandomSpheres() {
     const SPH_COUNT = 25
-    // const lightV = new Vector3D(1,1,-0.5)
     const lightV = randomLightDirection()
     for (let i=0;i<SPH_COUNT;i++) {
         let sphere = new Sphere(randomCenter(),(Math.random()+1)*1.125,randomColor(),lightV)
@@ -94,10 +79,11 @@ function initRandomSpheres() {
     function randomLightDirection() {
         let arr = []
         for (let i=0;i<3;i++) {
-            arr.push((Math.random()-0.5)*2*(i<2?1:0.5))
+            arr.push((Math.random()-0.5)*2)
         }
+        arr[2]+=0.75
         let vect = new Vector3D(arr)
-        if (vect.magnSqr === 0) {
+        if (vect.magnSqr() === 0) {
             return randomLightDirection()  // Note recursion
         } else {
             vect = vect.scalarMult(1/vect.magn())

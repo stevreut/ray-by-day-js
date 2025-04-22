@@ -8,6 +8,7 @@ class OpticalEnvironment {
         this.objCount = 0
         this.camera = null
     }
+    SKY_BLUE = [135/255,206/255,235/255]
     addOpticalObject(obj) {
         if (!obj instanceof OpticalObject) {
             throw 'attempted to add non-OpticalObject'
@@ -19,7 +20,6 @@ class OpticalEnvironment {
         if (!cameraRay instanceof Ray) {
             throw 'attempted to setCamera for non-Ray'
         }
-        console.log('cameraRay at setCamera() = ' + cameraRay)  // TODO
         this.camera = {}
         const org = cameraRay.getOrigin()
         let dir = cameraRay.getDirection()
@@ -33,7 +33,6 @@ class OpticalEnvironment {
         let yUnit = xUnit.cross(dir)
         yUnit = yUnit.scalarMult(1/yUnit.magn())
         this.camera.yUnit = yUnit
-        console.log('camera with embedded units after inclusion = ', this.camera.xUnit.toString(), ', ', this.camera.yUnit.toString(), ', ', this.camera.dir.toString())
     }
     getObjectCount() {
         return this.objCount
@@ -42,20 +41,17 @@ class OpticalEnvironment {
         let ray = this.rayFromXY(x,y)
         let { leastDist, leastDistObj } = this.getLeastDistanceObject(ray)
         if (leastDist === null) {
-            return [1,0,0]  // TODO
+            return this.SKY_BLUE
         } else {
             return leastDistObj.handle(ray)
         }
-        // TODO
-        if (x*x+y*y<1) {
-            return [1,0,0]
-        } else {
-            return [0,0.5,0.5]
-        }
     }
     rayFromXY(x,y) {
+        let dirVector = this.camera.xUnit.scalarMult(x)
+            .add(this.camera.yUnit.scalarMult(y))
+            .add(this.camera.dir.scalarMult(4))
         return new Ray(this.camera.orig,
-            new Vector3D(x,1,y),  // TODO - calculate based on xUnit, yUnit, etc.
+            dirVector,
             [1,1,1]  // white
         )
     }
@@ -69,10 +65,6 @@ class OpticalEnvironment {
                 leastDistObj = obj
             }
         })
-        // return {
-        //     leastDist: leastDist,
-        //     leastDistObj: leastDistObj
-        // }
         return {
             leastDist,
             leastDistObj

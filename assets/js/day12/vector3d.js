@@ -28,6 +28,15 @@ class Vector3D {
             (this.#arr[1]<0?' - ':' + ') + Math.abs(this.#arr[1]) + 'j' + 
             (this.#arr[2]<0?' - ':' + ') + Math.abs(this.#arr[2]) + 'k'
     }
+    getX() {
+        return this.#arr[0]
+    }
+    getY() {
+        return this.#arr[1]
+    }
+    getZ() {
+        return this.#arr[2]
+    }
     add(vectorAddend) {
         let sum = []
         this.#arr.forEach((itm,idx)=>sum.push(itm+vectorAddend.#arr[idx]))
