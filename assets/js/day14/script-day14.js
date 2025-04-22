@@ -1,7 +1,9 @@
 import Vector3D from "../day12/vector3d.js"
 import GridGraph from "../day6a/gridgraph.js"
 import BiVariantGrapher from "../day6a/bivargrapher.js"
-import Ray from "./ray.js"
+import Ray from "../day13/ray.js"
+// import OpticalObject from "./optical-object.js"
+import Sphere from "./sphere.js"
 
 const IMG_PARA_ID = 'imgpara'
 let imgParagraph = null
@@ -14,7 +16,7 @@ onload = () => {
     initRandomSpheres()
     imgParagraph.innerHTML = ''
     const gridder = new GridGraph()
-    const grapher = new BiVariantGrapher(gridder,400,300,2,130,f,2)
+    const grapher = new BiVariantGrapher(gridder,800,600,1,260,f,3)
     let svgElem = grapher.drawGraph()
     imgParagraph.appendChild(svgElem)
 }
@@ -28,7 +30,7 @@ function f(x,y) {
     let leastDist = null
     let leastSphere = null
     spheres.forEach((sph,idx)=>{
-        let dist = rayDistToSphere(ray,sph)
+        let dist = sph.interceptDistance(ray)
         if (dist !== null) {
             if (dist > 0 && (leastDist == null || dist < leastDist)) {
                 leastDist = dist
@@ -39,35 +41,15 @@ function f(x,y) {
     if (leastSphere === null) {
         return [0.2,0.2,0.4]
     } else {
-        return spheres[leastSphere].color
+        return spheres[leastSphere].handle(ray)
     }
-}
-
-function rayDistToSphere(ray,sph) {
-    let C = sph.centerV.subt(ray.getOrigin())
-    let D = ray.getDirection()
-    let CD = C.dot(D)
-    let det = CD**2 - D.magnSqr()*(C.magnSqr()-sph.radius**2)
-    if (det <= 0) {
-        return null
-    }
-    let detRoot = Math.sqrt(det)
-    let k = CD - detRoot
-    if (k <= 0) {
-        return null
-    }
-    k /= D.magn()
-    return k
 }
 
 function initRandomSpheres() {
     spheres = []
-    const SPH_COUNT = 20
+    const SPH_COUNT = 12
     for (let i=0;i<SPH_COUNT;i++) {
-        let sphere = {}
-        sphere.radius = 2.5
-        sphere.centerV = randomCenter()
-        sphere.color = randomColor()
+        let sphere = new Sphere(randomCenter(),(Math.random()+1)*1.125,randomColor(),new Vector3D(1,1,-0.5))
         spheres.push(sphere)
     }
 }
