@@ -3,6 +3,7 @@ import GridGraph from "../day6a/gridgraph.js"
 import BiVariantGrapher from "../day6a/bivargrapher.js"
 import Ray from "../day13/ray.js"
 import ShadowedSphere from "../day15/shadowed-sphere.js"
+import OpticalEnvironment from "./optical-env.js"
 
 const IMG_PARA_ID = 'imgpara'
 const DURATION_TEXT_ID = 'dur'
@@ -11,17 +12,22 @@ const REPEAT_BUTTON_ID = 'rptbtn'
 let modeIsRandom = true
 
 onload = () => {
-    let imgParagraph = document.getElementById(IMG_PARA_ID)
-    let goAgainButton = document.getElementById(REPEAT_BUTTON_ID)
-    let durationElem = document.getElementById(DURATION_TEXT_ID)
-    if (!imgParagraph) {
-        throw 'no ' + IMG_PARA_ID + ' id found on page'
+    try {
+        let imgParagraph = document.getElementById(IMG_PARA_ID)
+        let goAgainButton = document.getElementById(REPEAT_BUTTON_ID)
+        let durationElem = document.getElementById(DURATION_TEXT_ID)
+        if (!imgParagraph) {
+            throw 'no ' + IMG_PARA_ID + ' id found on page'
+        }
+        if (!goAgainButton) {
+            throw 'no ' + REPEAT_BUTTON_ID + ' id found on page'
+        }
+        processImage(imgParagraph,durationElem)
+        goAgainButton.addEventListener('click',()=>processImage(imgParagraph,durationElem))
+    } catch (err) {
+        console.error('err = ', err)
+        alert ('error = ' + err.toString())  // TODO
     }
-    if (!goAgainButton) {
-        throw 'no ' + REPEAT_BUTTON_ID + ' id found on page'
-    }
-    processImage(imgParagraph,durationElem)
-    goAgainButton.addEventListener('click',()=>processImage(imgParagraph,durationElem))
 }
 
 function processImage(imgParagraph,durationElem) {
@@ -29,6 +35,7 @@ function processImage(imgParagraph,durationElem) {
     imgParagraph.innerHTML = ''
     const gridder = new GridGraph()
     const startTime = new Date()
+    initEnvironment()
     const grapher = new BiVariantGrapher(gridder,160,120,5,52,f,2)
     let svgElem = grapher.drawGraph()
     const finTime = new Date()
@@ -42,7 +49,21 @@ let spheres = []
 
 const universalOrigin = new Vector3D(0,0,-30)
 
+let optEnv = null  // TODO
+
+function initEnvironment() {
+    optEnv = new OpticalEnvironment()
+    const cameraRay = new Ray(
+        new Vector3D(0,-30,0),
+        new Vector3D(0,1,0)
+    )
+    optEnv.setCamera(cameraRay)
+}
+
 function f(x,y) {
+    if (!optEnv) {
+        throw 'optEnv not initiated'
+    }
     const ray = new Ray(universalOrigin,new Vector3D(x,y,4))
     let leastDist = null
     let leastSphere = null
