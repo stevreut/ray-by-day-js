@@ -64,7 +64,7 @@ function f(x,y) {
 }
 
 function initRandomSpheres() {
-    const SPH_COUNT = 12
+    const SPH_COUNT = 25
     spheres = []
     const lightV = new Vector3D(1,1,-0.5)
     if (modeIsRandom) {
@@ -92,8 +92,8 @@ function randomCenter() {
 
 function orderlyCenter(n) {
     n = Math.round(n)
-    n = n%12
-    let theta = (n+0.3)*Math.PI/6
+    n = n%25
+    let theta = (n+0.3)*Math.PI*2/25
     let x = Math.cos(theta)*7
     let baseSin = Math.sin(theta)*7
     let z = baseSin*12/13

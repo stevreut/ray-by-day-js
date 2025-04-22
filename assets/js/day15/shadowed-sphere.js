@@ -33,21 +33,18 @@ class ShadowedSphere extends Sphere {
     }
 
     #isInShadow(ray) {
-        return false  // TODO
+        let isShadowed = false
+        this.optObjArr.forEach(obj=>{
+            if (obj != this) {  // 
+                let dist = obj.interceptDistance(ray)
+                if (dist !== null && dist > 0) {
+                    console.log('shadowed check')
+                    isShadowed = true  // TODO - inefficient - loop still continues
+                }
+            }
+        })
+        return isShadowed
     }
-    
-    // #validObjArray(arr) {  // TODO - just delete this?
-    //     if (!Array.isArray(arr)) {
-    //         return false
-    //     }
-    //     let allValid = true
-    //     arr.forEach(itm=>{
-    //         if (!itm instanceof OpticalObject) {
-    //             allValid = false
-    //         }
-    //     })
-    //     return allValid
-    // }
 }
 
 export default ShadowedSphere
