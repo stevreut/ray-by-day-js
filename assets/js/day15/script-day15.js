@@ -65,7 +65,8 @@ function f(x,y) {
 function initRandomSpheres() {
     const SPH_COUNT = 25
     spheres = []
-    const lightV = new Vector3D(1,1,-0.5)
+    // const lightV = new Vector3D(1,1,-0.5)
+    const lightV = randomLightDirection()
     if (modeIsRandom) {
         for (let i=0;i<SPH_COUNT;i++) {
             let sphere = new ShadowedSphere(randomCenter(),(Math.random()+1)*1.125,randomColor(),lightV,spheres)
@@ -78,6 +79,20 @@ function initRandomSpheres() {
         }
     }
     modeIsRandom = !modeIsRandom
+    //
+    function randomLightDirection() {
+        let arr = []
+        for (let i=0;i<3;i++) {
+            arr.push(Math.random()*(i<2?1:0.5))
+        }
+        let vect = new Vector3D(arr)
+        if (vect.magnSqr === 0) {
+            return randomLightDirection()  // Note recursion
+        } else {
+            vect = vect.scalarMult(1/vect.magn())
+            return vect
+        }
+    }
 }
 
 function randomCenter() {
