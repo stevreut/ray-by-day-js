@@ -83,7 +83,7 @@ function initRandomSpheres() {
     function randomLightDirection() {
         let arr = []
         for (let i=0;i<3;i++) {
-            arr.push(Math.random()*(i<2?1:0.5))
+            arr.push((Math.random()-0.5)*2*(i<2?1:0.5))
         }
         let vect = new Vector3D(arr)
         if (vect.magnSqr === 0) {
