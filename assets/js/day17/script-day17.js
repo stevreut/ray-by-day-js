@@ -34,8 +34,7 @@ function processImage(imgParagraph,durationElem) {
     imgParagraph.innerHTML = ''
     const gridder = new GridGraph()
     const startTime = new Date()
-    // const grapher = new BiVariantGrapher(gridder,160,120,5,52,f,3)
-    const grapher = new BiVariantGrapher(gridder,800,600,1,260,f,2)  // TODO
+    const grapher = new BiVariantGrapher(gridder,800,600,1,260,f,3)
     let svgElem = grapher.drawGraph()
     const finTime = new Date()
     const durationMs = finTime.getTime()-startTime.getTime()
@@ -44,9 +43,9 @@ function processImage(imgParagraph,durationElem) {
     durationElem.textContent = 'Image generation duration: ' + durationSecs + ' seconds'
 }
 
-const universalOrigin = new Vector3D(9,-22.5,22.5)
+const universalOrigin = new Vector3D(10,-15,15)
 
-let optEnv = null  // TODO
+let optEnv = null
 
 function initEnvironment() {
     optEnv = new OpticalEnvironment()
@@ -56,7 +55,7 @@ function initEnvironment() {
     )
     optEnv.setCamera(cameraRay)
     initRandomSpheres()
-    optEnv.addOpticalObject(new Plane(-3))
+    optEnv.addOpticalObject(new Plane(-7.5))
 }
 
 function f(x,y) {
@@ -86,7 +85,6 @@ function initRandomSpheres() {
         })
         if (hasIntersect) {
             rejectCount++
-            console.log('rejected count = ', rejectCount)
         } else {
             const sphere = new ReflectiveSphere(ctrV,radius,randomColor(),lightV)
             optEnv.addOpticalObject(sphere)
