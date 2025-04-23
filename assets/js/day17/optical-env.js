@@ -22,16 +22,13 @@ class OpticalEnvironment {
         }
         this.camera = {}
         const org = cameraRay.getOrigin()
-        let dir = cameraRay.getDirection()
-        dir = dir.scalarMult(1/dir.magn())
+        let dir = cameraRay.getDirection().normalized()
         this.camera.orig = org
         this.camera.dir = dir
         const zVect = new Vector3D(0,0,1)
-        let xUnit = this.camera.dir.cross(zVect)
-        xUnit = xUnit.scalarMult(1/xUnit.magn())
+        const xUnit = this.camera.dir.cross(zVect).normalized()
         this.camera.xUnit = xUnit
-        let yUnit = xUnit.cross(dir)
-        yUnit = yUnit.scalarMult(1/yUnit.magn())
+        const yUnit = xUnit.cross(dir).normalized()
         this.camera.yUnit = yUnit
     }
     getObjectCount() {

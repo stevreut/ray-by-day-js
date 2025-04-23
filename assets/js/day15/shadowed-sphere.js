@@ -19,8 +19,7 @@ class ShadowedSphere extends Sphere {
             let newColor = this.color.map(prim=>{return prim*0.2 /*TODO*/})
             return newColor
         } else {
-            let normVect = surfVect.subt(this.center)
-            normVect = normVect.scalarMult(1/normVect.magn())
+            let normVect = surfVect.subt(this.center).normalized()
             let dot = this.lighting.dot(normVect)
             dot = Math.max(0,dot)
             dot = (dot*0.8)+0.2  // TODO

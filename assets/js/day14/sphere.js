@@ -9,7 +9,7 @@ class Sphere extends OpticalObject {
         this.radius = radius
         this.#radiusSqr = radius**2 
         this.color = color
-        this.lighting = lightingVector.scalarMult(1/lightingVector.magn())
+        this.lighting = lightingVector.normalized()
     }
 
     interceptDistance(ray) {
@@ -23,8 +23,7 @@ class Sphere extends OpticalObject {
         }
         const dir = ray.getDirection()
         let surfVect = dir.scalarMult(dist/dir.magn()).add(ray.getOrigin())
-        let normVect = surfVect.subt(this.center)
-        normVect = normVect.scalarMult(1/normVect.magn())
+        let normVect = surfVect.subt(this.center).normalized()
         let dot = this.lighting.dot(normVect)
         dot = Math.max(0,dot)
         dot = (dot*0.8)+0.2  // TODO

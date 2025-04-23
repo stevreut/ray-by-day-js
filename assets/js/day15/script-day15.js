@@ -89,7 +89,7 @@ function initRandomSpheres() {
         if (vect.magnSqr === 0) {
             return randomLightDirection()  // Note recursion
         } else {
-            vect = vect.scalarMult(1/vect.magn())
+            vect = vect.normalized()
             return vect
         }
     }

@@ -82,6 +82,16 @@ class Vector3D {
         }
         return this.#magnVal
     }
+    normalized() {
+        // Returns a unit-length vector having the same direction
+        // ... unless 'this' is a null vector, in which case 'this'
+        // is returned unaltered
+        if (this.magnSqr() === 0) {
+            return this
+        } else {
+            return this.scalarMult(1/this.magn())
+        }
+    }
     cosAngleBetween(vec) {
         if (this.magn() === 0 || vec.magn() === 0) {
             // Not technically correct, but, for ray-tracing
