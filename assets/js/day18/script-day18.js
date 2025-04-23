@@ -45,7 +45,7 @@ function processImage(imgParagraph,durationElem,cameraOrigin) {
     optEnv.setCamera(cameraRay)
     const gridder = new GridGraph()
     const startTime = new Date()
-    const grapher = new BiVariantGrapher(gridder,400,400,1,100,f,2)
+    const grapher = new BiVariantGrapher(gridder,600,600,1,150,f,2)
     let svgElem = grapher.drawGraph()
     const finTime = new Date()
     const durationMs = finTime.getTime()-startTime.getTime()
