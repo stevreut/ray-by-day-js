@@ -21,20 +21,31 @@ onload = () => {
         if (!goAgainButton) {
             throw 'no ' + REPEAT_BUTTON_ID + ' id found on page'
         }
-        processImage(imgParagraph,durationElem)
-        goAgainButton.addEventListener('click',()=>processImage(imgParagraph,durationElem))
+        initEnvironment(imgParagraph)
+        processImage(imgParagraph,durationElem,cameraRightOrigin)
+        processImage(imgParagraph,durationElem,cameraLeftOrigin)
+        goAgainButton.addEventListener('click',()=>{
+            initEnvironment(imgParagraph)
+            processImage(imgParagraph,durationElem,cameraRightOrigin)
+            processImage(imgParagraph,durationElem,cameraLeftOrigin)
+        })
     } catch (err) {
         console.error('err = ', err)
         alert ('error = ' + err.toString())  // TODO
     }
 }
 
-function processImage(imgParagraph,durationElem) {
-    initEnvironment()
+function processImage(imgParagraph,durationElem,cameraOrigin) {
+    // initEnvironment()
     // imgParagraph.innerHTML = ''
+    const cameraRay = new Ray(
+        cameraOrigin,
+        cameraOrigin.scalarMult(-1)
+    )
+    optEnv.setCamera(cameraRay)
     const gridder = new GridGraph()
     const startTime = new Date()
-    const grapher = new BiVariantGrapher(gridder,400,400,1,130,f,2)
+    const grapher = new BiVariantGrapher(gridder,400,400,1,100,f,2)
     let svgElem = grapher.drawGraph()
     const finTime = new Date()
     const durationMs = finTime.getTime()-startTime.getTime()
@@ -43,22 +54,22 @@ function processImage(imgParagraph,durationElem) {
     durationElem.textContent = 'Image generation duration: ' + durationSecs + ' seconds'
 }
 
-const cameraLeftOrigin = new Vector3D(10,-15,15)
+const cameraRightOrigin = new Vector3D(10,-15,15)
+const cameraLeftOrigin = new Vector3D(8,-16.15,15)
 
 let optEnv = null
 
-function initEnvironment() {
+function initEnvironment(imgParagraph) {
+    imgParagraph.innerHTML = ''
     optEnv = new OpticalEnvironment()
-    const cameraRay = new Ray(
-        cameraLeftOrigin,
-        cameraLeftOrigin.scalarMult(-1)
-    )
-    optEnv.setCamera(cameraRay)
     initRandomSpheres()
     optEnv.addOpticalObject(new Plane(-7.5))
 }
 
 function f(x,y) {
+    if (x*x+y*y >= 3.25) {
+        return [1,1,1]
+    }
     if (!optEnv) {
         throw 'optEnv not initiated'
     }
