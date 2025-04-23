@@ -1,11 +1,10 @@
-import Vector3D from "../day12/vector3d.js"
+import Vector3D from "./vector3d.js"
 import GridGraph from "../day6a/gridgraph.js"
 import BiVariantGrapher from "../day6a/bivargrapher.js"
-import Ray from "../day13/ray.js"
-// import ShadowedSphere from "../day15/shadowed-sphere.js"
+import Ray from "./ray.js"
 import OpticalEnvironment from "./optical-env.js"
-import Sphere from "../day14/sphere.js"
-import Plane from "./plane.js"
+import ReflectiveSphere from "./reflective-sphere.js"
+import Plane from "../day16/plane.js"
 
 const IMG_PARA_ID = 'imgpara'
 const DURATION_TEXT_ID = 'dur'
@@ -35,8 +34,8 @@ function processImage(imgParagraph,durationElem) {
     imgParagraph.innerHTML = ''
     const gridder = new GridGraph()
     const startTime = new Date()
-    // const grapher = new BiVariantGrapher(gridder,160,120,5,52,f,3)
-    const grapher = new BiVariantGrapher(gridder,800,600,1,260,f,2)
+    const grapher = new BiVariantGrapher(gridder,160,120,5,52,f,3)
+    // const grapher = new BiVariantGrapher(gridder,800,600,1,260,f,2)  // TODO
     let svgElem = grapher.drawGraph()
     const finTime = new Date()
     const durationMs = finTime.getTime()-startTime.getTime()
@@ -72,7 +71,7 @@ function initRandomSpheres() {
     const SPH_COUNT = 25
     const lightV = randomLightDirection()
     for (let i=0;i<SPH_COUNT;i++) {
-        let sphere = new Sphere(randomCenter(),(Math.random()+1)*1.125,randomColor(),lightV)
+        let sphere = new ReflectiveSphere(randomCenter(),(Math.random()+1)*1.125,randomColor(),lightV)
         optEnv.addOpticalObject(sphere)
     }
     //
