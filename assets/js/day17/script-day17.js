@@ -70,11 +70,33 @@ function f(x,y) {
 function initRandomSpheres() {
     const SPH_COUNT = 25
     const lightV = randomLightDirection()
-    for (let i=0;i<SPH_COUNT;i++) {
-        let sphere = new ReflectiveSphere(randomCenter(),(Math.random()+1)*1.125,randomColor(),lightV)
-        optEnv.addOpticalObject(sphere)
+    let sphereCount = 0
+    let rejectCount = 0
+    const sphTempArray = []
+    while (sphereCount < SPH_COUNT) {
+        const ctrV = randomCenter()
+        const radius = (Math.random()+1)*1.125
+        let hasIntersect = false
+        sphTempArray.forEach(tmpSph=>{
+            if (!hasIntersect) {
+                if (tmpSph.center.subt(ctrV).magnSqr()<=(radius+tmpSph.radius)**2) {
+                    hasIntersect = true
+                }
+            }
+        })
+        if (hasIntersect) {
+            rejectCount++
+            console.log('rejected count = ', rejectCount)
+        } else {
+            const sphere = new ReflectiveSphere(ctrV,radius,randomColor(),lightV)
+            optEnv.addOpticalObject(sphere)
+            sphTempArray.push({
+                center: ctrV,
+                radius: radius 
+            })
+            sphereCount++
+        }
     }
-    //
     function randomLightDirection() {
         let arr = []
         for (let i=0;i<3;i++) {

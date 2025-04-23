@@ -44,7 +44,7 @@ class OpticalEnvironment {
         while (!done) {
             let { leastDist, leastDistObj } = this.getLeastDistanceObject(ray)
             if (leastDist === null) {
-                return this.SKY_BLUE
+                return this.SKY_BLUE.map((prim,idx)=>prim*ray.color[idx])
             } else {
                 count++
                 if (count > 10) {
