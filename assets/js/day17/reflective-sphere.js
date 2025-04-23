@@ -21,12 +21,6 @@ class ReflectiveSphere extends Sphere {
         })
         let resultantRay = new Ray(surfVect,resultantDir,resultantColor)
         return resultantRay
-        // normVect = normVect.scalarMult(1/normVect.magn())
-        // let dot = this.lighting.dot(normVect)
-        // dot = Math.max(0,dot)
-        // dot = (dot*0.8)+0.2  // TODO
-        // let newColor = this.color.map(prim=>{return prim*dot})
-        // return newColor
     }
 
 }

@@ -4,7 +4,7 @@ import BiVariantGrapher from "../day6a/bivargrapher.js"
 import Ray from "./ray.js"
 import OpticalEnvironment from "./optical-env.js"
 import ReflectiveSphere from "./reflective-sphere.js"
-import Plane from "../day16/plane.js"
+import Plane from "./plane.js"
 
 const IMG_PARA_ID = 'imgpara'
 const DURATION_TEXT_ID = 'dur'
