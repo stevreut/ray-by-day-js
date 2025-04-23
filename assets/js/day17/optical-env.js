@@ -39,11 +39,28 @@ class OpticalEnvironment {
     }
     colorFromXY(x,y) {
         let ray = this.rayFromXY(x,y)
-        let { leastDist, leastDistObj } = this.getLeastDistanceObject(ray)
-        if (leastDist === null) {
-            return this.SKY_BLUE
-        } else {
-            return leastDistObj.handle(ray)
+        let done = false
+        let count = 0
+        while (!done) {
+            let { leastDist, leastDistObj } = this.getLeastDistanceObject(ray)
+            if (leastDist === null) {
+                return this.SKY_BLUE
+            } else {
+                count++
+                if (count > 10) {
+                    done = true
+                }
+                let result = leastDistObj.handle(ray)
+                if (result instanceof Ray) {
+                    if (done) {
+                        return result.color
+                    } else {
+                        ray = result  // ... and redo
+                    }
+                } else {
+                    return result
+                }
+            }
         }
     }
     rayFromXY(x,y) {
