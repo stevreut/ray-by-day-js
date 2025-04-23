@@ -7,14 +7,12 @@ import ReflectiveSphere from "../day17/reflective-sphere.js"
 import Plane from "../day17/plane.js"
 
 const IMG_PARA_ID = 'imgpara'
-const DURATION_TEXT_ID = 'dur'
 const REPEAT_BUTTON_ID = 'rptbtn'
 
 onload = () => {
     try {
         let imgParagraph = document.getElementById(IMG_PARA_ID)
         let goAgainButton = document.getElementById(REPEAT_BUTTON_ID)
-        let durationElem = document.getElementById(DURATION_TEXT_ID)
         if (!imgParagraph) {
             throw 'no ' + IMG_PARA_ID + ' id found on page'
         }
@@ -22,12 +20,12 @@ onload = () => {
             throw 'no ' + REPEAT_BUTTON_ID + ' id found on page'
         }
         initEnvironment(imgParagraph)
-        processImage(imgParagraph,durationElem,cameraRightOrigin)
-        processImage(imgParagraph,durationElem,cameraLeftOrigin)
+        processImage(imgParagraph,cameraRightOrigin)
+        processImage(imgParagraph,cameraLeftOrigin)
         goAgainButton.addEventListener('click',()=>{
             initEnvironment(imgParagraph)
-            processImage(imgParagraph,durationElem,cameraRightOrigin)
-            processImage(imgParagraph,durationElem,cameraLeftOrigin)
+            processImage(imgParagraph,cameraRightOrigin)
+            processImage(imgParagraph,cameraLeftOrigin)
         })
     } catch (err) {
         console.error('err = ', err)
@@ -35,23 +33,16 @@ onload = () => {
     }
 }
 
-function processImage(imgParagraph,durationElem,cameraOrigin) {
-    // initEnvironment()
-    // imgParagraph.innerHTML = ''
+function processImage(imgParagraph,cameraOrigin) {
     const cameraRay = new Ray(
         cameraOrigin,
         cameraOrigin.scalarMult(-1)
     )
     optEnv.setCamera(cameraRay)
     const gridder = new GridGraph()
-    const startTime = new Date()
     const grapher = new BiVariantGrapher(gridder,600,600,1,150,f,2)
     let svgElem = grapher.drawGraph()
-    const finTime = new Date()
-    const durationMs = finTime.getTime()-startTime.getTime()
-    const durationSecs = durationMs/1000
     imgParagraph.appendChild(svgElem)
-    durationElem.textContent = 'Image generation duration: ' + durationSecs + ' seconds'
 }
 
 const cameraRightOrigin = new Vector3D(10,-15,15)
