@@ -22,8 +22,20 @@ onload = () => {
         if (!goAgainButton) {
             throw 'no ' + REPEAT_BUTTON_ID + ' id found on page'
         }
-        processImage(imgParagraph,durationElem)
-        goAgainButton.addEventListener('click',()=>processImage(imgParagraph,durationElem))
+        setTimeout(()=>{
+            processImage(imgParagraph,durationElem)
+            goAgainButton.disabled = false
+            goAgainButton.classList.remove('btndisabled')
+        },0)
+        goAgainButton.addEventListener('click',()=>{
+            goAgainButton.disabled = true
+            goAgainButton.classList.add('btndisabled')
+            setTimeout(()=>{
+                processImage(imgParagraph,durationElem)
+                goAgainButton.disabled = false
+                goAgainButton.classList.remove('btndisabled')
+            },0)
+        })
     } catch (err) {
         console.error('err = ', err)
         alert ('error = ' + err.toString())  // TODO
@@ -36,13 +48,13 @@ function processImage(imgParagraph,durationElem) {
     // const gridder = new GridGraph()
     const gridder = new CanvasGridder()
     const startTime = new Date()
-    // const grapher = new BiVariantGrapher(gridder,800,600,1,260,f,3)  // TODO - restore after testing
-    const grapher = new BiVariantGrapher(gridder,160,120,6,52,f,2)
-    let svgElem = grapher.drawGraph()
+    const grapher = new BiVariantGrapher(gridder,1024,1024*3/4,1,260,f,3)  // TODO - restore after testing
+    // const grapher = new BiVariantGrapher(gridder,160,120,6,52,f,2)
+    let canvasElem = grapher.drawGraph()
     const finTime = new Date()
     const durationMs = finTime.getTime()-startTime.getTime()
     const durationSecs = durationMs/1000
-    imgParagraph.appendChild(svgElem)
+    imgParagraph.appendChild(canvasElem)
     durationElem.textContent = 'Image generation duration: ' + durationSecs + ' seconds'
 }
 

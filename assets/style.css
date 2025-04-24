@@ -125,3 +125,7 @@ em {
     color: #0087ff;
     font-size: 110%;
 }
+.btndisabled, .btndisabled:hover {
+    border: none;
+    background-color: #eee;
+}
