@@ -28,6 +28,7 @@ class Sphere extends OpticalObject {
         dot = Math.max(0,dot)
         dot = (dot*0.8)+0.2  // TODO
         let newColor = this.color.map(prim=>{return prim*dot})
+        newColor = newColor.map((prim,idx)=>prim*ray.color[idx])
         return newColor
     }
 
