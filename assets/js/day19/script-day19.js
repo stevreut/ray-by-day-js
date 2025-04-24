@@ -6,6 +6,7 @@ import OpticalEnvironment from "./optical-env.js"
 import ReflectiveSphere from "./reflective-sphere.js"
 import Plane from "./plane.js"
 import CanvasGridder from "./canvas-gridder.js"
+import Sphere from "./sphere.js"
 
 const IMG_PARA_ID = 'imgpara'
 const DURATION_TEXT_ID = 'dur'
@@ -91,7 +92,7 @@ function f(x,y) {
 function initRandomSpheres() {
     // const SPH_COUNT = 25
     const SPH_COUNT = 8
-    const lightV = randomLightDirection()
+    const lightV = new Vector3D(0,0,1)
     let sphereCount = 0
     let rejectCount = 0
     const sphTempArray = []
@@ -109,27 +110,14 @@ function initRandomSpheres() {
         if (hasIntersect) {
             rejectCount++
         } else {
-            const sphere = new ReflectiveSphere(ctrV,radius,randomColor(),lightV)
+            const sphere = (sphereCount%3!=0?new ReflectiveSphere(ctrV,radius,randomColor(),lightV):
+                new Sphere(ctrV,radius,randomColor(),lightV))
             optEnv.addOpticalObject(sphere)
             sphTempArray.push({
                 center: ctrV,
                 radius: radius 
             })
             sphereCount++
-        }
-    }
-    function randomLightDirection() {
-        let arr = []
-        for (let i=0;i<3;i++) {
-            arr.push((Math.random()-0.5)*2)
-        }
-        arr[2]+=0.75
-        let vect = new Vector3D(arr)
-        if (vect.magnSqr() === 0) {
-            return randomLightDirection()  // Note recursion
-        } else {
-            vect = vect.normalized()
-            return vect
         }
     }
 }
