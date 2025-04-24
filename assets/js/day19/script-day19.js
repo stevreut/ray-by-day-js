@@ -11,6 +11,8 @@ const IMG_PARA_ID = 'imgpara'
 const DURATION_TEXT_ID = 'dur'
 const REPEAT_BUTTON_ID = 'rptbtn'
 
+let buttonEnabled = false
+
 onload = () => {
     try {
         let imgParagraph = document.getElementById(IMG_PARA_ID)
@@ -26,15 +28,20 @@ onload = () => {
             processImage(imgParagraph,durationElem)
             goAgainButton.disabled = false
             goAgainButton.classList.remove('btndisabled')
+            buttonEnabled = true
         },0)
         goAgainButton.addEventListener('click',()=>{
-            goAgainButton.disabled = true
-            goAgainButton.classList.add('btndisabled')
-            setTimeout(()=>{
-                processImage(imgParagraph,durationElem)
-                goAgainButton.disabled = false
-                goAgainButton.classList.remove('btndisabled')
-            },0)
+            if (buttonEnabled) {
+                buttonEnabled = false
+                goAgainButton.disabled = true
+                goAgainButton.classList.add('btndisabled')
+                setTimeout(()=>{
+                    processImage(imgParagraph,durationElem)
+                    goAgainButton.disabled = false
+                    goAgainButton.classList.remove('btndisabled')
+                    buttonEnabled = true
+                },0)
+            }
         })
     } catch (err) {
         console.error('err = ', err)
