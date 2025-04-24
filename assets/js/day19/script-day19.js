@@ -5,6 +5,7 @@ import Ray from "./ray.js"
 import OpticalEnvironment from "./optical-env.js"
 import ReflectiveSphere from "./reflective-sphere.js"
 import Plane from "./plane.js"
+import CanvasGridder from "./canvas-gridder.js"
 
 const IMG_PARA_ID = 'imgpara'
 const DURATION_TEXT_ID = 'dur'
@@ -32,7 +33,8 @@ onload = () => {
 function processImage(imgParagraph,durationElem) {
     initEnvironment()
     imgParagraph.innerHTML = ''
-    const gridder = new GridGraph()
+    // const gridder = new GridGraph()
+    const gridder = new CanvasGridder()
     const startTime = new Date()
     // const grapher = new BiVariantGrapher(gridder,800,600,1,260,f,3)  // TODO - restore after testing
     const grapher = new BiVariantGrapher(gridder,160,120,6,52,f,2)
