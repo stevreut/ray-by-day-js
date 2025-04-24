@@ -78,7 +78,7 @@ function initEnvironment() {
     )
     optEnv.setCamera(cameraRay)
     initRandomSpheres()
-    optEnv.addOpticalObject(new Plane(-7.5))
+    optEnv.addOpticalObject(new Plane(-7.5,15))
 }
 
 function f(x,y) {

@@ -69,7 +69,7 @@ input:read-only {
     padding: 2cm;
     margin: 2cm 0cm;
 }
-.imgdiv img, .imgdiv svg, .imgdiv table {
+.imgdiv img, .imgdiv svg, .imgdiv canvas, .imgdiv table {
     box-shadow: 0 10px 50px #000;
     margin-bottom: 1.5cm;
 }
