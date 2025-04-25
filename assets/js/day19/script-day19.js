@@ -116,7 +116,7 @@ function initRandomSpheres() {
             } else if (sphereCount < 5) {
                 sphere = new Sphere(ctrV,radius,randomColor(),lightV)
             } else {
-                sphere = new RefractiveSphere(ctrV,radius,randomColor(),1.333)
+                sphere = new RefractiveSphere(ctrV,radius,randomColor(),1.5)
             }
             optEnv.addOpticalObject(sphere)
             sphTempArray.push({
