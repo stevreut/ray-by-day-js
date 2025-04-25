@@ -126,6 +126,19 @@ class Vector3D {
         const resultant = this.subt(normComp.scalarMult(2))
         return resultant
     }
+    refract(normalVector,indexOfRefraction) {
+        const normComp = this.componentInDirectionOf(normalVector)
+        const otherComp = this.subt(normComp)
+        const incidentSine = otherComp.magn()/this.magn()
+        const resultantSine = incidentSine/indexOfRefraction
+        if (Math.abs(resultantSine) > 1) {
+            return this.reflect(normalVector)
+        }
+        const resultantCosine = Math.sqrt(1-resultantSine**2)
+        const resultantVector = normComp.normalized().scalarMult(resultantCosine)
+            .add(otherComp.normalized().scalarMult(resultantSine))
+        return resultantVector
+    }
 }
 
 export default Vector3D
