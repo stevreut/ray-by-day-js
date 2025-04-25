@@ -1,9 +1,9 @@
 import Vector3D from "./vector3d.js"
-import GridGraph from "./gridgraph.js"
 import BiVariantGrapher from "./bivargrapher.js"
 import Ray from "./ray.js"
 import OpticalEnvironment from "./optical-env.js"
 import ReflectiveSphere from "./reflective-sphere.js"
+import RefractiveSphere from "./refractive-sphere.js"
 import Plane from "./plane.js"
 import CanvasGridder from "./canvas-gridder.js"
 import Sphere from "./sphere.js"
@@ -110,8 +110,15 @@ function initRandomSpheres() {
         if (hasIntersect) {
             rejectCount++
         } else {
-            const sphere = (sphereCount%3!=0?new ReflectiveSphere(ctrV,radius,randomColor(),lightV):
-                new Sphere(ctrV,radius,randomColor(),lightV))
+            let sphere = null
+            let mod = sphereCount%5
+            if (mod < 3) {
+                sphere = new ReflectiveSphere(ctrV,radius,randomColor(),lightV)
+            } else if (mod === 4) {
+                sphere = new Sphere(ctrV,radius,randomColor(),lightV)
+            } else {
+                sphere = new RefractiveSphere(ctrV,radius,randomColor(),1.2)
+            }
             optEnv.addOpticalObject(sphere)
             sphTempArray.push({
                 center: ctrV,
