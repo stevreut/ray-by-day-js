@@ -24,7 +24,7 @@ class RefractiveSphere extends Sphere {
         //     return prim*ray.color[idx]
         // })
         let resultantColor = this.color  // TODO - temporary
-        let newOrigin = surfVect.add(resultantDir.normalized().scalarMult(1E-4))  // TODO
+        let newOrigin = surfVect.add(resultantDir.normalized().scalarMult(1E-9))  // TODO
         let resultantRay = new Ray(newOrigin,resultantDir,resultantColor)
         return resultantRay
     }
