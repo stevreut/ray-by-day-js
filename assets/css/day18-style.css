@@ -1,3 +1,12 @@
+#stereoframe {
+    border-radius: 10px;
+}
+#stereoframe, #stereoframe>h3, #stereoframe>div, #stereoframe>p {
+    background-color: #555;
+}
+#stereoframe>h3 {
+    color: #aaa;
+}
 #stereoframe svg {
     box-shadow: none;
 }

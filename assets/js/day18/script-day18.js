@@ -83,7 +83,7 @@ function initEnvironment(imgParagraph) {
 
 function f(x,y) {
     if (x*x+y*y >= 3.25) {
-        return [1,1,1]
+        return [1/3,1/3,1/3]
     }
     if (!optEnv) {
         throw 'optEnv not initiated'
