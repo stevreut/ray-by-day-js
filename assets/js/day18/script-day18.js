@@ -8,16 +8,28 @@ import Plane from "../day17/plane.js"
 
 const IMG_PARA_ID = 'imgpara'
 const REPEAT_BUTTON_ID = 'rptbtn'
+const SWAP_BUTTON_ID = 'swapview'
+const SWAP_TXT_ID = 'stereomode'
+
+let isCrossEyed = true
 
 onload = () => {
     try {
         let imgParagraph = document.getElementById(IMG_PARA_ID)
         let goAgainButton = document.getElementById(REPEAT_BUTTON_ID)
+        let swapButton = document.getElementById(SWAP_BUTTON_ID)
+        let viewModeTxt = document.getElementById(SWAP_TXT_ID)
         if (!imgParagraph) {
             throw 'no ' + IMG_PARA_ID + ' id found on page'
         }
         if (!goAgainButton) {
             throw 'no ' + REPEAT_BUTTON_ID + ' id found on page'
+        }
+        if (!swapButton) {
+            throw 'no ' + SWAP_BUTTON_ID + ' id found on page'
+        }
+        if (!viewModeTxt) {
+            throw 'no ' + SWAP_TXT_ID + ' id found'
         }
         initEnvironment(imgParagraph)
         processImage(imgParagraph,cameraRightOrigin)
@@ -26,6 +38,18 @@ onload = () => {
             initEnvironment(imgParagraph)
             processImage(imgParagraph,cameraRightOrigin)
             processImage(imgParagraph,cameraLeftOrigin)
+        })
+        swapButton.addEventListener('click',()=>{
+            isCrossEyed = !isCrossEyed
+            if (isCrossEyed) {
+                imgParagraph.classList.remove('parallel')
+                imgParagraph.classList.add('crosseyed')
+                viewModeTxt.value = 'cross-eyed'
+            } else {
+                imgParagraph.classList.remove('crosseyed')
+                imgParagraph.classList.add('parallel')
+                viewModeTxt.value = 'parallel'
+            }
         })
     } catch (err) {
         console.error('err = ', err)

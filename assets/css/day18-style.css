@@ -1,3 +1,13 @@
 #stereoframe svg {
     box-shadow: none;
 }
+#imgpara {
+    display: flex;
+    justify-content: space-around;
+}
+.crosseyed {
+    flex-direction: row;
+}
+.parallel {
+    flex-direction: row-reverse;
+}
