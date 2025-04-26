@@ -1,12 +1,12 @@
 import Vector3D from "../day19/vector3d.js"
 import BiVariantGrapher from "../day19/bivargrapher.js"
 import Ray from "../day19/ray.js"
-import OpticalEnvironment from "../day19/optical-env.js"
 import ReflectiveSphere from "../day19/reflective-sphere.js"
 import Plane from "../day19/plane.js"
 import CanvasGridder from "../day19/canvas-gridder.js"
 import Sphere from "../day19/sphere.js"
 
+import OpticalEnvironment from "./optical-env.js"
 import RefractiveSphere from "./refractive-sphere.js"
 
 
