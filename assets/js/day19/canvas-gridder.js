@@ -21,11 +21,8 @@ class CanvasGridder extends Gridder {
         if (!this.canvElem) {
             throw 'canvas element could not be created'
         }
-        console.log('width, height = ', this.width, this.height)
         this.canvElem.width = this.width
         this.canvElem.height = this.height
-        // this.canvElem.setAttribute('width',this.width)
-        // this.canvElem.setAttribute('height',this.height)
         this.ctx = this.canvElem.getContext('2d')  // ctx = context
         if (!this.ctx) {
             throw 'unable to obtain 2D context for canvas element'

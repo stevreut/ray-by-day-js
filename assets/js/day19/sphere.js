@@ -17,30 +17,30 @@ class Sphere extends OpticalObject {
     }
 
     handle(ray) {
-        let dist = this.rayDistToSphere(ray)  // TODO - how to eliminate duplicate calculation?
+        const dist = this.rayDistToSphere(ray)  // TODO - how to eliminate duplicate calculation?
         if (dist === null || dist <= 0) {
             return ray.color
         }
         const dir = ray.getDirection()
-        let surfVect = dir.scalarMult(dist/dir.magn()).add(ray.getOrigin())
-        let normVect = surfVect.subt(this.center).normalized()
-        let dot = this.lighting.dot(normVect)
-        dot = Math.max(0,dot)
-        dot = (dot*0.8)+0.2  // TODO
-        let newColor = this.color.map(prim=>{return prim*dot})
+        const surfaceVect = dir.scalarMult(dist/dir.magn()).add(ray.getOrigin())
+        const normVect = surfaceVect.subt(this.center).normalized()
+        let dotProd = this.lighting.dot(normVect)
+        dotProd = Math.max(0,dotProd)
+        dotProd = (dotProd*0.8)+0.2
+        let newColor = this.color.map(prim=>{return prim*dotProd})
         newColor = newColor.map((prim,idx)=>prim*ray.color[idx])
         return newColor
     }
 
     rayDistToSphere(ray) {
-        let C = this.center.subt(ray.getOrigin())
-        let D = ray.getDirection()
-        let CD = C.dot(D)
-        let det = CD**2 - D.magnSqr()*(C.magnSqr()-this.#radiusSqr)
+        const C = this.center.subt(ray.getOrigin())
+        const D = ray.getDirection()
+        const CD = C.dot(D)
+        const det = CD**2 - D.magnSqr()*(C.magnSqr()-this.#radiusSqr)
         if (det <= 0) {
             return null
         }
-        let detRoot = Math.sqrt(det)
+        const detRoot = Math.sqrt(det)
         let k = CD - detRoot
         if (k <= 0) {
             return null
