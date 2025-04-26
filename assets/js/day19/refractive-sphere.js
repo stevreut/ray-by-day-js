@@ -11,7 +11,9 @@ class RefractiveSphere extends Sphere {
         this.refractiveIndex = refractiveIndex
         this.r2 = radius*radius
     }
+
     // interceptDistance() inherits from Sphere without alteration
+
     handle(ray) {
         let dist = this.rayDistToSphere(ray)  // TODO - how to eliminate duplicate calculation?
         if (dist === null || dist <= 0) {
@@ -20,17 +22,17 @@ class RefractiveSphere extends Sphere {
         const dir = ray.getDirection()
         let surfVect = dir.scalarMult(dist/dir.magn()).add(ray.getOrigin())
         let normVect = surfVect.subt(this.center)
-        let resultantDir = dir.refract(normVect,this.refractiveIndex)
+        let resultantDir1 = dir.refract(normVect,this.refractiveIndex)
         // let resultantColor = this.color.map((prim,idx)=>{
         //     return prim*ray.color[idx]
         // })
         let resultantColor = ray.color  // TODO - temporary
-        // let newOrigin = surfVect.add(resultantDir.normalized().scalarMult(1E-9))  // TODO
+        // let newOrigin = surfVect.add(resultantDir1.normalized().scalarMult(1E-9))  // TODO
         let newOrigin = surfVect
-        let resultantRay1 = new Ray(newOrigin,resultantDir,resultantColor)
+        let resultantRay1 = new Ray(newOrigin,resultantDir1,resultantColor)
         let dist2 = this.#raySecondDistToSphere(resultantRay1)
         let surfVect2 = newOrigin.add(resultantRay1.getDirection().normalized().scalarMult(dist2))
-        let resultantDir2 = surfVect2.refract(surfVect2.subt(this.center),1/this.refractiveIndex)
+        let resultantDir2 = resultantDir1.refract(surfVect2.subt(this.center),1/this.refractiveIndex)
         let resultantRay2 = new Ray(
             surfVect2.add(resultantDir2.normalized().scalarMult(1e-9)),
             resultantDir2,resultantColor    
