@@ -9,6 +9,7 @@ class OpticalEnvironment {
         this.camera = null
     }
     SKY_BLUE = [135/255,206/255,235/255]
+    MAX_ITERATIONS = 11
     addOpticalObject(obj) {
         if (!obj instanceof OpticalObject) {
             throw 'attempted to add non-OpticalObject'
@@ -37,14 +38,16 @@ class OpticalEnvironment {
     colorFromXY(x,y) {
         let ray = this.rayFromXY(x,y)
         let done = false
-        let count = 0
+        if (!ray.count) {
+            ray.count = 1
+        }
         while (!done) {
             let { leastDist, leastDistObj } = this.getLeastDistanceObject(ray)
             if (leastDist === null) {
                 return this.SKY_BLUE.map((prim,idx)=>prim*ray.color[idx])
             } else {
-                count++
-                if (count > 10) {
+                ray.count++
+                if (ray.count > this.MAX_ITERATIONS) {
                     done = true
                 }
                 let result = leastDistObj.handle(ray)
