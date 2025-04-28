@@ -38,31 +38,79 @@ class OpticalEnvironment {
     }
     colorFromXY(x,y) {
         let ray = this.rayFromXY(x,y)
-        let done = false
         if (!ray.count) {
             ray.count = 1
         }
-        while (!done) {
-            let { leastDist, leastDistObj } = this.getLeastDistanceObject(ray)
-            if (leastDist === null) {
-                return this.SKY_BLUE.map((prim,idx)=>prim*ray.color[idx])
-            } else {
-                ray.count++
-                if (ray.count > this.MAX_ITERATIONS) {
-                    done = true
-                }
-                let result = leastDistObj.handle(ray)
-                if (result instanceof Ray) {
-                    if (done) {
-                        return result.color
-                    } else {
-                        ray = result  // ... and redo
-                    }
-                } else {
-                    return result
-                }
-            }
+        // return this.colorFromRay(ray)
+        let color = this.colorFromRay(ray)
+        if (!this.isColor(color)) {
+            console.error('non-color: ', color, ' coords = ', x, y)
         }
+        return color
+    }
+    colorFromRay(ray) {
+        if (ray.count >= this.MAX_ITERATIONS) {
+            // To prevent infinite recursion
+            return ray.color
+        }
+        let { leastDist, leastDistObj } = this.getLeastDistanceObject(ray)
+        if (leastDist === null) {
+            return this.SKY_BLUE.map((prim,idx)=>prim*ray.color[idx])
+        }
+        let result = leastDistObj.handle(ray)
+        let rayArray = []
+        if (result instanceof Ray) {
+            rayArray.push(result)
+        } else if (Array.isArray(result)) {
+            if (this.isColor(result)) {
+                return result  // color - expected return type of this method
+            } else if (this.isRayArray(result)) {
+                rayArray = result
+            } else {
+                console.error('invalid return result ', result, ' ', typeof result)
+                throw 'invalid handle result - neither Ray nor expected Array type'
+            }
+            if (!Array.isArray(rayArray) || rayArray.length < 1) {
+                console.error('rayArray = ', rayArray, typeof rayArray)
+                throw 'unexpected rayArray type'
+            }
+        } else {
+            console.error('bad result type = ', typeof result, ' result = ', result)
+            throw 'unexpected result type - neither array nor Ray'
+        }
+        let sumColor = [0,0,0]
+        rayArray.forEach(subRay=>{
+            subRay.count = ray.count+1  // IMPORTANT!
+            const subColor = this.colorFromRay(subRay)  // NOTE: RECURSIVE!!
+            for (let i=0;i<3;i++) {
+                sumColor[i] += subColor[i]
+            }
+        })
+        return sumColor
+    }
+    isColor(arr) {
+        if (!Array.isArray(arr) ||
+            arr.length !== 3) {
+                return false
+        }
+        arr.forEach(itm=>{
+            if (typeof itm !== 'number') {
+                return false
+            }
+        })
+        return true
+    }
+    isRayArray(arr) {
+        if (!Array.isArray(arr) || 
+            arr.length < 1) {
+                return false
+        }
+        arr.forEach(itm=>{
+            if (! itm instanceof Ray) {
+                return false
+            }
+        })
+        return true
     }
     rayFromXY(x,y) {
         let dirVector = this.camera.xUnit.scalarMult(x)
