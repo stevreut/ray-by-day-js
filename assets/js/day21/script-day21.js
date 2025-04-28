@@ -2,21 +2,23 @@ import Vector3D from "../day19/vector3d.js"
 import BiVariantGrapher from "../day19/bivargrapher.js"
 import Ray from "../day19/ray.js"
 import ReflectiveSphere from "../day19/reflective-sphere.js"
-import Plane from "../day19/plane.js"
 import CanvasGridder from "../day19/canvas-gridder.js"
 import Sphere from "../day19/sphere.js"
 import RefractiveSphere from "../day20/refractive-sphere.js"
-import OpticalEnvironment from "../day21/optical-env.js"
+
+import Sky from "./sky.js"
+import OpticalEnvironment from "./optical-env.js"
+import Plane from "./plane.js"
 
 
 const IMG_PARA_ID = 'imgpara'
 const DURATION_TEXT_ID = 'dur'
 const REPEAT_BUTTON_ID = 'rptbtn'
 
-const ACTUAL_WIDTH = 1024
+const ACTUAL_WIDTH = 800
 const ACTUAL_HEIGHT = Math.round(ACTUAL_WIDTH*0.75)
-const PIXEL_SIZE = 1
-const ANTI_ALIAS = 5
+const PIXEL_SIZE = 2
+const ANTI_ALIAS = 4
 
 let buttonEnabled = false
 
@@ -77,7 +79,7 @@ function processImage(imgParagraph,durationElem) {
     durationElem.textContent = 'Image generation duration: ' + durationSecs + ' seconds'
 }
 
-const universalOrigin = new Vector3D(10,-15,3)
+const universalOrigin = new Vector3D(10,-15,4)
 
 let optEnv = null
 
@@ -89,7 +91,8 @@ function initEnvironment() {
     )
     optEnv.setCamera(cameraRay)
     initRandomSpheres()
-    optEnv.addOpticalObject(new Plane(-7.5,15))
+    optEnv.addOpticalObject(new Plane(-7.5,35,2.5))
+    optEnv.addOpticalObject(new Sky())
 }
 
 function f(x,y) {
