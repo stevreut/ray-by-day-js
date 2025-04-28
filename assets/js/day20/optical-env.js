@@ -8,7 +8,8 @@ class OpticalEnvironment {
         this.objCount = 0
         this.camera = null
     }
-    SKY_BLUE = [135/255,206/255,235/255]
+    SKY_BLUE = [0.53125,0.8125,0.90625]
+    WHITE = [1,1,1]
     MAX_ITERATIONS = 11
     addOpticalObject(obj) {
         if (!obj instanceof OpticalObject) {
@@ -69,7 +70,7 @@ class OpticalEnvironment {
             .add(this.camera.dir.scalarMult(4))
         return new Ray(this.camera.orig,
             dirVector,
-            [1,1,1]  // white
+            this.WHITE
         )
     }
     getLeastDistanceObject(ray) {
