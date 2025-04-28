@@ -15,6 +15,7 @@ class RefractiveSphere extends Sphere {
     // interceptDistance() inherits from Sphere without alteration
 
     handle(ray) {
+        const GLOSS = 0.2
         const dist1 = this.rayDistToSphere(ray)  // TODO - how to eliminate duplicate calculation?
         if (dist1 === null || dist1 <= 0) {
             return ray.color
@@ -23,7 +24,10 @@ class RefractiveSphere extends Sphere {
         const surfaceVector1 = dir.scalarMult(dist1/dir.magn()).add(ray.getOrigin())
         const normVect = surfaceVector1.subt(this.center)
         const resultantDir1 = dir.refract(normVect,this.refractiveIndex)
-        const resultantColor = ray.color  // TODO - temporary
+        const reflectedDir = dir.reflect(normVect)
+        const reflectedColor = ray.color.map(prim=>prim*GLOSS)  // TODO
+        const reflectedRay = new Ray(surfaceVector1,reflectedDir,reflectedColor)
+        const resultantColor = ray.color.map(prim=>prim*(1-GLOSS))  // TODO - temporary
         const resultantRay1 = new Ray(surfaceVector1,resultantDir1,resultantColor)
         const dist2 = this.#raySecondDistToSphere(resultantRay1)
         const surfaceVector2 = surfaceVector1.add(resultantRay1.getDirection().normalized().scalarMult(dist2))
@@ -32,7 +36,7 @@ class RefractiveSphere extends Sphere {
             surfaceVector2.add(resultantDir2.normalized().scalarMult(1e-9)),
             resultantDir2,resultantColor    
         )
-        return resultantRay2
+        return [resultantRay2,reflectedRay]
     }
 
     #raySecondDistToSphere(ray) {
