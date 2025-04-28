@@ -50,7 +50,9 @@ class Plane extends OpticalObject {
         let y = Math.floor((org.getY()+mult*dir.getY())/this.squareSize)
         let isWhite = ((x+y)%2 === 0)
         const intense = this.lightSpreadSqr/(x*x+y*y+this.lightSpreadSqr)
-        return (isWhite?[intense*ray.color[0],intense*ray.color[1],intense*ray.color[2]]:[0.3*intense*ray.color[0],0.3*intense*ray.color[1],0.3*intense*ray.color[2]])
+        let colorMultiplier = (isWhite?0.15+intense*0.55:0.15) 
+        let returnedColor = ray.color.map(prim=>prim*colorMultiplier)
+        return returnedColor
     }
 }
 

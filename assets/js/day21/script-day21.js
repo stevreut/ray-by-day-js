@@ -15,10 +15,10 @@ const IMG_PARA_ID = 'imgpara'
 const DURATION_TEXT_ID = 'dur'
 const REPEAT_BUTTON_ID = 'rptbtn'
 
-const ACTUAL_WIDTH = 800
+const ACTUAL_WIDTH = 1024
 const ACTUAL_HEIGHT = Math.round(ACTUAL_WIDTH*0.75)
-const PIXEL_SIZE = 2
-const ANTI_ALIAS = 4
+const PIXEL_SIZE = 1
+const ANTI_ALIAS = 5
 
 let buttonEnabled = false
 
@@ -79,7 +79,7 @@ function processImage(imgParagraph,durationElem) {
     durationElem.textContent = 'Image generation duration: ' + durationSecs + ' seconds'
 }
 
-const universalOrigin = new Vector3D(10,-15,4)
+const universalOrigin = new Vector3D(10,-15,6)
 
 let optEnv = null
 
@@ -91,7 +91,7 @@ function initEnvironment() {
     )
     optEnv.setCamera(cameraRay)
     initRandomSpheres()
-    optEnv.addOpticalObject(new Plane(-7.5,35,2.5))
+    optEnv.addOpticalObject(new Plane(-7.5,25,2))
     optEnv.addOpticalObject(new Sky())
 }
 
