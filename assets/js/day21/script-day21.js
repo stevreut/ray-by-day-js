@@ -4,11 +4,11 @@ import Ray from "../day19/ray.js"
 import ReflectiveSphere from "../day19/reflective-sphere.js"
 import CanvasGridder from "../day19/canvas-gridder.js"
 import Sphere from "../day19/sphere.js"
-import RefractiveSphere from "../day20/refractive-sphere.js"
 
 import Sky from "./sky.js"
 import OpticalEnvironment from "./optical-env.js"
 import Plane from "./plane.js"
+import RefractiveSphere from "./refractive-sphere.js"
 
 
 const IMG_PARA_ID = 'imgpara'
