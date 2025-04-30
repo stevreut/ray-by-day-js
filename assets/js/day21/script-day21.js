@@ -89,7 +89,7 @@ function initEnvironment() {
         universalOrigin,
         universalOrigin.scalarMult(-1)
     )
-    optEnv.setCamera(cameraRay)
+    optEnv.setCamera(cameraRay,0.5,universalOrigin.magn())
     initRandomSpheres()
     optEnv.addOpticalObject(new Plane(-7.5,25,2))
     optEnv.addOpticalObject(new Sky())
@@ -125,7 +125,7 @@ function initRandomSpheres() {
         } else {
             let sphere = null
             if (sphereCount < 4) {
-                sphere = new ReflectiveSphere(ctrV,radius,randomColor())
+                sphere = new ReflectiveSphere(ctrV,radius,randomColor(0.5,0.7))
             } else if (sphereCount < 5) {
                 sphere = new Sphere(ctrV,radius,randomColor(),lightV)
             } else {
@@ -150,10 +150,10 @@ function randomCenter() {
     return ctr
 }
 
-function randomColor() {
+function randomColor(lo=0.47,hi=0.94) {
     let arr = []
     for (let i=0;i<3;i++) {
-        arr.push(Math.round(Math.random()*120+120)/255)
+        arr.push(Math.random()*(hi-lo)+lo)
     }
     return arr
 }
