@@ -3,19 +3,20 @@ import Vector3D from "../day19/vector3d.js"
 import Ray from "../day19/ray.js"
 
 class RefractiveSphere extends Sphere {
-    constructor(center,radius,color,refractiveIndex) {
+    constructor(center,radius,color,refractiveIndex,gloss=0.125) {
         super(center,radius,color,new Vector3D(1,1,1))  // TODO - need to get lightV out of Sphere class
         if (typeof refractiveIndex !== 'number' || refractiveIndex <= 0) {
             throw 'invalid refractiveIndex'
         }
         this.refractiveIndex = refractiveIndex
         this.r2 = radius*radius
+        this.gloss = gloss
+        this.glossComplement = 1-this.gloss
     }
 
     // interceptDistance() inherits from Sphere without alteration
 
     handle(ray) {
-        const GLOSS = 0.2
         const dist1 = this.rayDistToSphere(ray)  // TODO - how to eliminate duplicate calculation?
         if (dist1 === null || dist1 <= 0) {
             return ray.color
@@ -25,9 +26,9 @@ class RefractiveSphere extends Sphere {
         const normVect = surfaceVector1.subt(this.center)
         const resultantDir1 = dir.refract(normVect,this.refractiveIndex)
         const reflectedDir = dir.reflect(normVect)
-        const reflectedColor = ray.color.map(prim=>prim*GLOSS)  // TODO
+        const reflectedColor = ray.color.map(prim=>prim*this.gloss)
         const reflectedRay = new Ray(surfaceVector1,reflectedDir,reflectedColor)
-        let resultantColor = ray.color.map(prim=>prim*(1-GLOSS))  // TODO - temporary
+        let resultantColor = ray.color.map(prim=>prim*this.glossComplement)
         const resultantRay1 = new Ray(surfaceVector1,resultantDir1,resultantColor)
         const dist2 = this.#raySecondDistToSphere(resultantRay1)
         resultantColor = resultantColor.map((prim,idx)=>prim*this.color[idx]**(dist2*0.3))

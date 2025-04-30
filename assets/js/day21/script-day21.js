@@ -18,7 +18,7 @@ const REPEAT_BUTTON_ID = 'rptbtn'
 const ACTUAL_WIDTH = 1024
 const ACTUAL_HEIGHT = Math.round(ACTUAL_WIDTH*0.75)
 const PIXEL_SIZE = 1
-const ANTI_ALIAS = 5
+const ANTI_ALIAS = 4
 
 let buttonEnabled = false
 

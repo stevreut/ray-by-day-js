@@ -23,7 +23,7 @@ class RefractiveSphere extends Sphere {
         const surfaceVector1 = dir.scalarMult(dist1/dir.magn()).add(ray.getOrigin())
         const normVect = surfaceVector1.subt(this.center)
         const resultantDir1 = dir.refract(normVect,this.refractiveIndex)
-        const resultantColor = ray.color  // TODO - temporary
+        const resultantColor = ray.color
         const resultantRay1 = new Ray(surfaceVector1,resultantDir1,resultantColor)
         const dist2 = this.#raySecondDistToSphere(resultantRay1)
         const surfaceVector2 = surfaceVector1.add(resultantRay1.getDirection().normalized().scalarMult(dist2))
