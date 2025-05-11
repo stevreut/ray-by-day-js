@@ -93,9 +93,9 @@ function initEnvironment() {
     optEnv.setCamera(cameraRay,0,universalOrigin.magn())
     initRandomSpheres()
     optEnv.addOpticalObject(new Triangle(
-        new Vector3D(50,1,1),
-        new Vector3D(50,20,1),
-        new Vector3D(40,32,30)
+        new Vector3D(-3,20,2),
+        new Vector3D(3,20,2),
+        new Vector3D(0,20,6*Math.sqrt(3)/2+2)
     ))
     optEnv.addOpticalObject(new Plane(-7.5,25,2))
     optEnv.addOpticalObject(new Sky())

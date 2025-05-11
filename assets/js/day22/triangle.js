@@ -29,19 +29,50 @@ class Triangle extends OpticalObject {
         console.log('len = ', this.planeNormalV.magn())
     }
     interceptDistance(ray) {
-        const v1 = ray.getOrigin().componentInDirectionOf(this.planeNormalV)
-        const v2 = this.planeNormalV.subt(v1)
-        const v3 = ray.getDirection()
-        const dot = v2.dot(v3)
-        // console.log('dot = ', dot)
-        if (dot <= 0) {
-            // console.log('null at null')
-            return null
+        // const v1 = ray.getOrigin().componentInDirectionOf(this.planeNormalV)
+        // const v2 = this.planeNormalV.subt(v1)
+        // const v3 = ray.getDirection()
+        // const dot = v2.dot(v3)
+        // // console.log('dot = ', dot)
+        // if (dot <= 0) {
+        //     // console.log('null at null')
+        //     return null
+        // }
+        // const v4 = v3.componentInDirectionOf(this.planeNormalV)
+        // const m = v4.magn()
+        // const dist = 30
+        // return dist
+
+        const result = rayIntersectsTriangle(ray.getOrigin(), ray.getDirection(),
+             ...this.verts /*epsilon defaulted*/)
+        return result 
+
+        // function rayIntersectsTriangle() provided by ChatGPT on
+        // May 11, 2025 and used herein without alteration (so far)
+        function rayIntersectsTriangle(rayOrigin, rayDirection, v0, v1, v2, epsilon = 1e-6) {
+            const e1 = v1.subt(v0); // altered
+            const e2 = v2.subt(v0); // altered
+
+            const pvec = rayDirection.cross(e2);
+            const det = e1.dot(pvec);
+
+            if (Math.abs(det) < epsilon) return null;
+
+            const invDet = 1.0 / det;
+            const tvec = rayOrigin.subt(v0); // altered
+            const u = tvec.dot(pvec) * invDet;
+
+            if (u < 0 || u > 1) return null;
+
+            const qvec = tvec.cross(e1);
+            const v = rayDirection.dot(qvec) * invDet;
+
+            if (v < 0 || u + v > 1) return null;
+
+            const t = e2.dot(qvec) * invDet;
+
+            return t > epsilon ? t : null;
         }
-        const v4 = v3.componentInDirectionOf(this.planeNormalV)
-        const m = v4.magn()
-        const dist = 30
-        return dist
     }
     handle(ray) {
         return [0.9,0.7,0.4]  // TODO
