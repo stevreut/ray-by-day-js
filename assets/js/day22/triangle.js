@@ -4,6 +4,7 @@ import Vector3D from "../day19/vector3d.js";
 class Triangle extends OpticalObject {
     constructor (vertex1, vertex2, vertex3) {
         super()
+        this.color = [0.9,0.7,0.4]  // TODO
         this.verts = [vertex1,vertex2,vertex3]
         if (this.verts.length !== 3) {
             throw 'invalid argument count'
@@ -75,7 +76,9 @@ class Triangle extends OpticalObject {
         }
     }
     handle(ray) {
-        return [0.9,0.7,0.4]  // TODO
+        const rColor = ray.color
+        const color = this.color.map((prim,idx)=>prim*rColor[idx])
+        return color
     }
 }
 
