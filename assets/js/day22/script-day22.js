@@ -20,6 +20,8 @@ const ACTUAL_HEIGHT = Math.round(ACTUAL_WIDTH*0.75)
 const PIXEL_SIZE = 1  // TODO
 const ANTI_ALIAS = 3  // TODO
 
+const MAGNIFY_OCTAHEDRON = 5
+
 let buttonEnabled = false
 
 onload = () => {
@@ -79,7 +81,7 @@ function processImage(imgParagraph,durationElem) {
     durationElem.textContent = 'Image generation duration: ' + durationSecs + ' seconds'
 }
 
-const universalOrigin = new Vector3D(10,-15,6)
+const universalOrigin = new Vector3D(3,-17.8,6)
 
 let optEnv = null
 
@@ -89,28 +91,102 @@ function initEnvironment() {
         universalOrigin,
         universalOrigin.scalarMult(-1)
     )
-    optEnv.setCamera(cameraRay,0.5,universalOrigin.magn())
+    optEnv.setCamera(cameraRay,0.3,universalOrigin.magn())
     initRandomSpheres()
-    addTriangles(optEnv)
+    addTrianglesForOctahedron(optEnv)
     optEnv.addOpticalObject(new Plane(-7.5,25,2))
     optEnv.addOpticalObject(new Sky())
 }
 
-function addTriangles(env) {
-    for (let i=-11;i<10;i+=2.25) {
+function addTrianglesForOctahedron(env) {
+    const triSet = [
+        {
+            verts: [
+                [0,0,1],
+                [0,1,0],
+                [1,0,0],
+            ]
+        },
+        {
+            verts: [
+                [0,0,1],
+                [0,1,0],
+                [-1,0,0],
+            ]
+        },
+        {
+            verts: [
+                [0,0,1],
+                [0,-1,0],
+                [1,0,0],
+            ]
+        },
+        {
+            verts: [
+                [0,0,1],
+                [0,-1,0],
+                [-1,0,0],
+            ]
+        },
+        {
+            verts: [
+                [0,0,-1],
+                [0,1,0],
+                [1,0,0],
+            ]
+        },
+        {
+            verts: [
+                [0,0,-1],
+                [0,1,0],
+                [-1,0,0],
+            ]
+        },
+        {
+            verts: [
+                [0,0,-1],
+                [0,-1,0],
+                [1,0,0],
+            ]
+        },
+        {
+            verts: [
+                [0,0,-1],
+                [0,-1,0],
+                [-1,0,0],
+            ]
+        },
+    ]
+    triSet.forEach(tri=>{
+        let { verts } = tri
+        if (!verts) {
+            throw 'no vertex ? (161)'
+        }
+        let vects = []
+        verts.forEach(vert=>{
+            vects.push((new Vector3D(vert[0], vert[1], vert[2])).scalarMult(MAGNIFY_OCTAHEDRON))
+        })
+        if (vects.length !== 3) {
+            throw 'unexpected vertex count'
+        }
         env.addOpticalObject(new Triangle(
-            new Vector3D(i+1,0,1),
-            new Vector3D(i-1,0,1),
-            new Vector3D(i-1,0,-1),
-            randomColor()
+            ...vects, randomColor()
         ))
-        env.addOpticalObject(new Triangle(
-            new Vector3D(i+1,0,1),
-            new Vector3D(i-1,0,-1),
-            new Vector3D(i+1,0,-1),
-            randomColor()
-        ))
-    }
+    })
+    // for (let i=-11;i<10;i+=2.25) {
+    //     env.addOpticalObject(new Triangle(
+    //         new Vector3D(i+1,0,1),
+    //         new Vector3D(i-1,0,1),
+    //         new Vector3D(i-1,0,-1),
+    //         randomColor()
+    //     ))
+    //     env.addOpticalObject(new Triangle(
+    //         new Vector3D(i+1,0,1),
+    //         new Vector3D(i-1,0,-1),
+    //         new Vector3D(i+1,0,-1),
+    //         randomColor()
+    //     ))
+    // }
 }
 
 function f(x,y) {
