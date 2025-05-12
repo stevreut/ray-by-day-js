@@ -44,7 +44,10 @@ class Triangle extends OpticalObject {
         // const dist = 30
         // return dist
 
-        const result = rayIntersectsTriangle(ray.getOrigin(), ray.getDirection(),
+        // Note the normalization of the ray's direction vector.  This, it was
+        // discovered at 11:00 p.m. EDT 5/11/2025, is required by function
+        // rayIntersectsTriange().
+        const result = rayIntersectsTriangle(ray.getOrigin(), ray.getDirection().normalized(),
              ...this.verts /*epsilon defaulted*/)
         return result 
 
