@@ -15,9 +15,9 @@ const IMG_PARA_ID = 'imgpara'
 const DURATION_TEXT_ID = 'dur'
 const REPEAT_BUTTON_ID = 'rptbtn'
 
-const ACTUAL_WIDTH = 400 // TODO
+const ACTUAL_WIDTH = 1024 // TODO
 const ACTUAL_HEIGHT = Math.round(ACTUAL_WIDTH*0.75)
-const PIXEL_SIZE = 2  // TODO
+const PIXEL_SIZE = 1  // TODO
 const ANTI_ALIAS = 2  // TODO
 
 let buttonEnabled = false
@@ -79,8 +79,8 @@ function processImage(imgParagraph,durationElem) {
     durationElem.textContent = 'Image generation duration: ' + durationSecs + ' seconds'
 }
 
-// const universalOrigin = new Vector3D(10,-15,6)
-const universalOrigin = new Vector3D(0,-10,0)
+// const universalOrigin = new Vector3D(0,-10,0.5)
+const universalOrigin = new Vector3D(10,-15,6)
 
 let optEnv = null
 
@@ -93,12 +93,21 @@ function initEnvironment() {
     optEnv.setCamera(cameraRay,0,universalOrigin.magn())
     initRandomSpheres()
     optEnv.addOpticalObject(new Triangle(
-        new Vector3D(-3,20,2),
-        new Vector3D(3,20,2),
-        new Vector3D(0,20,6*Math.sqrt(3)/2+2)
+        new Vector3D(1,0,1),
+        new Vector3D(-1,0,1),
+        new Vector3D(-1,0,-1),
+        [0.9,0.7,0.4]
+    ))
+    optEnv.addOpticalObject(new Triangle(
+        new Vector3D(1,0,1),
+        new Vector3D(-1,0,-1),
+        new Vector3D(1,0,-1),
+        [1,0,0]
     ))
     optEnv.addOpticalObject(new Plane(-7.5,25,2))
     optEnv.addOpticalObject(new Sky())
+    // optEnv.addOpticalObject(new RefractiveSphere(universalOrigin.scalarMult(0.8).add(new Vector3D(0.3,0,0)),1.5,[0.3,0.3,0.3],1.01,null))
+    // optEnv.addOpticalObject(new RefractiveSphere(new Vector3D(0,-1.1,0),1,[0.8,0.2,0.2],1.5))
 }
 
 function f(x,y) {
@@ -110,7 +119,7 @@ function f(x,y) {
 }
 
 function initRandomSpheres() {
-    const SPH_COUNT = 4
+    const SPH_COUNT = 10
     const lightV = new Vector3D(0,0,1)
     let sphereCount = 0
     let rejectCount = 0
@@ -126,16 +135,19 @@ function initRandomSpheres() {
                 }
             }
         })
+        if (Math.abs(ctrV.getY())<(radius+0.5)) {
+            hasIntersect = true
+        }
         if (hasIntersect) {
             rejectCount++
         } else {
             let sphere = null
-            if (sphereCount < 1) {
+            if (sphereCount < 4) {
                 sphere = new ReflectiveSphere(ctrV,radius,randomColor(0.5,0.7))
-            } else if (sphereCount < 2) {
+            } else if (sphereCount < 4) {
                 sphere = new Sphere(ctrV,radius,randomColor(),lightV)
             } else {
-                sphere = new RefractiveSphere(ctrV,radius,randomColor(),1.5)
+                sphere = new RefractiveSphere(ctrV,radius,randomColor(),1.005)
             }
             optEnv.addOpticalObject(sphere)
             sphTempArray.push({
