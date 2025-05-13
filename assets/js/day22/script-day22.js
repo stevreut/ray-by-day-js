@@ -7,9 +7,8 @@ import Sky from "../day21/sky.js"
 import OpticalEnvironment from "../day21/optical-env.js"
 import Plane from "../day21/plane.js"
 import RefractiveSphere from "../day21/refractive-sphere.js"
-import Triangle from "./triangle.js"
-import ReflectiveTriangle from "./reflective-triangle.js"
 
+import ReflectiveTriangle from "./reflective-triangle.js"
 import BiVariantGrapher from "./bivargrapher.js"
 
 
@@ -25,9 +24,7 @@ const ANTI_ALIAS = 3  // TODO
 
 const MAGNIFY_OCTAHEDRON = 5
 
-// let statusElem = null
 let statBarElem = null
-let statBarParaElem = null
 
 let buttonEnabled = false
 
@@ -230,7 +227,7 @@ function initRandomSpheres() {
                 }
             }
         })
-        if (Math.abs(ctrV.getY())<(radius+0.5)) {
+        if (ctrV.magn()-radius<MAGNIFY_OCTAHEDRON) {
             hasIntersect = true
         }
         if (hasIntersect) {
