@@ -8,6 +8,7 @@ import OpticalEnvironment from "../day21/optical-env.js"
 import Plane from "../day21/plane.js"
 import RefractiveSphere from "../day21/refractive-sphere.js"
 import Triangle from "./triangle.js"
+import ReflectiveTriangle from "./reflective-triangle.js"
 
 import BiVariantGrapher from "./bivargrapher.js"
 
@@ -180,6 +181,7 @@ function addTrianglesForOctahedron(env) {
             ]
         },
     ]
+    const triangleColor = randomColor(0.4,0.6)
     triSet.forEach(tri=>{
         let { verts } = tri
         if (!verts) {
@@ -192,8 +194,8 @@ function addTrianglesForOctahedron(env) {
         if (vects.length !== 3) {
             throw 'unexpected vertex count'
         }
-        env.addOpticalObject(new Triangle(
-            ...vects, randomColor(0.4,0.6)
+        env.addOpticalObject(new ReflectiveTriangle(
+            ...vects, triangleColor
         ))
     })
 }
