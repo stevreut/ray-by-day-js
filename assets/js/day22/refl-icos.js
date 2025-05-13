@@ -1,6 +1,7 @@
-import OpticalObject from "../day19/optical-object";
-import ReflectiveTriangle from "./reflective-triangle";
-import Sphere from "../day19/sphere.js"
+import OpticalObject from "../day19/optical-object.js";
+import ReflectiveTriangle from "./reflective-triangle.js";
+import Sphere from "../day19/sphere.js";
+import Vector3D from "../day19/vector3d.js";
 
 class ReflectiveIcosahedron extends OpticalObject {
     constructor(center,radius,color) {
@@ -9,15 +10,16 @@ class ReflectiveIcosahedron extends OpticalObject {
         this.center = center
         this.radius = radius
         this.color = color
-        this.sphere = new Sphere(this.center,this.radius,[0,0,0],null)
-        this.#initTriangles()
+        this.sphere = new Sphere(this.center,this.radius,[0,0,0],new Vector3D(0,0,1))
+        this.initTriangles()
     }
-    #initTriangles() {
+    initTriangles() {
         const A1 = Math.acos(Math.sqrt(0.2))
         const A2 = Math.PI-A1
         const A3 = Math.PI/5
         const A4 = A3*2
         this.verts = []
+        const self = this
         pv(0,0)
         for (let i=0;i<5;i++) {
             pv(A1,i*A4)
@@ -52,23 +54,24 @@ class ReflectiveIcosahedron extends OpticalObject {
         picos(10,6,11)
         //
         function pv(lat,lon) {
-            const z = Math.cos(lat)
-            const c = Math.sin(lat)
+            const z = Math.cos(lat)*self.radius
+            const c = Math.sin(lat)*self.radius
             const x = c*Math.cos(lon)
             const y = c*Math.sin(lon)
             const vect = new Vector3D(x,y,z)
-            this.verts.push(vect)
+            self.verts.push(vect)
         }
         function picos(a,b,c) {
             const tri = new ReflectiveTriangle(
-                this.verts[a],
-                this.verts[b],
-                this.verts[c],
-                this.color
+                self.verts[a],
+                self.verts[b],
+                self.verts[c],
+                self.color
             )
-            this.triangles.push(tri)
+            self.triangles.push(tri)
         }
     }
+    
     interceptDistance(ray) {
         // TODO - ultimately perhaps a nested OpticalEnvironment?
         if (this.sphere.interceptDistance(ray) === null) {

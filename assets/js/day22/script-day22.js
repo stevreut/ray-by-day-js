@@ -9,6 +9,7 @@ import Plane from "../day21/plane.js"
 import RefractiveSphere from "../day21/refractive-sphere.js"
 
 import ReflectiveTriangle from "./reflective-triangle.js"
+import ReflectiveIcosahedron from "./refl-icos.js"
 import BiVariantGrapher from "./bivargrapher.js"
 
 
@@ -102,7 +103,7 @@ function statusReporterFunction(frac) {
     }
 }
 
-const universalOrigin = new Vector3D(3,-17.8,6)
+const universalOrigin = new Vector3D(5,22,6)
 
 let optEnv = null
 
@@ -114,7 +115,12 @@ function initEnvironment() {
     )
     optEnv.setCamera(cameraRay,0.3,universalOrigin.magn())
     initRandomSpheres()
-    addTrianglesForOctahedron(optEnv)
+    // addTrianglesForOctahedron(optEnv)
+    optEnv.addOpticalObject(new ReflectiveIcosahedron(
+        new Vector3D(0 /*MAGNIFY_OCTAHEDRON+1.5*/,0,0),
+        2.4,
+        [0.9,0.8,0.8]
+    ))
     optEnv.addOpticalObject(new Plane(-7.5,25,2))
     optEnv.addOpticalObject(new Sky())
 }
