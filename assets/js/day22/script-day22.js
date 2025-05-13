@@ -13,7 +13,7 @@ import BiVariantGrapher from "./bivargrapher.js"
 
 
 const IMG_PARA_ID = 'imgpara'
-const STATUS_ID = 'statuspara'
+const STATUS_BAR_ID = 'statbar'
 const DURATION_TEXT_ID = 'dur'
 const REPEAT_BUTTON_ID = 'rptbtn'
 
@@ -24,7 +24,9 @@ const ANTI_ALIAS = 3  // TODO
 
 const MAGNIFY_OCTAHEDRON = 5
 
-let statusElem = null
+// let statusElem = null
+let statBarElem = null
+let statBarParaElem = null
 
 let buttonEnabled = false
 
@@ -33,12 +35,12 @@ onload = () => {
         let imgParagraph = document.getElementById(IMG_PARA_ID)
         let goAgainButton = document.getElementById(REPEAT_BUTTON_ID)
         let durationElem = document.getElementById(DURATION_TEXT_ID)
-        statusElem = document.getElementById(STATUS_ID)
+        statBarElem = document.getElementById(STATUS_BAR_ID)
         if (!imgParagraph) {
             throw 'no ' + IMG_PARA_ID + ' id found on page'
         }
-        if (!statusElem) {
-            throw 'no ' + STATUS_ID + ' id found on page'
+        if (!statBarElem) {
+            throw 'no ' + STATUS_BAR_ID + ' id found on page'
         }
         if (!goAgainButton) {
             throw 'no ' + REPEAT_BUTTON_ID + ' id found on page'
@@ -71,6 +73,7 @@ onload = () => {
 async function processImage(imgParagraph,durationElem) {
     initEnvironment()
     imgParagraph.innerHTML = ''
+    durationElem.textContent = ''
     const gridder = new CanvasGridder()
     const startTime = new Date()
     const grapher = new BiVariantGrapher(
@@ -96,7 +99,8 @@ function statusReporterFunction(frac) {
     } else {
         let p = Math.round(Math.max(0,Math.min(1,frac))*1000)/10
         p = p.toFixed(1)
-        statusElem.textContent = 'Status: ' + p + '% complete'
+        statBarElem.textContent = 'Status: ' + p + '% complete'
+        statBarElem.style.width = (p + '%')
     }
 }
 
@@ -192,20 +196,6 @@ function addTrianglesForOctahedron(env) {
             ...vects, randomColor(0.4,0.6)
         ))
     })
-    // for (let i=-11;i<10;i+=2.25) {
-    //     env.addOpticalObject(new Triangle(
-    //         new Vector3D(i+1,0,1),
-    //         new Vector3D(i-1,0,1),
-    //         new Vector3D(i-1,0,-1),
-    //         randomColor()
-    //     ))
-    //     env.addOpticalObject(new Triangle(
-    //         new Vector3D(i+1,0,1),
-    //         new Vector3D(i-1,0,-1),
-    //         new Vector3D(i+1,0,-1),
-    //         randomColor()
-    //     ))
-    // }
 }
 
 function f(x,y) {

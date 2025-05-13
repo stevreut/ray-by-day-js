@@ -129,3 +129,20 @@ em {
     border: none;
     background-color: #eee;
 }
+.progress-container {
+    width: 100%;
+    background: #eee;
+    border: 1px solid #ccc;
+    height: 40px;
+    margin: 10px 0px 15px 0px;
+}
+.progress-bar {
+    height: 100%;
+    background: #cdd5e9;
+    font-family: 'Courier New', Courier, monospace;
+    color: #5c7ea0;
+    width: 0%;
+    text-align: left;
+}
+
+
