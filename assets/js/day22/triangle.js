@@ -25,9 +25,9 @@ class Triangle extends OpticalObject {
             throw 'triangle verteces are colinear'
         }
         this.planeNormalV = vertex1.componentInDirectionOf(this.planeNormalV)
-        console.log('plane norml (2) = ' + this.planeNormalV)  // TODO
-        console.log('plane norm normed = ' + this.planeNormalV.normalized())
-        console.log('len = ', this.planeNormalV.magn())
+        // console.log('plane norml (2) = ' + this.planeNormalV)  // TODO
+        // console.log('plane norm normed = ' + this.planeNormalV.normalized())
+        // console.log('len = ', this.planeNormalV.magn())
     }
     interceptDistance(ray) {
         // const v1 = ray.getOrigin().componentInDirectionOf(this.planeNormalV)

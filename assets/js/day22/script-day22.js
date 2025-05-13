@@ -1,5 +1,4 @@
 import Vector3D from "../day19/vector3d.js"
-import BiVariantGrapher from "../day19/bivargrapher.js"
 import Ray from "../day19/ray.js"
 import ReflectiveSphere from "../day19/reflective-sphere.js"
 import CanvasGridder from "../day19/canvas-gridder.js"
@@ -10,8 +9,11 @@ import Plane from "../day21/plane.js"
 import RefractiveSphere from "../day21/refractive-sphere.js"
 import Triangle from "./triangle.js"
 
+import BiVariantGrapher from "./bivargrapher.js"
+
 
 const IMG_PARA_ID = 'imgpara'
+const STATUS_ID = 'statuspara'
 const DURATION_TEXT_ID = 'dur'
 const REPEAT_BUTTON_ID = 'rptbtn'
 
@@ -22,6 +24,8 @@ const ANTI_ALIAS = 3  // TODO
 
 const MAGNIFY_OCTAHEDRON = 5
 
+let statusElem = null
+
 let buttonEnabled = false
 
 onload = () => {
@@ -29,8 +33,12 @@ onload = () => {
         let imgParagraph = document.getElementById(IMG_PARA_ID)
         let goAgainButton = document.getElementById(REPEAT_BUTTON_ID)
         let durationElem = document.getElementById(DURATION_TEXT_ID)
+        statusElem = document.getElementById(STATUS_ID)
         if (!imgParagraph) {
             throw 'no ' + IMG_PARA_ID + ' id found on page'
+        }
+        if (!statusElem) {
+            throw 'no ' + STATUS_ID + ' id found on page'
         }
         if (!goAgainButton) {
             throw 'no ' + REPEAT_BUTTON_ID + ' id found on page'
@@ -71,7 +79,8 @@ function processImage(imgParagraph,durationElem) {
         Math.floor(ACTUAL_HEIGHT/PIXEL_SIZE),
         PIXEL_SIZE, 
         ACTUAL_HEIGHT/PIXEL_SIZE*0.33,
-        f,ANTI_ALIAS
+        f,ANTI_ALIAS,
+        statusReporterFunction
     )
     let canvasElem = grapher.drawGraph()
     const finTime = new Date()
@@ -79,6 +88,16 @@ function processImage(imgParagraph,durationElem) {
     const durationSecs = durationMs/1000
     imgParagraph.appendChild(canvasElem)
     durationElem.textContent = 'Image generation duration: ' + durationSecs + ' seconds'
+}
+
+function statusReporterFunction(frac) {
+    if (typeof frac !== 'number') {
+        console.log('status is non-number')
+    } else {
+        const x = Math.round(Math.max(0,Math.min(1,frac))*1000)/10
+        console.log('completion fraction = ' + x + '%')
+        statusElem.textContent = 'Status: ' + x + '% complete'
+    }
 }
 
 const universalOrigin = new Vector3D(3,-17.8,6)
@@ -170,7 +189,7 @@ function addTrianglesForOctahedron(env) {
             throw 'unexpected vertex count'
         }
         env.addOpticalObject(new Triangle(
-            ...vects, randomColor()
+            ...vects, randomColor(0.4,0.6)
         ))
     })
     // for (let i=-11;i<10;i+=2.25) {
