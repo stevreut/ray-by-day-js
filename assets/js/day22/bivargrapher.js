@@ -55,7 +55,7 @@ class BiVariantGrapher {
             this.colorFunction = bvf
         }
     }
-    drawGraph() {
+    async drawGraph() {
         if (!this.colorFunction) {
             throw 'function not defined'
         }
@@ -90,6 +90,7 @@ class BiVariantGrapher {
             }
             if (this.usingReporter) {
                 this.statReporter(j/this.height)
+                await new Promise(requestAnimationFrame);
             }
         }
         if (this.usingReporter) {

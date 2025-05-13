@@ -68,7 +68,7 @@ onload = () => {
     }
 }
 
-function processImage(imgParagraph,durationElem) {
+async function processImage(imgParagraph,durationElem) {
     initEnvironment()
     imgParagraph.innerHTML = ''
     const gridder = new CanvasGridder()
@@ -82,7 +82,7 @@ function processImage(imgParagraph,durationElem) {
         f,ANTI_ALIAS,
         statusReporterFunction
     )
-    let canvasElem = grapher.drawGraph()
+    let canvasElem = await grapher.drawGraph()
     const finTime = new Date()
     const durationMs = finTime.getTime()-startTime.getTime()
     const durationSecs = durationMs/1000
@@ -92,11 +92,11 @@ function processImage(imgParagraph,durationElem) {
 
 function statusReporterFunction(frac) {
     if (typeof frac !== 'number') {
-        console.log('status is non-number')
+        console.error('status is non-number')
     } else {
-        const x = Math.round(Math.max(0,Math.min(1,frac))*1000)/10
-        console.log('completion fraction = ' + x + '%')
-        statusElem.textContent = 'Status: ' + x + '% complete'
+        let p = Math.round(Math.max(0,Math.min(1,frac))*1000)/10
+        p = p.toFixed(1)
+        statusElem.textContent = 'Status: ' + p + '% complete'
     }
 }
 
