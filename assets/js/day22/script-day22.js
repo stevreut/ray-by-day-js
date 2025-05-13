@@ -45,8 +45,8 @@ onload = () => {
         if (!goAgainButton) {
             throw 'no ' + REPEAT_BUTTON_ID + ' id found on page'
         }
-        setTimeout(()=>{
-            processImage(imgParagraph,durationElem)
+        setTimeout(async ()=>{
+            await processImage(imgParagraph,durationElem)
             goAgainButton.disabled = false
             goAgainButton.classList.remove('btndisabled')
             buttonEnabled = true
@@ -56,8 +56,8 @@ onload = () => {
                 buttonEnabled = false
                 goAgainButton.disabled = true
                 goAgainButton.classList.add('btndisabled')
-                setTimeout(()=>{
-                    processImage(imgParagraph,durationElem)
+                setTimeout(async ()=>{
+                    await processImage(imgParagraph,durationElem)
                     goAgainButton.disabled = false
                     goAgainButton.classList.remove('btndisabled')
                     buttonEnabled = true
@@ -72,7 +72,6 @@ onload = () => {
 
 async function processImage(imgParagraph,durationElem) {
     initEnvironment()
-    imgParagraph.innerHTML = ''
     durationElem.textContent = ''
     const gridder = new CanvasGridder()
     const startTime = new Date()
@@ -89,6 +88,7 @@ async function processImage(imgParagraph,durationElem) {
     const finTime = new Date()
     const durationMs = finTime.getTime()-startTime.getTime()
     const durationSecs = durationMs/1000
+    imgParagraph.innerHTML = ''
     imgParagraph.appendChild(canvasElem)
     durationElem.textContent = 'Image generation duration: ' + durationSecs + ' seconds'
 }
