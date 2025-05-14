@@ -22,7 +22,7 @@ const ACTUAL_HEIGHT = Math.round(ACTUAL_WIDTH*0.75)
 const PIXEL_SIZE = 1
 const ANTI_ALIAS = 4
 
-const MAGNIFY_OCTAHEDRON = 5
+const universalOrigin = new Vector3D(-17,5,7.5)
 
 let statBarElem = null
 let goAgainButton = null
@@ -109,8 +109,6 @@ function statusReporterFunction(frac) {
     }
 }
 
-const universalOrigin = new Vector3D(5,22,6)
-
 let optEnv = null
 
 function initEnvironment() {
@@ -119,16 +117,9 @@ function initEnvironment() {
         universalOrigin,
         universalOrigin.scalarMult(-1)
     )
-    optEnv.setCamera(cameraRay,0.3,universalOrigin.magn())
-    initRandomSpheres()
-    for (let i=0;i<5;i++) {
-        optEnv.addOpticalObject(new ReflectiveIcosahedron(
-            randomCenter(),
-            2,
-            randomColor(0.5,0.6)
-        ))
-    }
-    optEnv.addOpticalObject(new Plane(-7.5,25,2))
+    optEnv.setCamera(cameraRay,0.5,universalOrigin.magn())
+    initRandomShapes()
+    optEnv.addOpticalObject(new Plane(-7.5,12,2))
     optEnv.addOpticalObject(new Sky())
 }
 
@@ -140,50 +131,71 @@ function f(x,y) {
     return optEnv.colorFromXY(x,y)
 }
 
-function initRandomSpheres() {
-    const SPH_COUNT = 15
+function initRandomShapes() {
+    const TARGET_SHAPE_COUNT = 25
     const lightV = new Vector3D(0,0,1)
-    let sphereCount = 0
     let rejectCount = 0
-    const sphTempArray = []
-    sphTempArray.push({
-        center: new Vector3D(0,0,0),
-        radius: 1.5
-    })
-    sphereCount = 1
-    while (sphereCount < SPH_COUNT) {
-        const ctrV = randomCenter()
-        const radius = 1
+    const shapeTempArray = []
+    const MIN_SPACE = 0.2  // TODO
+    while (shapeTempArray.length < TARGET_SHAPE_COUNT) {
+        let candidateObject = {
+            center: randomCenter()
+        }
+        let rando = Math.random();
+        if (rando < 0.3) {
+            candidateObject.type = 'icos'
+        } else if (rando < 0.7) {
+            candidateObject.type = 'spht'
+        } else if (rando < 0.9) {
+            candidateObject.type = 'sphm'
+        } else {
+            candidateObject.type = 'sphf'
+        }
+        if (candidateObject.type === 'icos') {
+            candidateObject.radius = Math.random()*1.4+1
+        } else {
+            candidateObject.radius = 1
+        }
         let hasIntersect = false
-        sphTempArray.forEach(tmpSph=>{
+        shapeTempArray.forEach(otherShape=>{
             if (!hasIntersect) {
-                if (tmpSph.center.subt(ctrV).magnSqr()<=(radius+tmpSph.radius)**2) {
+                if (otherShape.center.subt(candidateObject.center).magn() <= 
+                        otherShape.radius+candidateObject.radius+MIN_SPACE) {
                     hasIntersect = true
                 }
             }
         })
-        if (ctrV.magn()-radius<MAGNIFY_OCTAHEDRON) {
-            hasIntersect = true
-        }
         if (hasIntersect) {
             rejectCount++
         } else {
-            let sphere = null
-            if (sphereCount < 5) {
-                sphere = new ReflectiveSphere(ctrV,radius,randomColor(0.5,0.7))
-            } else if (sphereCount < 7) {
-                sphere = new Sphere(ctrV,radius,randomColor(),lightV)
-            } else {
-                sphere = new RefractiveSphere(ctrV,radius,randomColor(),1.5)
-            }
-            optEnv.addOpticalObject(sphere)
-            sphTempArray.push({
-                center: ctrV,
-                radius: radius 
-            })
-            sphereCount++
+            shapeTempArray.push(candidateObject)
         }
     }
+    const straightUp = new Vector3D(0,0,1)
+    shapeTempArray.forEach(shape=>{
+        const { type } = shape
+        let obj = null
+        switch (type) {
+            case 'icos':
+                obj = new ReflectiveIcosahedron(shape.center,shape.radius,randomColor(0.5,0.6))
+                break;
+            case 'sphm':
+                obj = new ReflectiveSphere(shape.center,shape.radius,randomColor(0.5,0.6))
+                break;
+            case 'spht':
+                obj = new RefractiveSphere(shape.center,shape.radius,randomColor(),1.5)
+                break;
+            case 'sphf':
+                obj = new Sphere(shape.center,shape.radius,randomColor(0.7,0.85),straightUp)
+                break;
+            default:
+                console.error('unexpected shape = ', type, ' - ignored')
+                // obj remains null
+        }
+        if (obj) {
+            optEnv.addOpticalObject(obj)
+        }
+    })
 }
 
 function randomCenter() {
