@@ -14,7 +14,7 @@ class ReflectiveIcosahedron extends OpticalObject {
         this.initTriangles()
     }
     initTriangles() {
-        const A1 = Math.acos(Math.sqrt(0.2))
+        const A1 = Math.atan(2)
         const A2 = Math.PI-A1
         const A3 = Math.PI/5
         const A4 = A3*2
@@ -54,10 +54,10 @@ class ReflectiveIcosahedron extends OpticalObject {
         picos(10,6,11)
         //
         function pv(lat,lon) {
-            const z = Math.cos(lat)*self.radius
+            const z = Math.cos(lat)*self.radius+self.center.getZ()
             const c = Math.sin(lat)*self.radius
-            const x = c*Math.cos(lon)
-            const y = c*Math.sin(lon)
+            const x = c*Math.cos(lon)+self.center.getX()
+            const y = c*Math.sin(lon)+self.center.getY()
             const vect = new Vector3D(x,y,z)
             self.verts.push(vect)
         }
@@ -94,7 +94,7 @@ class ReflectiveIcosahedron extends OpticalObject {
     }
     handle(ray) {
         const dist = this.interceptDistance(ray)  // TODO - redundant, plus using only for side effect
-        if (this.leastDistIdx) {
+        if (this.leastDistIdx !== null && this.leastDistIdx >= 0 && this.leastDistIdx < this.triangles.length) {
             return this.triangles[this.leastDistIdx].handle(ray)
         } else {
             console.error('icos leastDistIdx not found')

@@ -8,7 +8,6 @@ import OpticalEnvironment from "../day21/optical-env.js"
 import Plane from "../day21/plane.js"
 import RefractiveSphere from "../day21/refractive-sphere.js"
 
-import ReflectiveTriangle from "./reflective-triangle.js"
 import ReflectiveIcosahedron from "./refl-icos.js"
 import BiVariantGrapher from "./bivargrapher.js"
 
@@ -18,10 +17,10 @@ const STATUS_BAR_ID = 'statbar'
 const DURATION_TEXT_ID = 'dur'
 const REPEAT_BUTTON_ID = 'rptbtn'
 
-const ACTUAL_WIDTH = 600 // TODO
+const ACTUAL_WIDTH = 600
 const ACTUAL_HEIGHT = Math.round(ACTUAL_WIDTH*0.75)
-const PIXEL_SIZE = 1  // TODO
-const ANTI_ALIAS = 3  // TODO
+const PIXEL_SIZE = 1
+const ANTI_ALIAS = 4
 
 const MAGNIFY_OCTAHEDRON = 5
 
@@ -115,92 +114,15 @@ function initEnvironment() {
     )
     optEnv.setCamera(cameraRay,0.3,universalOrigin.magn())
     initRandomSpheres()
-    // addTrianglesForOctahedron(optEnv)
-    optEnv.addOpticalObject(new ReflectiveIcosahedron(
-        new Vector3D(0 /*MAGNIFY_OCTAHEDRON+1.5*/,0,0),
-        2.4,
-        [0.9,0.8,0.8]
-    ))
+    for (let i=0;i<5;i++) {
+        optEnv.addOpticalObject(new ReflectiveIcosahedron(
+            randomCenter(),
+            2,
+            randomColor(0.5,0.6)
+        ))
+    }
     optEnv.addOpticalObject(new Plane(-7.5,25,2))
     optEnv.addOpticalObject(new Sky())
-}
-
-function addTrianglesForOctahedron(env) {
-    const triSet = [
-        {
-            verts: [
-                [0,0,1],
-                [0,1,0],
-                [1,0,0],
-            ]
-        },
-        {
-            verts: [
-                [0,0,1],
-                [0,1,0],
-                [-1,0,0],
-            ]
-        },
-        {
-            verts: [
-                [0,0,1],
-                [0,-1,0],
-                [1,0,0],
-            ]
-        },
-        {
-            verts: [
-                [0,0,1],
-                [0,-1,0],
-                [-1,0,0],
-            ]
-        },
-        {
-            verts: [
-                [0,0,-1],
-                [0,1,0],
-                [1,0,0],
-            ]
-        },
-        {
-            verts: [
-                [0,0,-1],
-                [0,1,0],
-                [-1,0,0],
-            ]
-        },
-        {
-            verts: [
-                [0,0,-1],
-                [0,-1,0],
-                [1,0,0],
-            ]
-        },
-        {
-            verts: [
-                [0,0,-1],
-                [0,-1,0],
-                [-1,0,0],
-            ]
-        },
-    ]
-    const triangleColor = randomColor(0.4,0.6)
-    triSet.forEach(tri=>{
-        let { verts } = tri
-        if (!verts) {
-            throw 'no vertex ? (161)'
-        }
-        let vects = []
-        verts.forEach(vert=>{
-            vects.push((new Vector3D(vert[0], vert[1], vert[2])).scalarMult(MAGNIFY_OCTAHEDRON))
-        })
-        if (vects.length !== 3) {
-            throw 'unexpected vertex count'
-        }
-        env.addOpticalObject(new ReflectiveTriangle(
-            ...vects, triangleColor
-        ))
-    })
 }
 
 function f(x,y) {
