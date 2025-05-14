@@ -25,46 +25,53 @@ const ANTI_ALIAS = 4
 const MAGNIFY_OCTAHEDRON = 5
 
 let statBarElem = null
+let goAgainButton = null
+let imgParagraph = null
+let durationElem = null
 
-let buttonEnabled = false
+let buttonEnabled = true
+
 
 onload = () => {
     try {
-        let imgParagraph = document.getElementById(IMG_PARA_ID)
-        let goAgainButton = document.getElementById(REPEAT_BUTTON_ID)
-        let durationElem = document.getElementById(DURATION_TEXT_ID)
-        statBarElem = document.getElementById(STATUS_BAR_ID)
-        if (!imgParagraph) {
-            throw 'no ' + IMG_PARA_ID + ' id found on page'
-        }
-        if (!statBarElem) {
-            throw 'no ' + STATUS_BAR_ID + ' id found on page'
-        }
-        if (!goAgainButton) {
-            throw 'no ' + REPEAT_BUTTON_ID + ' id found on page'
-        }
-        setTimeout(async ()=>{
-            await processImage(imgParagraph,durationElem)
-            goAgainButton.disabled = false
-            goAgainButton.classList.remove('btndisabled')
-            buttonEnabled = true
-        },0)
-        goAgainButton.addEventListener('click',()=>{
-            if (buttonEnabled) {
-                buttonEnabled = false
-                goAgainButton.disabled = true
-                goAgainButton.classList.add('btndisabled')
-                setTimeout(async ()=>{
-                    await processImage(imgParagraph,durationElem)
-                    goAgainButton.disabled = false
-                    goAgainButton.classList.remove('btndisabled')
-                    buttonEnabled = true
-                },0)
-            }
-        })
+        imgParagraph = linkElement(IMG_PARA_ID)
+        goAgainButton = linkElement(REPEAT_BUTTON_ID)
+        durationElem = linkElement(DURATION_TEXT_ID)
+        statBarElem = linkElement(STATUS_BAR_ID)
+        makeImageIfEnabled()
+        goAgainButton.addEventListener('click',()=>makeImageIfEnabled())
     } catch (err) {
         console.error('err = ', err)
         alert ('error = ' + err.toString())  // TODO
+    }
+    function makeImageIfEnabled() {
+        if (buttonEnabled) {
+            enableButton(false)
+            setTimeout(async ()=>{
+                await processImage(imgParagraph,durationElem)
+                enableButton(true)
+            },0)
+        }
+    }
+}
+
+function linkElement(id) {
+    let elem = document.getElementById(id)
+    if (!elem) {
+        throw 'no ' + id + ' id found on page'
+    }
+    return elem
+}
+
+function enableButton(doEnable) {
+    if (doEnable === null || doEnable === true) {
+        buttonEnabled = true
+        goAgainButton.disabled = false
+        goAgainButton.classList.remove('btndisabled')
+    } else {
+        buttonEnabled = false
+        goAgainButton.disabled = true
+        goAgainButton.classList.add('btndisabled')
     }
 }
 
