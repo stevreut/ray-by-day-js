@@ -13,14 +13,14 @@ import BiVariantGrapher from "../day22/bivargrapher.js"
 
 
 const IMG_PARA_ID = 'imgpara'
-const STATUS_BAR_ID = 'statbar'
-const DURATION_TEXT_ID = 'dur'
+// const STATUS_BAR_ID = 'statbar'
+// const DURATION_TEXT_ID = 'dur'
 const REPEAT_BUTTON_ID = 'rptbtn'
 
 const ACTUAL_WIDTH = 600
 const ACTUAL_HEIGHT = Math.round(ACTUAL_WIDTH*0.75)
-const PIXEL_SIZE = 3  // TODO - change back to 1 after testing
-const ANTI_ALIAS = 3  // TODO - change back to 4 after testing
+const PIXEL_SIZE = 8  // TODO - change back to 1 after testing
+const ANTI_ALIAS = 2  // TODO - change back to 4 after testing
 
 const universalOrigin = new Vector3D(-17,5,7.5)
 
@@ -36,21 +36,25 @@ onload = () => {
     try {
         imgParagraph = linkElement(IMG_PARA_ID)
         goAgainButton = linkElement(REPEAT_BUTTON_ID)
-        durationElem = linkElement(DURATION_TEXT_ID)
-        statBarElem = linkElement(STATUS_BAR_ID)
-        makeImageIfEnabled()
-        goAgainButton.addEventListener('click',()=>makeImageIfEnabled())
+        // durationElem = linkElement(DURATION_TEXT_ID)
+        // statBarElem = linkElement(STATUS_BAR_ID)
+        makeAnimationIfEnabled()
+        goAgainButton.addEventListener('click',()=>makeAnimationIfEnabled())
     } catch (err) {
         console.error('err = ', err)
         alert ('error = ' + err.toString())  // TODO
     }
-    function makeImageIfEnabled() {
+    function makeAnimationIfEnabled() {
         if (buttonEnabled) {
             enableButton(false)
-            setTimeout(async ()=>{
-                await processImage(imgParagraph,durationElem)
-                enableButton(true)
-            },0)
+            initEnvironment()
+            for (let t=0;t<30;t+=2) {
+                setInterval(async ()=>{
+                    await positionCameraForFrameAtTime(t)
+                    await processSingleImage(imgParagraph,durationElem)
+                },t*1000)
+            }
+            enableButton(true)
         }
     }
 }
@@ -75,9 +79,8 @@ function enableButton(doEnable) {
     }
 }
 
-async function processImage(imgParagraph,durationElem) {
-    initEnvironment()
-    durationElem.textContent = ''
+async function processSingleImage(imgParagraph,durationElem) {
+    // durationElem.textContent = ''
     const gridder = new CanvasGridder()
     const startTime = new Date()
     const grapher = new BiVariantGrapher(
@@ -86,8 +89,7 @@ async function processImage(imgParagraph,durationElem) {
         Math.floor(ACTUAL_HEIGHT/PIXEL_SIZE),
         PIXEL_SIZE, 
         ACTUAL_HEIGHT/PIXEL_SIZE*0.33,
-        f,ANTI_ALIAS,
-        statusReporterFunction
+        f,ANTI_ALIAS
     )
     let canvasElem = await grapher.drawGraph()
     const finTime = new Date()
@@ -95,29 +97,33 @@ async function processImage(imgParagraph,durationElem) {
     const durationSecs = durationMs/1000
     imgParagraph.innerHTML = ''
     imgParagraph.appendChild(canvasElem)
-    durationElem.textContent = 'Image generation duration: ' + durationSecs + ' seconds'
+    // durationElem.textContent = 'Image generation duration: ' + durationSecs + ' seconds'
 }
 
-function statusReporterFunction(frac) {
-    if (typeof frac !== 'number') {
-        console.error('status is non-number')
-    } else {
-        let p = Math.round(Math.max(0,Math.min(1,frac))*1000)/10
-        p = p.toFixed(1)
-        statBarElem.textContent = 'Status: ' + p + '% complete'
-        statBarElem.style.width = (p + '%')
-    }
-}
+// function statusReporterFunction(frac) {
+//     if (typeof frac !== 'number') {
+//         console.error('status is non-number')
+//     } else {
+//         let p = Math.round(Math.max(0,Math.min(1,frac))*1000)/10
+//         p = p.toFixed(1)
+//         statBarElem.textContent = 'Status: ' + p + '% complete'
+//         statBarElem.style.width = (p + '%')
+//     }
+// }
 
 let optEnv = null
 
-function initEnvironment() {
-    optEnv = new OpticalEnvironment()
+function positionCameraForFrameAtTime(t) {
+    const originAtTime = universalOrigin.scalarMult((20-t)/20)
     const cameraRay = new Ray(
-        universalOrigin,
+        originAtTime,
         universalOrigin.scalarMult(-1)
     )
     optEnv.setCamera(cameraRay,0.5,universalOrigin.magn())
+}
+
+function initEnvironment() {
+    optEnv = new OpticalEnvironment()
     initRandomShapes()
     optEnv.addOpticalObject(new Plane(-7.5,12,2))
     optEnv.addOpticalObject(new Sky())
