@@ -4,12 +4,12 @@ import ReflectiveSphere from "../day19/reflective-sphere.js"
 import CanvasGridder from "../day19/canvas-gridder.js"
 import Sphere from "../day19/sphere.js"
 import Sky from "../day21/sky.js"
+import OpticalEnvironment from "../day21/optical-env.js"
 import Plane from "../day21/plane.js"
 import RefractiveSphere from "../day21/refractive-sphere.js"
 import ReflectiveIcosahedron from "../day22/refl-icos.js"
 import BiVariantGrapher from "../day22/bivargrapher.js"
 
-import OpticalEnvironment from "./optical-env.js"
 
 
 const IMG_PARA_ID = 'imgpara'
@@ -117,7 +117,7 @@ function initEnvironment() {
         universalOrigin,
         universalOrigin.scalarMult(-1)
     )
-    optEnv.setCamera(cameraRay,/*0.5 TODO*/ 0,universalOrigin.magn())
+    optEnv.setCamera(cameraRay,0.5,universalOrigin.magn())
     initRandomShapes()
     optEnv.addOpticalObject(new Plane(-7.5,12,2))
     optEnv.addOpticalObject(new Sky())

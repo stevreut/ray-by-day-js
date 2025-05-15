@@ -132,21 +132,21 @@ function f(x,y) {
 }
 
 function initRandomShapes() {
-    const TARGET_SHAPE_COUNT = 12
+    const TARGET_SHAPE_COUNT = 25
     const lightV = new Vector3D(0,0,1)
     let rejectCount = 0
     const shapeTempArray = []
-    const MIN_SPACE = 0.2
+    const MIN_SPACE = 0.2  // TODO
     while (shapeTempArray.length < TARGET_SHAPE_COUNT) {
         let candidateObject = {
             center: randomCenter()
         }
         let rando = Math.random();
-        if (rando < 0.5) {
+        if (rando < 0.3) {
             candidateObject.type = 'icos'
-        } else if (rando < 0.8) {
+        } else if (rando < 0.7) {
             candidateObject.type = 'spht'
-        } else if (rando < 0.93) {
+        } else if (rando < 0.9) {
             candidateObject.type = 'sphm'
         } else {
             candidateObject.type = 'sphf'
