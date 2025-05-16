@@ -14,18 +14,20 @@ import BiVariantGrapher from "../day22/bivargrapher.js"
 const IMG_PARA_ID = 'imgpara'
 const REPEAT_BUTTON_ID = 'rptbtn'
 const FRAME_STATUS_ID = 'framestat'
+const SETTINGS_ID = 'settings'
 
-const ACTUAL_WIDTH = 600
-const ACTUAL_HEIGHT = Math.round(ACTUAL_WIDTH*0.75)
-const PIXEL_SIZE = 6
-const ANTI_ALIAS = 2
+const SETTINGS_PREFIX = 'settx'  // TODO
 
-const FRAME_COUNT = 450
-const FRAME_INTERVAL = 0.05
+let ACTUAL_WIDTH = 600
+let ACTUAL_HEIGHT = 450
+let PIXEL_SIZE = 10
+let ANTI_ALIAS = 2
 
-const universalOrigin = new Vector3D(-17,5,7.5)
+let FRAME_COUNT = 200
+let FRAME_INTERVAL = 0.15
 
 let goAgainButton = null
+let settingsDiv = null
 let imgParagraph = null
 let durationElem = null
 let frameStatusPara = null
@@ -39,7 +41,9 @@ onload = () => {
         imgParagraph = linkElement(IMG_PARA_ID)
         goAgainButton = linkElement(REPEAT_BUTTON_ID)
         frameStatusPara = linkElement(FRAME_STATUS_ID)
-        makeAnimationIfEnabled()
+        settingsDiv = linkElement(SETTINGS_ID)
+        createSettingsInputs()
+        makeAnimationIfEnabled()  // TODO - reenable after testing
         goAgainButton.addEventListener('click',()=>makeAnimationIfEnabled())
     } catch (err) {
         console.error('err = ', err)
@@ -103,7 +107,13 @@ async function processSingleImage(imgParagraph) {
         Math.floor(ACTUAL_HEIGHT/PIXEL_SIZE),
         PIXEL_SIZE, 
         ACTUAL_HEIGHT/PIXEL_SIZE*0.33,
-        f,ANTI_ALIAS
+        (x,y) => {
+            if (!optEnv) {
+                throw 'optEnv not initiated'
+            }
+            return optEnv.colorFromXY(x,y)
+        },
+        ANTI_ALIAS
     )
     return await grapher.drawGraph()
 }
@@ -113,10 +123,6 @@ let optEnv = null
 function positionCameraForFrameAtTime(t) {
     const deltaT = 1e-6
     const deltaMult = 1/(2*deltaT)
-    // const endTime = 30
-    // const R = 60
-    // const V = 0.75
-    // const TH = 0.5
     const originVector = posVec(t)
     const dirVector = velocVec(t)
     const cameraRay = new Ray(
@@ -161,7 +167,6 @@ function f(x,y) {
     if (!optEnv) {
         throw 'optEnv not initiated'
     }
-    // const ray = new Ray(universalOrigin,new Vector3D(x,y,4))
     return optEnv.colorFromXY(x,y)
 }
 
@@ -242,4 +247,56 @@ function randomColor(lo=0.47,hi=0.94) {
         arr.push(Math.random()*(hi-lo)+lo)
     }
     return arr
+}
+
+function createSettingsInputs() {
+    if (!settingsDiv) {
+        throw 'settings div has not been created'
+    }
+    const tbl = document.createElement("table")
+    const tbody = document.createElement("tbody")
+    //
+    addInputRow('Width (pixels)','imgwid',10,1024,ACTUAL_WIDTH)
+    addInputRow('Height (pixels)','imghgt',10,768,ACTUAL_HEIGHT)
+    addInputRow('Virtual pixel size','virtpix',1,300,PIXEL_SIZE)
+    addInputRow('Anti-alias factor','aalias',1,5,ANTI_ALIAS)
+    addInputRow('Frame count','framecount',5,1000,FRAME_COUNT)
+    addInputRow('Frame duration (seconds)','framedur',0.01,10,FRAME_INTERVAL)
+    //
+    tbl.appendChild(tbody)
+    settingsDiv.appendChild(tbl)
+    function addInputRow(lbl,id,lo,hi,val) {
+        const tr = document.createElement("tr")
+        const td1 = document.createElement("td")
+        td1.textContent = lbl
+        tr.appendChild(td1)
+        const td2 = document.createElement("td")
+        td2.textContent = "range: " + lo + " to " + hi
+        tr.appendChild(td2)
+        const td3 = document.createElement("td")
+        const inp = document.createElement("input")
+        inp.value = val
+        inp.setAttribute("id",SETTINGS_PREFIX+id)
+        inp.setAttribute("type","number")
+        inp.setAttribute("min",lo)
+        inp.setAttribute("max",hi)
+        const isInt = Number.isInteger(lo) && Number.isInteger(hi)
+        inp.setAttribute('requireint',(isInt))
+        inp.style.textAlign = "right"
+        inp.style.width = '8em'
+        td3.appendChild(inp)
+        tr.appendChild(td3)
+        tbody.appendChild(tr)
+    }
+    tbody.addEventListener('change',(event)=>{
+        console.log('changes not enabled yet for TODO table body ', event)
+    // addInputRow('Width (pixels)','imgwid',10,1024,ACTUAL_WIDTH)
+    // addInputRow('Height (pixels)','imghgt',10,768,ACTUAL_HEIGHT)
+    // addInputRow('Virtual pixel size','virtpix',1,300,PIXEL_SIZE)
+    // addInputRow('Anti-alias factor','aalias',1,5,ANTI_ALIAS)
+    // addInputRow('Frame count','framecount',5,1000,FRAME_COUNT)
+    // addInputRow('Frame duration (seconds)','framedur',0.01,10,FRAME_INTERVAL)
+        
+
+    })
 }
