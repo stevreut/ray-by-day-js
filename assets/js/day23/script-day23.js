@@ -7,7 +7,7 @@ import Sky from "../day21/sky.js"
 import OpticalEnvironment from "../day21/optical-env.js"
 import Plane from "../day21/plane.js"
 import RefractiveSphere from "../day21/refractive-sphere.js"
-import ReflectiveIcosahedron from "../day22/refl-icos.js"
+// import ReflectiveIcosahedron from "../day22/refl-icos.js"
 import BiVariantGrapher from "../day22/bivargrapher.js"
 
 
@@ -19,8 +19,8 @@ const REPEAT_BUTTON_ID = 'rptbtn'
 
 const ACTUAL_WIDTH = 600
 const ACTUAL_HEIGHT = Math.round(ACTUAL_WIDTH*0.75)
-const PIXEL_SIZE = 8  // TODO - change back to 1 after testing
-const ANTI_ALIAS = 2  // TODO - change back to 4 after testing
+const PIXEL_SIZE = 4  // TODO - change back to 1 after testing
+const ANTI_ALIAS = 3  // TODO - change back to 4 after testing
 
 const universalOrigin = new Vector3D(-17,5,7.5)
 
@@ -48,13 +48,13 @@ onload = () => {
         if (buttonEnabled) {
             enableButton(false)
             initEnvironment()
-            for (let t=0;t<30;t+=2) {
-                setInterval(async ()=>{
+            for (let t=0;t<30;t+=0.2) {
+                setTimeout(async ()=>{
                     await positionCameraForFrameAtTime(t)
                     await processSingleImage(imgParagraph,durationElem)
                 },t*1000)
             }
-            enableButton(true)
+            setTimeout(()=>enableButton(true),30000)
         }
     }
 }
@@ -114,12 +114,12 @@ async function processSingleImage(imgParagraph,durationElem) {
 let optEnv = null
 
 function positionCameraForFrameAtTime(t) {
-    const originAtTime = universalOrigin.scalarMult((20-t)/20)
+    const originAtTime = universalOrigin.scalarMult((30-t)/30)
     const cameraRay = new Ray(
         originAtTime,
         universalOrigin.scalarMult(-1)
     )
-    optEnv.setCamera(cameraRay,0.5,universalOrigin.magn())
+    optEnv.setCamera(cameraRay,0,universalOrigin.magn())
 }
 
 function initEnvironment() {
@@ -148,9 +148,9 @@ function initRandomShapes() {
             center: randomCenter()
         }
         let rando = Math.random();
-        if (rando < 0.3) {
-            candidateObject.type = 'icos'
-        } else if (rando < 0.8) {
+        // if (rando < 0.3) {
+        //     candidateObject.type = 'icos'
+        if (rando < 0.7) {
             candidateObject.type = 'spht'
         } else if (rando < 0.93) {
             candidateObject.type = 'sphm'
@@ -182,9 +182,9 @@ function initRandomShapes() {
         const { type } = shape
         let obj = null
         switch (type) {
-            case 'icos':
-                obj = new ReflectiveIcosahedron(shape.center,shape.radius,randomColor(0.5,0.6))
-                break;
+            // case 'icos':
+            //     obj = new ReflectiveIcosahedron(shape.center,shape.radius,randomColor(0.5,0.6))
+            //     break;
             case 'sphm':
                 obj = new ReflectiveSphere(shape.center,shape.radius,randomColor(0.5,0.6))
                 break;
