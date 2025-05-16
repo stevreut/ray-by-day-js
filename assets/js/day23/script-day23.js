@@ -20,6 +20,9 @@ const ACTUAL_HEIGHT = Math.round(ACTUAL_WIDTH*0.75)
 const PIXEL_SIZE = 6
 const ANTI_ALIAS = 2
 
+const FRAME_COUNT = 450
+const FRAME_INTERVAL = 0.05
+
 const universalOrigin = new Vector3D(-17,5,7.5)
 
 let goAgainButton = null
@@ -48,15 +51,14 @@ onload = () => {
             initEnvironment()
             canvasArray = []
             const startTime = new Date()
-            for (let frameNo=0;frameNo<300;frameNo++) {
-                let t = frameNo/10
+            for (let frameNo=0;frameNo<FRAME_COUNT;frameNo++) {
+                let t = frameNo*FRAME_INTERVAL
                 positionCameraForFrameAtTime(t)
                 let canv = await processSingleImage(imgParagraph,durationElem)
                 canvasArray.push(canv)
-                console.log('render for time t=', t, ' complete at ', new Date())
-                console.log('canv arr size = ', canvasArray.length)
                 await new Promise(requestAnimationFrame);
-                frameStatusPara.textContent = 'Complete: ' + (frameNo+1) + ' frames out of 300'
+                frameStatusPara.textContent = 'Complete: ' + (frameNo+1) + ' frames out of ' + FRAME_COUNT
+
             }
             const finTime = new Date()
             const duration = (finTime.getTime()-startTime.getTime())/1000
@@ -67,7 +69,7 @@ onload = () => {
                 setTimeout(()=>{
                     imgParagraph.innerHTML = ''
                     imgParagraph.appendChild(canv)
-                },i*20)
+                },i*FRAME_INTERVAL*1000)
             }
         }
     }
@@ -112,30 +114,44 @@ async function processSingleImage(imgParagraph) {
 let optEnv = null
 
 function positionCameraForFrameAtTime(t) {
+    const deltaT = 1e-6
+    const deltaMult = 1/(2*deltaT)
     const endTime = 30
-    const R = 40
-    const V = 0.5
+    const R = 60
+    const V = 0.75
     const TH = 0.5
-    const angle = (endTime-t)/R
-    const x = Math.sin(angle)*Math.cos(TH)*R
-    const y = Math.sin(angle)*Math.sin(TH)*R
-    const z = (1-Math.cos(angle))*R
-    const originVector = new Vector3D(x,y,z)
-    const vx = -Math.cos(angle)*Math.cos(TH)
-    const vy = -Math.cos(angle)*Math.sin(TH)
-    const vz = -Math.sin(angle)
-    const dirVector = new Vector3D(vx,vy,vz)
+    const originVector = posVec(t)
+    const dirVector = velocVec(t)
     const cameraRay = new Ray(
         originVector,
         dirVector
     )
     optEnv.setCamera(cameraRay,0,10)
+    //
+    function posVec(t) {
+        const SZ = 7.5
+        // const angle = (endTime-t)/R
+        // const x = Math.sin(angle)*Math.cos(TH)*R
+        // const y = Math.sin(angle)*Math.sin(TH)*R
+        // const z = (1-Math.cos(angle))*R
+        // return new Vector3D(x,y,z)
+        const th1 = t*2*Math.PI/(FRAME_COUNT*FRAME_INTERVAL)
+        const th2 = th1*2
+        const x = Math.cos(th1)*SZ
+        const y = Math.sin(th2)*SZ/2
+        const z = x/5
+        const vec = new Vector3D(x,y,z)
+        return vec
+    }
+    function velocVec(t) {
+        return posVec(t+deltaT).subt(posVec(t-deltaT)).scalarMult(deltaMult)
+    }
 }
 
 function initEnvironment() {
     optEnv = new OpticalEnvironment()
     initRandomShapes()
-    optEnv.addOpticalObject(new Plane(-7.5,12,2))
+    optEnv.addOpticalObject(new Plane(-7.5,12,5))
     optEnv.addOpticalObject(new Sky())
 }
 
