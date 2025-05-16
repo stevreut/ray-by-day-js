@@ -13,6 +13,7 @@ import BiVariantGrapher from "../day22/bivargrapher.js"
 
 const IMG_PARA_ID = 'imgpara'
 const REPEAT_BUTTON_ID = 'rptbtn'
+const FRAME_STATUS_ID = 'framestat'
 
 const ACTUAL_WIDTH = 600
 const ACTUAL_HEIGHT = Math.round(ACTUAL_WIDTH*0.75)
@@ -24,6 +25,7 @@ const universalOrigin = new Vector3D(-17,5,7.5)
 let goAgainButton = null
 let imgParagraph = null
 let durationElem = null
+let frameStatusPara = null
 
 let buttonEnabled = true
 
@@ -33,6 +35,7 @@ onload = () => {
     try {
         imgParagraph = linkElement(IMG_PARA_ID)
         goAgainButton = linkElement(REPEAT_BUTTON_ID)
+        frameStatusPara = linkElement(FRAME_STATUS_ID)
         makeAnimationIfEnabled()
         goAgainButton.addEventListener('click',()=>makeAnimationIfEnabled())
     } catch (err) {
@@ -45,12 +48,15 @@ onload = () => {
             initEnvironment()
             canvasArray = []
             const startTime = new Date()
-            for (let t=0;t<30;t+=0.1) {
+            for (let frameNo=0;frameNo<300;frameNo++) {
+                let t = frameNo/10
                 positionCameraForFrameAtTime(t)
                 let canv = await processSingleImage(imgParagraph,durationElem)
                 canvasArray.push(canv)
                 console.log('render for time t=', t, ' complete at ', new Date())
                 console.log('canv arr size = ', canvasArray.length)
+                await new Promise(requestAnimationFrame);
+                frameStatusPara.textContent = 'Complete: ' + (frameNo+1) + ' frames out of 300'
             }
             const finTime = new Date()
             const duration = (finTime.getTime()-startTime.getTime())/1000
