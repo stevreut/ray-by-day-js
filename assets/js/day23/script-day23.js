@@ -16,8 +16,8 @@ const REPEAT_BUTTON_ID = 'rptbtn'
 
 const ACTUAL_WIDTH = 600
 const ACTUAL_HEIGHT = Math.round(ACTUAL_WIDTH*0.75)
-const PIXEL_SIZE = 4  // TODO - change back to 1 after testing
-const ANTI_ALIAS = 3  // TODO - change back to 4 after testing
+const PIXEL_SIZE = 6
+const ANTI_ALIAS = 2
 
 const universalOrigin = new Vector3D(-17,5,7.5)
 
@@ -27,6 +27,7 @@ let durationElem = null
 
 let buttonEnabled = true
 
+let canvasArray = []
 
 onload = () => {
     try {
@@ -38,17 +39,30 @@ onload = () => {
         console.error('err = ', err)
         alert ('error = ' + err.toString())  // TODO
     }
-    function makeAnimationIfEnabled() {
+    async function makeAnimationIfEnabled() {
         if (buttonEnabled) {
             enableButton(false)
             initEnvironment()
-            for (let t=0;t<30;t+=0.2) {
-                setTimeout(async ()=>{
-                    await positionCameraForFrameAtTime(t)
-                    await processSingleImage(imgParagraph,durationElem)
-                },t*1000)
+            canvasArray = []
+            const startTime = new Date()
+            for (let t=0;t<30;t+=0.1) {
+                positionCameraForFrameAtTime(t)
+                let canv = await processSingleImage(imgParagraph,durationElem)
+                canvasArray.push(canv)
+                console.log('render for time t=', t, ' complete at ', new Date())
+                console.log('canv arr size = ', canvasArray.length)
             }
-            setTimeout(()=>enableButton(true),30000)
+            const finTime = new Date()
+            const duration = (finTime.getTime()-startTime.getTime())/1000
+            console.log('duration for canvases = ', duration, ' seconds')
+            enableButton(true)
+            for (let i=0;i<canvasArray.length*5;i++) {
+                let canv = canvasArray[i%canvasArray.length]
+                setTimeout(()=>{
+                    imgParagraph.innerHTML = ''
+                    imgParagraph.appendChild(canv)
+                },i*20)
+            }
         }
     }
 }
@@ -84,8 +98,9 @@ async function processSingleImage(imgParagraph) {
         f,ANTI_ALIAS
     )
     let canvasElem = await grapher.drawGraph()
-    imgParagraph.innerHTML = ''
-    imgParagraph.appendChild(canvasElem)
+    // imgParagraph.innerHTML = ''
+    // imgParagraph.appendChild(canvasElem)
+    return canvasElem
 }
 
 let optEnv = null
