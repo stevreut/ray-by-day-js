@@ -7,14 +7,11 @@ import Sky from "../day21/sky.js"
 import OpticalEnvironment from "../day21/optical-env.js"
 import Plane from "../day21/plane.js"
 import RefractiveSphere from "../day21/refractive-sphere.js"
-// import ReflectiveIcosahedron from "../day22/refl-icos.js"
 import BiVariantGrapher from "../day22/bivargrapher.js"
 
 
 
 const IMG_PARA_ID = 'imgpara'
-// const STATUS_BAR_ID = 'statbar'
-// const DURATION_TEXT_ID = 'dur'
 const REPEAT_BUTTON_ID = 'rptbtn'
 
 const ACTUAL_WIDTH = 600
@@ -24,7 +21,6 @@ const ANTI_ALIAS = 3  // TODO - change back to 4 after testing
 
 const universalOrigin = new Vector3D(-17,5,7.5)
 
-let statBarElem = null
 let goAgainButton = null
 let imgParagraph = null
 let durationElem = null
@@ -36,8 +32,6 @@ onload = () => {
     try {
         imgParagraph = linkElement(IMG_PARA_ID)
         goAgainButton = linkElement(REPEAT_BUTTON_ID)
-        // durationElem = linkElement(DURATION_TEXT_ID)
-        // statBarElem = linkElement(STATUS_BAR_ID)
         makeAnimationIfEnabled()
         goAgainButton.addEventListener('click',()=>makeAnimationIfEnabled())
     } catch (err) {
@@ -79,10 +73,8 @@ function enableButton(doEnable) {
     }
 }
 
-async function processSingleImage(imgParagraph,durationElem) {
-    // durationElem.textContent = ''
+async function processSingleImage(imgParagraph) {
     const gridder = new CanvasGridder()
-    const startTime = new Date()
     const grapher = new BiVariantGrapher(
         gridder,
         Math.floor(ACTUAL_WIDTH/PIXEL_SIZE),
@@ -92,34 +84,31 @@ async function processSingleImage(imgParagraph,durationElem) {
         f,ANTI_ALIAS
     )
     let canvasElem = await grapher.drawGraph()
-    const finTime = new Date()
-    const durationMs = finTime.getTime()-startTime.getTime()
-    const durationSecs = durationMs/1000
     imgParagraph.innerHTML = ''
     imgParagraph.appendChild(canvasElem)
-    // durationElem.textContent = 'Image generation duration: ' + durationSecs + ' seconds'
 }
-
-// function statusReporterFunction(frac) {
-//     if (typeof frac !== 'number') {
-//         console.error('status is non-number')
-//     } else {
-//         let p = Math.round(Math.max(0,Math.min(1,frac))*1000)/10
-//         p = p.toFixed(1)
-//         statBarElem.textContent = 'Status: ' + p + '% complete'
-//         statBarElem.style.width = (p + '%')
-//     }
-// }
 
 let optEnv = null
 
 function positionCameraForFrameAtTime(t) {
-    const originAtTime = universalOrigin.scalarMult((30-t)/30)
+    const endTime = 30
+    const R = 40
+    const V = 0.5
+    const TH = 0.5
+    const angle = (endTime-t)/R
+    const x = Math.sin(angle)*Math.cos(TH)*R
+    const y = Math.sin(angle)*Math.sin(TH)*R
+    const z = (1-Math.cos(angle))*R
+    const originVector = new Vector3D(x,y,z)
+    const vx = -Math.cos(angle)*Math.cos(TH)
+    const vy = -Math.cos(angle)*Math.sin(TH)
+    const vz = -Math.sin(angle)
+    const dirVector = new Vector3D(vx,vy,vz)
     const cameraRay = new Ray(
-        originAtTime,
-        universalOrigin.scalarMult(-1)
+        originVector,
+        dirVector
     )
-    optEnv.setCamera(cameraRay,0,universalOrigin.magn())
+    optEnv.setCamera(cameraRay,0,10)
 }
 
 function initEnvironment() {
@@ -133,7 +122,7 @@ function f(x,y) {
     if (!optEnv) {
         throw 'optEnv not initiated'
     }
-    const ray = new Ray(universalOrigin,new Vector3D(x,y,4))
+    // const ray = new Ray(universalOrigin,new Vector3D(x,y,4))
     return optEnv.colorFromXY(x,y)
 }
 
@@ -148,8 +137,6 @@ function initRandomShapes() {
             center: randomCenter()
         }
         let rando = Math.random();
-        // if (rando < 0.3) {
-        //     candidateObject.type = 'icos'
         if (rando < 0.7) {
             candidateObject.type = 'spht'
         } else if (rando < 0.93) {
@@ -182,9 +169,6 @@ function initRandomShapes() {
         const { type } = shape
         let obj = null
         switch (type) {
-            // case 'icos':
-            //     obj = new ReflectiveIcosahedron(shape.center,shape.radius,randomColor(0.5,0.6))
-            //     break;
             case 'sphm':
                 obj = new ReflectiveSphere(shape.center,shape.radius,randomColor(0.5,0.6))
                 break;
