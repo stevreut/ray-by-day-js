@@ -105,10 +105,7 @@ async function processSingleImage(imgParagraph) {
         ACTUAL_HEIGHT/PIXEL_SIZE*0.33,
         f,ANTI_ALIAS
     )
-    let canvasElem = await grapher.drawGraph()
-    // imgParagraph.innerHTML = ''
-    // imgParagraph.appendChild(canvasElem)
-    return canvasElem
+    return await grapher.drawGraph()
 }
 
 let optEnv = null
@@ -116,10 +113,10 @@ let optEnv = null
 function positionCameraForFrameAtTime(t) {
     const deltaT = 1e-6
     const deltaMult = 1/(2*deltaT)
-    const endTime = 30
-    const R = 60
-    const V = 0.75
-    const TH = 0.5
+    // const endTime = 30
+    // const R = 60
+    // const V = 0.75
+    // const TH = 0.5
     const originVector = posVec(t)
     const dirVector = velocVec(t)
     const cameraRay = new Ray(
@@ -129,21 +126,26 @@ function positionCameraForFrameAtTime(t) {
     optEnv.setCamera(cameraRay,0,10)
     //
     function posVec(t) {
-        const SZ = 7.5
-        // const angle = (endTime-t)/R
-        // const x = Math.sin(angle)*Math.cos(TH)*R
-        // const y = Math.sin(angle)*Math.sin(TH)*R
-        // const z = (1-Math.cos(angle))*R
-        // return new Vector3D(x,y,z)
+        const SZ = 4.5
         const th1 = t*2*Math.PI/(FRAME_COUNT*FRAME_INTERVAL)
         const th2 = th1*2
+        // Vector path traced out by the following is a Lemiscate of Bernoulli
+        // ( https://en.wikipedia.org/wiki/Lemniscate_of_Bernoulli#:~:text=In%20geometry%2C%20the%20lemniscate%20of,and%20to%20the%20%E2%88%9E%20symbol. )
+        // which is basically a figure-8 path.  In this case it is slightly canted to give the elevation some
+        // variety.
+        // The parametric equations used in this case do NOT yield constant velocity.
         const x = Math.cos(th1)*SZ
-        const y = Math.sin(th2)*SZ/2
-        const z = x/5
-        const vec = new Vector3D(x,y,z)
-        return vec
+        const y = Math.sin(th2)*SZ*0.5
+        const z = x*0.2
+        return new Vector3D(x,y,z)
     }
     function velocVec(t) {
+        // Use an approximation of the derivative of the position vector
+        // (posVec) to determine the velocity vector.  The magnitude of this
+        // vector would be the speed of the camera but is irrelevant for our
+        // purposes; it is the direction of the vector that is important since it
+        // will determine in what direction the camera is pointed - always forward
+        // with the motion of the camera.
         return posVec(t+deltaT).subt(posVec(t-deltaT)).scalarMult(deltaMult)
     }
 }
@@ -164,7 +166,7 @@ function f(x,y) {
 }
 
 function initRandomShapes() {
-    const TARGET_SHAPE_COUNT = 10
+    const TARGET_SHAPE_COUNT = 20
     const lightV = new Vector3D(0,0,1)
     let rejectCount = 0
     const shapeTempArray = []
