@@ -250,6 +250,7 @@ function randomColor(lo=0.47,hi=0.94) {
 }
 
 function createSettingsInputs() {
+    const REQ_INT_LIT = 'requireint'
     if (!settingsDiv) {
         throw 'settings div has not been created'
     }
@@ -281,7 +282,7 @@ function createSettingsInputs() {
         inp.setAttribute("min",lo)
         inp.setAttribute("max",hi)
         const isInt = Number.isInteger(lo) && Number.isInteger(hi)
-        inp.setAttribute('requireint',(isInt))
+        inp.setAttribute(REQ_INT_LIT,(isInt))
         inp.style.textAlign = "right"
         inp.style.width = '8em'
         td3.appendChild(inp)
@@ -296,7 +297,56 @@ function createSettingsInputs() {
     // addInputRow('Anti-alias factor','aalias',1,5,ANTI_ALIAS)
     // addInputRow('Frame count','framecount',5,1000,FRAME_COUNT)
     // addInputRow('Frame duration (seconds)','framedur',0.01,10,FRAME_INTERVAL)
-        
+        const targ = event.target
+        if (targ.id && targ.id.startsWith(SETTINGS_PREFIX)) {
+            const sansPrefixId = targ.id.slice(SETTINGS_PREFIX.length)
+            console.log('modified id = ', sansPrefixId)
+            const mustBeInt = targ.getAttribute(REQ_INT_LIT)
+            console.log('require int = ', mustBeInt)
+            console.log('value = ', targ.value, ' type = ', typeof targ.value)
+            let value = 0
+            if (mustBeInt) {
+                try {
+                    value = Math.round(parseInt(targ.value))
+                } catch (err) {
+                    console.error(err)
+                    value = parseInt(targ.getAttribute("min"))
+                }
+            } else {
+                try {
+                    value = parseFloat(targ.value)
+                } catch (err) {
+                    console.error(err)
+                    value = parseInt(targ.getAttribute("min"))
+                }
+            }
+            targ.value = value
+            console.log('value = ', value, ' type = ', typeof value)
+            switch (sansPrefixId) {
+                case 'imgwid':
+                    ACTUAL_WIDTH = value
+                    break;
+                case 'imghgt':
+                    ACTUAL_HEIGHT = value
+                    break;
+                case 'virtpix':
+                    PIXEL_SIZE = value
+                    break;
+                case 'aalias':
+                    ANTI_ALIAS = value
+                    break;
+                case 'framecount':
+                    FRAME_COUNT = value
+                    break;
+                case 'framedur':
+                    FRAME_INTERVAL = value
+                    break;
+                default:
+                    console.error ('unexpected id ignored: ', sansPrefixId)
+            }
+        } else {
+            console.error('trapped targ does not start with ' + SETTINGS_PREFIX + ':', targ)
+        }
 
     })
 }
