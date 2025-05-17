@@ -43,7 +43,8 @@ onload = () => {
         frameStatusPara = linkElement(FRAME_STATUS_ID)
         settingsDiv = linkElement(SETTINGS_ID)
         createSettingsInputs()
-        makeAnimationIfEnabled()  // TODO - reenable after testing
+        enableButton(true)  // TODO ?
+        // makeAnimationIfEnabled()  // TODO - reenable after testing
         goAgainButton.addEventListener('click',()=>makeAnimationIfEnabled())
     } catch (err) {
         console.error('err = ', err)
@@ -291,17 +292,11 @@ function createSettingsInputs() {
     }
     tbody.addEventListener('change',(event)=>{
         console.log('changes not enabled yet for TODO table body ', event)
-    // addInputRow('Width (pixels)','imgwid',10,1024,ACTUAL_WIDTH)
-    // addInputRow('Height (pixels)','imghgt',10,768,ACTUAL_HEIGHT)
-    // addInputRow('Virtual pixel size','virtpix',1,300,PIXEL_SIZE)
-    // addInputRow('Anti-alias factor','aalias',1,5,ANTI_ALIAS)
-    // addInputRow('Frame count','framecount',5,1000,FRAME_COUNT)
-    // addInputRow('Frame duration (seconds)','framedur',0.01,10,FRAME_INTERVAL)
         const targ = event.target
         if (targ.id && targ.id.startsWith(SETTINGS_PREFIX)) {
             const sansPrefixId = targ.id.slice(SETTINGS_PREFIX.length)
             console.log('modified id = ', sansPrefixId)
-            const mustBeInt = targ.getAttribute(REQ_INT_LIT)
+            const mustBeInt = (targ.getAttribute(REQ_INT_LIT) == 'true')
             console.log('require int = ', mustBeInt)
             console.log('value = ', targ.value, ' type = ', typeof targ.value)
             let value = 0
