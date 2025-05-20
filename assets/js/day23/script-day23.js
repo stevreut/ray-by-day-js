@@ -12,7 +12,12 @@ import BiVariantGrapher from "../day22/bivargrapher.js"
 
 
 const IMG_PARA_ID = 'imgpara'
-const REPEAT_BUTTON_ID = 'rptbtn'
+const GENERATION_BUTTON_ID = 'genbtn'
+const START_BUTTON_ID = 'startbtn'
+const PAUSE_BUTTON_ID = 'pausebtn'
+const STOP_BUTTON_ID = 'stopbtn'
+const RANDOM_ENV_BUTTON_ID = 'randbtn'
+
 const FRAME_STATUS_ID = 'framestat'
 const SETTINGS_ID = 'settings'
 
@@ -26,33 +31,41 @@ let ANTI_ALIAS = 2
 let FRAME_COUNT = 200
 let FRAME_INTERVAL = 0.15
 
-let goAgainButton = null
+let generateButton = null
+let startButton = null
+let pauseButton = null
+let stopButton = null
+let randomEnvButton = null
+
 let settingsDiv = null
 let imgParagraph = null
 let durationElem = null
 let frameStatusPara = null
-
-let buttonEnabled = true
 
 let canvasArray = []
 
 onload = () => {
     try {
         imgParagraph = linkElement(IMG_PARA_ID)
-        goAgainButton = linkElement(REPEAT_BUTTON_ID)
+        generateButton = linkElement(GENERATION_BUTTON_ID)
+        startButton = linkElement(START_BUTTON_ID)
+        pauseButton = linkElement(PAUSE_BUTTON_ID)
+        stopButton = linkElement(STOP_BUTTON_ID)
+        randomEnvButton = linkElement(RANDOM_ENV_BUTTON_ID)
+
         frameStatusPara = linkElement(FRAME_STATUS_ID)
         settingsDiv = linkElement(SETTINGS_ID)
         createSettingsInputs()
-        enableButton(true)  // TODO ?
+        enableButton(true,generateButton,stopButton)  // TODO ?
         // makeAnimationIfEnabled()  // TODO - reenable after testing
-        goAgainButton.addEventListener('click',()=>makeAnimationIfEnabled())
+        generateButton.addEventListener('click',()=>makeAnimationIfEnabled())
     } catch (err) {
         console.error('err = ', err)
         alert ('error = ' + err.toString())  // TODO
     }
     async function makeAnimationIfEnabled() {
-        if (buttonEnabled) {
-            enableButton(false)
+        if (!generateButton.disabled) {  // TODO _ ASDF
+            enableButton(false,generateButton)
             initEnvironment()
             canvasArray = []
             const startTime = new Date()
@@ -68,7 +81,7 @@ onload = () => {
             const finTime = new Date()
             const duration = (finTime.getTime()-startTime.getTime())/1000
             console.log('duration for canvases = ', duration, ' seconds')
-            enableButton(true)
+            enableButton(true,generateButton)
             for (let i=0;i<canvasArray.length*5;i++) {
                 let canv = canvasArray[i%canvasArray.length]
                 setTimeout(()=>{
@@ -88,16 +101,16 @@ function linkElement(id) {
     return elem
 }
 
-function enableButton(doEnable) {
-    if (doEnable === null || doEnable === true) {
-        buttonEnabled = true
-        goAgainButton.disabled = false
-        goAgainButton.classList.remove('btndisabled')
-    } else {
-        buttonEnabled = false
-        goAgainButton.disabled = true
-        goAgainButton.classList.add('btndisabled')
-    }
+function enableButton(doEnable,...button) {
+    button.forEach(btn=>{
+        if (doEnable === null || doEnable === true) {
+            btn.disabled = false
+            btn.classList.remove('btndisabled')
+        } else {
+            btn.disabled = true
+            btn.classList.add('btndisabled')
+        }
+    })
 }
 
 async function processSingleImage(imgParagraph) {
