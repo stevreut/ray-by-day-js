@@ -256,6 +256,15 @@ function createSettingsInputs() {
         throw 'settings div has not been created'
     }
     const tbl = document.createElement("table")
+    const thead = document.createElement("thead")
+    const thRow = document.createElement("tr")
+    "Setting;Allowed Range;Value".split(";").forEach(str=>{
+        const th = document.createElement("th")
+        th.textContent = str
+        thRow.appendChild(th)
+    })
+    thead.appendChild(thRow)
+    tbl.appendChild(thead)
     const tbody = document.createElement("tbody")
     //
     addInputRow('Width (pixels)','imgwid',10,1024,ACTUAL_WIDTH)
@@ -265,7 +274,6 @@ function createSettingsInputs() {
     addInputRow('Frame count','framecount',5,1000,FRAME_COUNT)
     addInputRow('Frame duration (seconds)','framedur',0.01,10,FRAME_INTERVAL)
     //
-    tbl.appendChild(tbody)
     settingsDiv.appendChild(tbl)
     function addInputRow(lbl,id,lo,hi,val) {
         const tr = document.createElement("tr")
@@ -273,7 +281,7 @@ function createSettingsInputs() {
         td1.textContent = lbl
         tr.appendChild(td1)
         const td2 = document.createElement("td")
-        td2.textContent = "range: " + lo + " to " + hi
+        td2.textContent = lo + " to " + hi
         tr.appendChild(td2)
         const td3 = document.createElement("td")
         const inp = document.createElement("input")
@@ -284,12 +292,13 @@ function createSettingsInputs() {
         inp.setAttribute("max",hi)
         const isInt = Number.isInteger(lo) && Number.isInteger(hi)
         inp.setAttribute(REQ_INT_LIT,(isInt))
-        inp.style.textAlign = "right"
-        inp.style.width = '8em'
         td3.appendChild(inp)
         tr.appendChild(td3)
         tbody.appendChild(tr)
+
     }
+    tbl.appendChild(tbody)
+
     tbody.addEventListener('change',(event)=>{
         console.log('changes not enabled yet for TODO table body ', event)
         const targ = event.target

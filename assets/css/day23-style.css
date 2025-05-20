@@ -1,0 +1,49 @@
+#settings {
+    border: solid 1px #ccc;
+    display: inline-block;
+    padding: 1cm;
+}
+#settings, #settings * {
+    background-color: #eee;
+}
+#settings input {
+    background-color: #f7ffff;
+    color: #8bcdff;
+    border: solid 2px #6cf;
+    border-radius: 0;
+    text-align: right;
+    width: 8em;
+    font-weight: bold;
+}
+#settings input:focus {
+    color: #d106ff;
+}
+#settings input[requireint="false"] {  /* for floating point input */
+    background-color: #f7f6ff;
+    border: solid 2px #c266ff;
+
+}
+#settings th {
+    background-color: #fafafa;
+    padding: 3mm;
+    font-weight: bold;
+    text-align: left;
+}
+#settings th:nth-child(3) {
+    text-align: right;
+}
+#settings td { 
+    background-color: #fafafa;
+    padding: 3mm;
+}
+#settings td:nth-child(2) {
+    color: #888;
+    text-align: center;
+}
+#settings td:nth-child(3) {
+    padding: 0.5mm;
+}
+.settingsbox {
+    border: solid 1px #ddd;
+    padding: 2cm;
+}
