@@ -13,6 +13,7 @@ import BiVariantGrapher from "../day22/bivargrapher.js"
 
 const IMG_PARA_ID = 'imgpara'
 const GENERATION_BUTTON_ID = 'genbtn'
+const CANCEL_GEN_BUTTON_ID = 'cangenbtn'
 const START_BUTTON_ID = 'startbtn'
 const PAUSE_BUTTON_ID = 'pausebtn'
 const STOP_BUTTON_ID = 'stopbtn'
@@ -21,7 +22,7 @@ const RANDOM_ENV_BUTTON_ID = 'randbtn'
 const FRAME_STATUS_ID = 'framestat'
 const SETTINGS_ID = 'settings'
 
-const SETTINGS_PREFIX = 'settx'  // TODO
+const SETTINGS_PREFIX = 'settx'
 
 let ACTUAL_WIDTH = 600
 let ACTUAL_HEIGHT = 450
@@ -32,6 +33,7 @@ let FRAME_COUNT = 200
 let FRAME_INTERVAL = 0.15
 
 let generateButton = null
+let cancelButton = null
 let startButton = null
 let pauseButton = null
 let stopButton = null
@@ -42,6 +44,7 @@ let imgParagraph = null
 let durationElem = null
 let frameStatusPara = null
 
+let generationInProgress = false
 let canvasArray = []
 
 let timer = null 
@@ -49,15 +52,8 @@ let currentFrame = 0
 
 onload = () => {
     try {
-        imgParagraph = linkElement(IMG_PARA_ID)
-        generateButton = linkElement(GENERATION_BUTTON_ID)
-        startButton = linkElement(START_BUTTON_ID)
-        pauseButton = linkElement(PAUSE_BUTTON_ID)
-        stopButton = linkElement(STOP_BUTTON_ID)
-        randomEnvButton = linkElement(RANDOM_ENV_BUTTON_ID)
-        frameStatusPara = linkElement(FRAME_STATUS_ID)
-        settingsDiv = linkElement(SETTINGS_ID)
-        createSettingsInputs()
+        linkToElements()
+        renderSettingsInputsOnPage()
         enableButton(true,generateButton)
         generateButton.addEventListener('click',async ()=>await generateAnimation())
         startButton.addEventListener('click',()=>{
@@ -92,73 +88,73 @@ onload = () => {
             initEnvironment()
             enableButton(true,generateButton)
         })
+        cancelButton.addEventListener('click',()=>{
+            enableButton(false,cancelButton,startButton,pauseButton,stopButton)
+            generationInProgress = false
+            enableButton(true,generateButton,randomEnvButton)
+        })
     } catch (err) {
         console.error('err = ', err)
         alert ('error = ' + err.toString())  // TODO
     }
-    async function generateAnimation() {
-        enableButton(false,generateButton,startButton,pauseButton,stopButton,randomEnvButton)
-        if (!optEnv) {
-            initEnvironment()
-        }
-        canvasArray = []
-        const startTime = new Date()
-        for (let frameNo=0;frameNo<FRAME_COUNT;frameNo++) {
-            let t = frameNo*FRAME_INTERVAL
-            positionCameraForFrameAtTime(t)
-            let canv = await processSingleImage(imgParagraph,durationElem)
-            canvasArray.push(canv)
-            await new Promise(requestAnimationFrame);
-            frameStatusPara.textContent = 'Complete: ' + (frameNo+1) + ' frames out of ' + FRAME_COUNT
-        }
-        const finTime = new Date()
-        const duration = (finTime.getTime()-startTime.getTime())/1000
-        console.log('duration for canvases = ', duration, ' seconds')
-        enableButton(true,startButton)
-    }
-    function resetTimerLoop() {
-        if (timer !== null) {
-            clearInterval(timer)
-            timer = null
-        }
-        currentFrame = 0
-    }
-    function rollThroughLoop() {
-        timer = setInterval(()=>{
-            let canv = canvasArray[currentFrame]
-            imgParagraph.innerHTML = ''
-            imgParagraph.appendChild(canv)
-            currentFrame = (currentFrame+1)%canvasArray.length
-        },FRAME_INTERVAL*1000)
-    }
-    async function makeAnimationIfEnabled() {
-        if (!generateButton.disabled) {  // TODO _ ASDF
-            enableButton(false,generateButton)
-            initEnvironment()
-            canvasArray = []
-            const startTime = new Date()
-            for (let frameNo=0;frameNo<FRAME_COUNT;frameNo++) {
-                let t = frameNo*FRAME_INTERVAL
-                positionCameraForFrameAtTime(t)
-                let canv = await processSingleImage(imgParagraph,durationElem)
-                canvasArray.push(canv)
-                await new Promise(requestAnimationFrame);
-                frameStatusPara.textContent = 'Complete: ' + (frameNo+1) + ' frames out of ' + FRAME_COUNT
+}
 
-            }
-            const finTime = new Date()
-            const duration = (finTime.getTime()-startTime.getTime())/1000
-            console.log('duration for canvases = ', duration, ' seconds')
-            enableButton(true,generateButton)
-            for (let i=0;i<canvasArray.length*5;i++) {
-                let canv = canvasArray[i%canvasArray.length]
-                setTimeout(()=>{
-                    imgParagraph.innerHTML = ''
-                    imgParagraph.appendChild(canv)
-                },i*FRAME_INTERVAL*1000)
-            }
-        }
+function linkToElements() {
+    imgParagraph = linkElement(IMG_PARA_ID)
+    generateButton = linkElement(GENERATION_BUTTON_ID)
+    cancelButton = linkElement(CANCEL_GEN_BUTTON_ID)
+    startButton = linkElement(START_BUTTON_ID)
+    pauseButton = linkElement(PAUSE_BUTTON_ID)
+    stopButton = linkElement(STOP_BUTTON_ID)
+    randomEnvButton = linkElement(RANDOM_ENV_BUTTON_ID)
+    frameStatusPara = linkElement(FRAME_STATUS_ID)
+    settingsDiv = linkElement(SETTINGS_ID)
+}
+
+async function generateAnimation() {
+    enableButton(false,generateButton,startButton,pauseButton,stopButton,randomEnvButton)
+    enableButton(true,cancelButton)
+    if (!optEnv) {
+        initEnvironment()
     }
+    generationInProgress = true
+    canvasArray = []
+    const startTime = new Date()
+    for (let frameNo=0;frameNo<FRAME_COUNT;frameNo++) {
+        if (!generationInProgress) {
+            canvasArray = []
+            frameStatusPara.textContent = 'animation generation cancelled'
+            return
+        }
+        let t = frameNo*FRAME_INTERVAL
+        positionCameraForFrameAtTime(t)
+        let canv = await processSingleFrame(imgParagraph,durationElem)
+        canvasArray.push(canv)
+        await new Promise(requestAnimationFrame);
+        frameStatusPara.textContent = (frameNo+1) + ' out of ' + FRAME_COUNT + ' frames completed'
+    }
+    generationInProgress = false
+    const finTime = new Date()
+    const duration = (finTime.getTime()-startTime.getTime())/1000
+    enableButton(false,cancelButton)
+    enableButton(true,generateButton,startButton)
+}
+
+function resetTimerLoop() {
+    if (timer !== null) {
+        clearInterval(timer)
+        timer = null
+    }
+    currentFrame = 0
+}
+
+function rollThroughLoop() {
+    timer = setInterval(()=>{
+        let canv = canvasArray[currentFrame]
+        imgParagraph.innerHTML = ''
+        imgParagraph.appendChild(canv)
+        currentFrame = (currentFrame+1)%canvasArray.length
+    },FRAME_INTERVAL*1000)
 }
 
 function linkElement(id) {
@@ -181,7 +177,7 @@ function enableButton(doEnable,...button) {
     })
 }
 
-async function processSingleImage(imgParagraph) {
+async function processSingleFrame(imgParagraph) {
     const gridder = new CanvasGridder()
     const grapher = new BiVariantGrapher(
         gridder,
@@ -331,7 +327,7 @@ function randomColor(lo=0.47,hi=0.94) {
     return arr
 }
 
-function createSettingsInputs() {
+function renderSettingsInputsOnPage() {
     const REQ_INT_LIT = 'requireint'
     if (!settingsDiv) {
         throw 'settings div has not been created'
@@ -381,14 +377,10 @@ function createSettingsInputs() {
     tbl.appendChild(tbody)
 
     tbody.addEventListener('change',(event)=>{
-        console.log('changes not enabled yet for TODO table body ', event)
         const targ = event.target
         if (targ.id && targ.id.startsWith(SETTINGS_PREFIX)) {
             const sansPrefixId = targ.id.slice(SETTINGS_PREFIX.length)
-            console.log('modified id = ', sansPrefixId)
             const mustBeInt = (targ.getAttribute(REQ_INT_LIT) == 'true')
-            console.log('require int = ', mustBeInt)
-            console.log('value = ', targ.value, ' type = ', typeof targ.value)
             let value = 0
             if (mustBeInt) {
                 try {
@@ -406,7 +398,6 @@ function createSettingsInputs() {
                 }
             }
             targ.value = value
-            console.log('value = ', value, ' type = ', typeof value)
             switch (sansPrefixId) {
                 case 'imgwid':
                     ACTUAL_WIDTH = value
