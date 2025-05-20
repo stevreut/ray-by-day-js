@@ -44,6 +44,9 @@ let frameStatusPara = null
 
 let canvasArray = []
 
+let timer = null 
+let currentFrame = 0
+
 onload = () => {
     try {
         imgParagraph = linkElement(IMG_PARA_ID)
@@ -52,16 +55,81 @@ onload = () => {
         pauseButton = linkElement(PAUSE_BUTTON_ID)
         stopButton = linkElement(STOP_BUTTON_ID)
         randomEnvButton = linkElement(RANDOM_ENV_BUTTON_ID)
-
         frameStatusPara = linkElement(FRAME_STATUS_ID)
         settingsDiv = linkElement(SETTINGS_ID)
         createSettingsInputs()
-        enableButton(true,generateButton,stopButton)  // TODO ?
-        // makeAnimationIfEnabled()  // TODO - reenable after testing
-        generateButton.addEventListener('click',()=>makeAnimationIfEnabled())
+        enableButton(true,generateButton)
+        generateButton.addEventListener('click',async ()=>await generateAnimation())
+        startButton.addEventListener('click',()=>{
+            pauseButton.textContent = "Pause Animation"
+            enableButton(false,generateButton,startButton,randomEnvButton)
+            enableButton(true,pauseButton,stopButton)
+            resetTimerLoop()
+            rollThroughLoop()
+        })
+        pauseButton.addEventListener('click',()=>{
+            if (timer !== null) {
+                clearInterval(timer)
+                timer = null
+                enableButton(false,stopButton)
+                enableButton(true,generateButton,startButton,randomEnvButton)
+                pauseButton.textContent = "Restart"
+            } else {
+                enableButton(false,startButton,generateButton,randomEnvButton)
+                enableButton(true,stopButton)
+                pauseButton.textContent = "Pause Animation"
+                rollThroughLoop()
+            }
+        })
+        stopButton.addEventListener('click',()=>{
+            resetTimerLoop()
+            enableButton(false,pauseButton,stopButton)
+            enableButton(true,generateButton,startButton,randomEnvButton)
+        })
+        randomEnvButton.addEventListener('click',()=>{
+            resetTimerLoop()
+            enableButton(false,generateButton,startButton,pauseButton,stopButton,randomEnvButton)
+            initEnvironment()
+            enableButton(true,generateButton)
+        })
     } catch (err) {
         console.error('err = ', err)
         alert ('error = ' + err.toString())  // TODO
+    }
+    async function generateAnimation() {
+        enableButton(false,generateButton,startButton,pauseButton,stopButton,randomEnvButton)
+        if (!optEnv) {
+            initEnvironment()
+        }
+        canvasArray = []
+        const startTime = new Date()
+        for (let frameNo=0;frameNo<FRAME_COUNT;frameNo++) {
+            let t = frameNo*FRAME_INTERVAL
+            positionCameraForFrameAtTime(t)
+            let canv = await processSingleImage(imgParagraph,durationElem)
+            canvasArray.push(canv)
+            await new Promise(requestAnimationFrame);
+            frameStatusPara.textContent = 'Complete: ' + (frameNo+1) + ' frames out of ' + FRAME_COUNT
+        }
+        const finTime = new Date()
+        const duration = (finTime.getTime()-startTime.getTime())/1000
+        console.log('duration for canvases = ', duration, ' seconds')
+        enableButton(true,startButton)
+    }
+    function resetTimerLoop() {
+        if (timer !== null) {
+            clearInterval(timer)
+            timer = null
+        }
+        currentFrame = 0
+    }
+    function rollThroughLoop() {
+        timer = setInterval(()=>{
+            let canv = canvasArray[currentFrame]
+            imgParagraph.innerHTML = ''
+            imgParagraph.appendChild(canv)
+            currentFrame = (currentFrame+1)%canvasArray.length
+        },FRAME_INTERVAL*1000)
     }
     async function makeAnimationIfEnabled() {
         if (!generateButton.disabled) {  // TODO _ ASDF
