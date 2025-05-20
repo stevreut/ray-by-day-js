@@ -47,3 +47,14 @@
     border: solid 1px #ddd;
     padding: 2cm;
 }
+dt {
+    font-weight: bold;
+    color: #888;
+    margin: 3mm 3mm 2mm 7.5mm;
+}
+dd {
+    margin-left: 1.5cm;
+}
+li {
+    margin: 3mm 0mm;
+}

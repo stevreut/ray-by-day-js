@@ -25,6 +25,59 @@
             <button id="stopbtn" class="btndisabled" disabled>Stop Animation</button>
             <button id="randbtn" class="btndisabled" disabled>Randomize Environment</button>
         </p>
+        <h3>Buttons explained...</h3>
+        <dl>
+            <dt>Generate Animation</dt>
+            <dd>Initiates the calculation of animation frames based on settings (above)
+                and the random optical environment.  Note that this only does the frame 
+                calculations; it does not display the resulting frames as animation content.
+                (See "Start Animation")
+            </dd>
+            <dt>Cancel Animation Generation</dt>
+            <dd>Cancels the animation calculation.</dd>
+            <dt>Pause Animation</dt>
+            <dd>Freezes playback of the animation</dd>
+            <dt>Reset</dt>
+            <dd><em>Un</em>freezes a paused animation, causing playback to resume
+            at the point where it was previously paused.</dd>
+            <dt>Stop Animation</dt>
+            <dd>Stops playback of the animation.  Starting animation after a stop
+            causes the animation to restart from the beginning.
+            </dd>
+            <dt>Randomize Environment</dt>
+            <dd>Repopulates the virtual "optical environment" with random objects.  The 
+            optical environment remains unchanged between animation regenerations unless 
+            this button is pressed or the page is reloaded, even though changes to the 
+            settings can impact the dimensions and precision of the generated frames.
+            </dd>
+        </dl>
+        <h3>How to use this page - step-by-step</h3>
+        <ul>
+            <li>Adjust the various settings to reflect desired animation characteristics, 
+                or leave the settings unchanged and proceed with the default values.  (Starting 
+                with the defaults is a good place to start the first time.)
+            </li>
+            <li>Press "Generate Animation" to generate the frame data for an animation.
+                This step can be time-consuming and the time required will vary based 
+                on the various settings.  As the animation creation proceeds, its progress 
+                can be monitored by observing the "... frames completed".  Do <em>not</em> 
+                press "Cancel Animation Generation" unless you explicitly want to cancel 
+                all animation generation calculated and start over.
+            </li>
+            <li>Press "Start Animation" to actually display the calculated animation.  This 
+                animation will loop indefinitely once started unless you intervene.
+            </li>
+            <li>While the animation is playing, you may choose to Pause or Stop its playback.  
+                If you do so, the calculated animation frames will not be lost and the animation 
+                can be easily and quickly restarted via the "Restart" or "Start Animation" 
+                buttons.
+            </li>
+            <li>If a different random arrangement of objects in the virtual environment is desired 
+                then you can press the "Randomize Environment" button, then (optionally) changed 
+                any settings, and then press "Generate Animation" to recalculate the animation.  (Remember 
+                that you will still press "Start Animation" after the animation has been calculated.)
+            </li>
+        </ul>
     </div>
     <div class="hopdiv">
         <a href="./day22.html">Prev</a>
