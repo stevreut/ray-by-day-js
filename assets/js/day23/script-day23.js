@@ -55,6 +55,7 @@ onload = () => {
         linkToElements()
         renderSettingsInputsOnPage()
         enableButton(true,generateButton)
+        firstLoadAction()
         generateButton.addEventListener('click',async ()=>await generateAnimation())
         startButton.addEventListener('click',()=>{
             pauseButton.textContent = "Pause Animation"
@@ -99,6 +100,15 @@ onload = () => {
     }
 }
 
+async function firstLoadAction() {
+    await generateAnimation()
+    pauseButton.textContent = "Pause Animation"
+    enableButton(false,generateButton,startButton,randomEnvButton)
+    enableButton(true,pauseButton,stopButton)
+    resetTimerLoop()
+    rollThroughLoop()
+}
+
 function linkToElements() {
     imgParagraph = linkElement(IMG_PARA_ID)
     generateButton = linkElement(GENERATION_BUTTON_ID)
@@ -123,7 +133,7 @@ async function generateAnimation() {
     for (let frameNo=0;frameNo<FRAME_COUNT;frameNo++) {
         if (!generationInProgress) {
             canvasArray = []
-            frameStatusPara.textContent = 'animation generation cancelled'
+            frameStatusPara.textContent = 'Animation status: ' + 'cancelled'
             return
         }
         let t = frameNo*FRAME_INTERVAL
@@ -131,8 +141,9 @@ async function generateAnimation() {
         let canv = await processSingleFrame(imgParagraph,durationElem)
         canvasArray.push(canv)
         await new Promise(requestAnimationFrame);
-        frameStatusPara.textContent = (frameNo+1) + ' out of ' + FRAME_COUNT + ' frames completed'
+        frameStatusPara.textContent = 'Animation status: ' + (frameNo+1) + ' out of ' + FRAME_COUNT + ' frames completed'
     }
+    setTimeout(()=>frameStatusPara.textContent = 'Animation status: all frames calculated',800)
     generationInProgress = false
     const finTime = new Date()
     const duration = (finTime.getTime()-startTime.getTime())/1000

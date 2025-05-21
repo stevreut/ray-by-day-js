@@ -67,3 +67,9 @@ button {
     font-weight: bold;
     padding: 2mm;
 }
+em {
+    padding: 0;
+    font-style: normal;
+    font-weight: bold;
+    background-color: #fe0;
+}
