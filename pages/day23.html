@@ -25,6 +25,8 @@
             <button id="stopbtn" class="btndisabled" disabled>Stop Animation</button>
             <button id="randbtn" class="btndisabled" disabled>Randomize Environment</button>
         </p>
+    </div>
+    <div>
         <h3>Buttons explained...</h3>
         <dl>
             <dt>Generate Animation</dt>
@@ -35,6 +37,8 @@
             </dd>
             <dt>Cancel Animation Generation</dt>
             <dd>Cancels the animation calculation.</dd>
+            <dt>Start Animation</dt>
+            <dd>Begins playback of a calculated animation.</dd>
             <dt>Pause Animation</dt>
             <dd>Freezes playback of the animation</dd>
             <dt>Reset</dt>
@@ -51,7 +55,7 @@
             settings can impact the dimensions and precision of the generated frames.
             </dd>
         </dl>
-        <h3>How to use this page - step-by-step</h3>
+        <h3>How to use this page to create animations - step-by-step</h3>
         <ul>
             <li>Adjust the various settings to reflect desired animation characteristics, 
                 or leave the settings unchanged and proceed with the default values.  (Starting 
@@ -62,7 +66,7 @@
                 on the various settings.  As the animation creation proceeds, its progress 
                 can be monitored by observing the "... frames completed".  Do <em>not</em> 
                 press "Cancel Animation Generation" unless you explicitly want to cancel 
-                all animation generation calculated and start over.
+                all of the animation generation calculation and start over.
             </li>
             <li>Press "Start Animation" to actually display the calculated animation.  This 
                 animation will loop indefinitely once started unless you intervene.
@@ -76,6 +80,11 @@
                 then you can press the "Randomize Environment" button, then (optionally) changed 
                 any settings, and then press "Generate Animation" to recalculate the animation.  (Remember 
                 that you will still press "Start Animation" after the animation has been calculated.)
+            </li>
+            <li>Before generating a high-resolution animation (i.e. large dimensions, small pixels, many frames, etc.), 
+                you may find it useful to repeatedly (if necessary) generate animations at lower
+                resolution before then changing the settings for higher resolution <em>without</em>
+                pressing the "Randomize Environment" button again.
             </li>
         </ul>
     </div>

@@ -48,13 +48,22 @@
     padding: 2cm;
 }
 dt {
+    display: inline-block;
     font-weight: bold;
-    color: #888;
+    color: #fff;
+    background-color: #8af;
+    padding: 1mm 2mm;
     margin: 3mm 3mm 2mm 7.5mm;
+    border-radius: 1mm;
 }
 dd {
-    margin-left: 1.5cm;
+    margin-left: 1cm;
 }
 li {
     margin: 3mm 0mm;
+}
+button {
+    border-style: outset;
+    font-weight: bold;
+    padding: 2mm;
 }
