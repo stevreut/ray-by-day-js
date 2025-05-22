@@ -1,10 +1,10 @@
 import Vector3D from "../day19/vector3d.js"
-import BiVariantGrapher from "../day19/bivargrapher.js"
 import Ray from "../day19/ray.js"
 import ReflectiveSphere from "../day19/reflective-sphere.js"
 import CanvasGridder from "../day19/canvas-gridder.js"
 import Sphere from "../day19/sphere.js"
 
+import BiVariantGrapher from "./bivargrapher.js"
 import Sky from "./sky.js"
 import OpticalEnvironment from "./optical-env.js"
 import Plane from "./plane.js"
@@ -12,8 +12,11 @@ import RefractiveSphere from "./refractive-sphere.js"
 
 
 const IMG_PARA_ID = 'imgpara'
+const STATUS_BAR_ID = 'statbar'
 const DURATION_TEXT_ID = 'dur'
 const REPEAT_BUTTON_ID = 'rptbtn'
+
+const STATUS_CONTAINER_CLASS = 'progress-container'
 
 const ACTUAL_WIDTH = 1024
 const ACTUAL_HEIGHT = Math.round(ACTUAL_WIDTH*0.75)
@@ -22,14 +25,20 @@ const ANTI_ALIAS = 4
 
 let buttonEnabled = false
 
+let imgParagraph = null
+let statBarElem  = null
+
 onload = () => {
     try {
-        let imgParagraph = document.getElementById(IMG_PARA_ID)
+        imgParagraph = document.getElementById(IMG_PARA_ID)
         let goAgainButton = document.getElementById(REPEAT_BUTTON_ID)
         let durationElem = document.getElementById(DURATION_TEXT_ID)
+        statBarElem = document.getElementById(STATUS_BAR_ID)
         if (!imgParagraph) {
             throw 'no ' + IMG_PARA_ID + ' id found on page'
         }
+        initStatusBar()
+        insertBlankCanvas()
         if (!goAgainButton) {
             throw 'no ' + REPEAT_BUTTON_ID + ' id found on page'
         }
@@ -58,9 +67,9 @@ onload = () => {
     }
 }
 
-function processImage(imgParagraph,durationElem) {
+async function processImage(imgParagraph,durationElem) {
     initEnvironment()
-    imgParagraph.innerHTML = ''
+    durationElem.textContent = ''
     const gridder = new CanvasGridder()
     const startTime = new Date()
     const grapher = new BiVariantGrapher(
@@ -69,14 +78,57 @@ function processImage(imgParagraph,durationElem) {
         Math.floor(ACTUAL_HEIGHT/PIXEL_SIZE),
         PIXEL_SIZE, 
         ACTUAL_HEIGHT/PIXEL_SIZE*0.33,
-        f,ANTI_ALIAS
+        f,ANTI_ALIAS,
+        statusReporterFunction
     )
-    let canvasElem = grapher.drawGraph()
+    let canvasElem = await grapher.drawGraph()
     const finTime = new Date()
     const durationMs = finTime.getTime()-startTime.getTime()
     const durationSecs = durationMs/1000
+    imgParagraph.innerHTML = ''
     imgParagraph.appendChild(canvasElem)
     durationElem.textContent = 'Image generation duration: ' + durationSecs + ' seconds'
+}
+
+function initStatusBar() {
+    const statContainers = document.querySelectorAll('.' + STATUS_CONTAINER_CLASS)
+    if (statContainers) {
+        statContainers.forEach(stc=>{
+            stc.style.width = ACTUAL_WIDTH + 'px'
+        })
+    }
+}
+
+function insertBlankCanvas() {
+    const canv = document.createElement('canvas')
+    if (canv) {
+        imgParagraph.innerHTML = ''
+        canv.width = ACTUAL_WIDTH
+        canv.height = ACTUAL_HEIGHT
+        const localContext = canv.getContext('2d')
+        if (localContext) {
+            localContext.fillStyle = '#ddd';
+            localContext.fillRect(0,0,ACTUAL_WIDTH,ACTUAL_HEIGHT)
+            localContext.fillStyle = '#bbb';
+            const currentFont = localContext.font
+            const fontParts = currentFont.split(' ')
+            const newFont = '36px ' + fontParts.slice(1).join(' ')
+            localContext.font = newFont
+            localContext.fillText('Image creation in progress...',30,80)
+        }
+        imgParagraph.appendChild(canv)
+    }
+}
+
+function statusReporterFunction(frac) {
+    if (typeof frac !== 'number') {
+        console.error('status is non-number')
+    } else {
+        let p = Math.round(Math.max(0,Math.min(1,frac))*1000)/10
+        p = p.toFixed(1)
+        statBarElem.textContent = 'Status: ' + p + '% complete'
+        statBarElem.style.width = (p + '%')
+    }
 }
 
 const universalOrigin = new Vector3D(10,-15,6)

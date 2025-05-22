@@ -7,7 +7,7 @@ import Sky from "../day21/sky.js"
 import OpticalEnvironment from "../day21/optical-env.js"
 import Plane from "../day21/plane.js"
 import RefractiveSphere from "../day21/refractive-sphere.js"
-import BiVariantGrapher from "../day22/bivargrapher.js"
+import BiVariantGrapher from "../day21/bivargrapher.js"
 
 
 

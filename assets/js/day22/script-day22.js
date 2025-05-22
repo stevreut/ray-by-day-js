@@ -3,13 +3,13 @@ import Ray from "../day19/ray.js"
 import ReflectiveSphere from "../day19/reflective-sphere.js"
 import CanvasGridder from "../day19/canvas-gridder.js"
 import Sphere from "../day19/sphere.js"
+import BiVariantGrapher from "../day21/bivargrapher.js"
 import Sky from "../day21/sky.js"
 import OpticalEnvironment from "../day21/optical-env.js"
 import Plane from "../day21/plane.js"
 import RefractiveSphere from "../day21/refractive-sphere.js"
 
 import ReflectiveIcosahedron from "./refl-icos.js"
-import BiVariantGrapher from "./bivargrapher.js"
 
 
 const IMG_PARA_ID = 'imgpara'
