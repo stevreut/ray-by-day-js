@@ -220,20 +220,6 @@ function positionCameraForFrameAtTime(t) {
     )
     optEnv.setCamera(cameraRay,0,10)
     //
-    function posVec(t) {
-        const SZ = 4.5
-        const th1 = t*2*Math.PI/(FRAME_COUNT*FRAME_INTERVAL)
-        const th2 = th1*2
-        // Vector path traced out by the following is a Lemiscate of Bernoulli
-        // ( https://en.wikipedia.org/wiki/Lemniscate_of_Bernoulli )
-        // which is basically a figure-8 path.  In this case it is slightly canted to give the elevation some
-        // variety.
-        // The parametric equations used in this case do NOT yield constant velocity.
-        const x = Math.cos(th1)*SZ
-        const y = Math.sin(th2)*SZ*0.5
-        const z = x*0.2
-        return new Vector3D(x,y,z)
-    }
     function velocVec(t) {
         // Use an approximation of the derivative of the position vector
         // (posVec) to determine the velocity vector.  The magnitude of this
@@ -245,6 +231,21 @@ function positionCameraForFrameAtTime(t) {
     }
 }
 
+function posVec(t) {
+    const SZ = 3.5
+    const th1 = t*2*Math.PI/(FRAME_COUNT*FRAME_INTERVAL)
+    const th2 = th1*2
+    // Vector path traced out by the following is a Lemiscate of Bernoulli
+    // ( https://en.wikipedia.org/wiki/Lemniscate_of_Bernoulli )
+    // which is basically a figure-8 path.  In this case it is slightly canted to give the elevation some
+    // variety.
+    // The parametric equations used in this case do NOT yield constant velocity.
+    const x = Math.cos(th1)*SZ
+    const y = Math.sin(th2)*SZ*0.5
+    const z = x*0.2
+    return new Vector3D(x,y,z)
+}
+
 function initEnvironment() {
     optEnv = new OpticalEnvironment()
     initRandomShapes()
@@ -254,7 +255,6 @@ function initEnvironment() {
 
 function initRandomShapes() {
     const TARGET_SHAPE_COUNT = 20
-    const lightV = new Vector3D(0,0,1)
     let rejectCount = 0
     const shapeTempArray = []
     const MIN_SPACE = 0.2
@@ -270,11 +270,7 @@ function initRandomShapes() {
         } else {
             candidateObject.type = 'sphf'
         }
-        if (candidateObject.type === 'icos') {
-            candidateObject.radius = Math.random()*1.4+1
-        } else {
-            candidateObject.radius = 1
-        }
+        candidateObject.radius = 1
         let hasIntersect = false
         shapeTempArray.forEach(otherShape=>{
             if (!hasIntersect) {
@@ -284,6 +280,11 @@ function initRandomShapes() {
                 }
             }
         })
+        if (!hasIntersect) {
+            if (intersectsCameraPath(candidateObject)) {
+                hasIntersect = true
+            }
+        }
         if (hasIntersect) {
             rejectCount++
         } else {
@@ -312,6 +313,39 @@ function initRandomShapes() {
             optEnv.addOpticalObject(obj)
         }
     })
+}
+
+let pathTrace = null
+
+function createPathTrace() {
+    pathTrace = []
+    for (let i=0;i<100;i++) {
+        const t = i/100*FRAME_COUNT*FRAME_INTERVAL
+        pathTrace.push(posVec(t))
+    }   
+}
+
+function intersectsCameraPath(obj) {
+    if (!pathTrace) {
+        createPathTrace()
+        if (!pathTrace) {
+            throw 'unable to create path trace'
+        }
+    }
+    const { center, radius } = obj
+    if (!center instanceof Vector3D || typeof radius !== 'number') {
+        console.error('ignoring object with unexpected attributes')
+        return true
+    }
+    let isIntersect = false
+    pathTrace.forEach(pctr=>{
+        if (!isIntersect) {
+            if (center.subt(pctr).magn() <= radius+0.1) {
+                isIntersect = true
+            }
+        }
+    })
+    return isIntersect
 }
 
 function randomCenter() {
