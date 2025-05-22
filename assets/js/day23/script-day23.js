@@ -225,7 +225,7 @@ function positionCameraForFrameAtTime(t) {
         const th1 = t*2*Math.PI/(FRAME_COUNT*FRAME_INTERVAL)
         const th2 = th1*2
         // Vector path traced out by the following is a Lemiscate of Bernoulli
-        // ( https://en.wikipedia.org/wiki/Lemniscate_of_Bernoulli#:~:text=In%20geometry%2C%20the%20lemniscate%20of,and%20to%20the%20%E2%88%9E%20symbol. )
+        // ( https://en.wikipedia.org/wiki/Lemniscate_of_Bernoulli )
         // which is basically a figure-8 path.  In this case it is slightly canted to give the elevation some
         // variety.
         // The parametric equations used in this case do NOT yield constant velocity.
