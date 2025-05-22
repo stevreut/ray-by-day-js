@@ -17,6 +17,8 @@ const STATUS_BAR_ID = 'statbar'
 const DURATION_TEXT_ID = 'dur'
 const REPEAT_BUTTON_ID = 'rptbtn'
 
+const STATUS_CONTAINER_CLASS = 'progress-container'
+
 const ACTUAL_WIDTH = 600
 const ACTUAL_HEIGHT = Math.round(ACTUAL_WIDTH*0.75)
 const PIXEL_SIZE = 1
@@ -38,6 +40,8 @@ onload = () => {
         goAgainButton = linkElement(REPEAT_BUTTON_ID)
         durationElem = linkElement(DURATION_TEXT_ID)
         statBarElem = linkElement(STATUS_BAR_ID)
+        initStatusBar()
+        insertBlankCanvas()
         makeImageIfEnabled()
         goAgainButton.addEventListener('click',()=>makeImageIfEnabled())
     } catch (err) {
@@ -96,6 +100,34 @@ async function processImage(imgParagraph,durationElem) {
     imgParagraph.innerHTML = ''
     imgParagraph.appendChild(canvasElem)
     durationElem.textContent = 'Image generation duration: ' + durationSecs + ' seconds'
+}
+
+function initStatusBar() {
+    const statContainers = document.querySelectorAll('.' + STATUS_CONTAINER_CLASS)
+    if (statContainers) {
+        statContainers.forEach(stc=>{
+            stc.style.width = ACTUAL_WIDTH + 'px'
+        })
+    }
+}
+
+function insertBlankCanvas() {
+    const canv = document.createElement('canvas')
+    if (canv) {
+        imgParagraph.innerHTML = ''
+        canv.width = ACTUAL_WIDTH
+        canv.height = ACTUAL_HEIGHT
+        const localContext = canv.getContext('2d')
+        if (localContext) {
+            localContext.fillStyle = '#ccc';
+            localContext.fillRect(0,0,ACTUAL_WIDTH,ACTUAL_HEIGHT)
+            localContext.fillStyle = '#999';
+            // localContext.font = ''
+            localContext.font = '36px serif'
+            localContext.fillText('Image creation in progress...',30,80)
+        }
+        imgParagraph.appendChild(canv)
+    }
 }
 
 function statusReporterFunction(frac) {

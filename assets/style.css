@@ -130,6 +130,7 @@ em {
     background-color: #eee;
 }
 .progress-container {
+    display: inline-block;
     width: 100%;
     background: #eee;
     border: 1px solid #ccc;
