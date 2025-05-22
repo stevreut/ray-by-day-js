@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas to WebM</title>
+</head>
+<body>
+  <canvas id="canvas" width="300" height="150"></canvas>
+  <br>
+  <button id="startBtn">Start Recording</button>
+  <a id="downloadLink" style="display: none;">Download Video</a>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const startBtn = document.getElementById('startBtn');
+    const downloadLink = document.getElementById('downloadLink');
+
+    const stream = canvas.captureStream(30); // 30 FPS
+    const mediaRecorder = new MediaRecorder(stream, {
+      mimeType: 'video/webm'
+    });
+
+    const chunks = [];
+
+    mediaRecorder.ondataavailable = (e) => {
+      if (e.data.size > 0) chunks.push(e.data);
+    };
+
+    mediaRecorder.onstop = () => {
+      const blob = new Blob(chunks, { type: 'video/webm' });
+      const url = URL.createObjectURL(blob);
+
+      downloadLink.href = url;
+      downloadLink.download = 'animation.webm';
+      downloadLink.textContent = 'Download Video';
+      downloadLink.style.display = 'inline';
+    };
+
+    function drawFrame(frame) {
+      ctx.fillStyle = "white";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = "red";
+      ctx.beginPath();
+      ctx.arc(30 + frame * 10, 75, 20, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    async function animateAndRecord() {
+      const totalFrames = 30;
+      const fps = 30;
+      const interval = 1000 / fps;
+
+      for (let i = 0; i < totalFrames; i++) {
+        drawFrame(i);
+        await new Promise(res => setTimeout(res, interval));
+      }
+
+      mediaRecorder.stop();
+    }
+
+    startBtn.addEventListener('click', () => {
+      chunks.length = 0; // clear previous data
+      mediaRecorder.start();
+      animateAndRecord();
+    });
+  </script>
+</body>
+</html>
