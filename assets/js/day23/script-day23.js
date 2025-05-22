@@ -252,13 +252,6 @@ function initEnvironment() {
     optEnv.addOpticalObject(new Sky())
 }
 
-function f(x,y) {
-    if (!optEnv) {
-        throw 'optEnv not initiated'
-    }
-    return optEnv.colorFromXY(x,y)
-}
-
 function initRandomShapes() {
     const TARGET_SHAPE_COUNT = 20
     const lightV = new Vector3D(0,0,1)
