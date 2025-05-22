@@ -119,11 +119,13 @@ function insertBlankCanvas() {
         canv.height = ACTUAL_HEIGHT
         const localContext = canv.getContext('2d')
         if (localContext) {
-            localContext.fillStyle = '#ccc';
+            localContext.fillStyle = '#ddd';
             localContext.fillRect(0,0,ACTUAL_WIDTH,ACTUAL_HEIGHT)
-            localContext.fillStyle = '#999';
-            // localContext.font = ''
-            localContext.font = '36px serif'
+            localContext.fillStyle = '#bbb';
+            const currentFont = localContext.font
+            const fontParts = currentFont.split(' ')
+            const newFont = '36px ' + fontParts.slice(1).join(' ')
+            localContext.font = newFont
             localContext.fillText('Image creation in progress...',30,80)
         }
         imgParagraph.appendChild(canv)
