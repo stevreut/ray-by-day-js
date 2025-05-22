@@ -19,10 +19,10 @@ const REPEAT_BUTTON_ID = 'rptbtn'
 
 const STATUS_CONTAINER_CLASS = 'progress-container'
 
-const ACTUAL_WIDTH = 600
+const ACTUAL_WIDTH = 800
 const ACTUAL_HEIGHT = Math.round(ACTUAL_WIDTH*0.75)
-const PIXEL_SIZE = 1
-const ANTI_ALIAS = 4
+const PIXEL_SIZE = 2
+const ANTI_ALIAS = 5
 
 const universalOrigin = new Vector3D(-17,5,7.5)
 
