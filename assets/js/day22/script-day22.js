@@ -1,15 +1,14 @@
-import Vector3D from "../day19/vector3d.js"
-import Ray from "../day19/ray.js"
-import ReflectiveSphere from "../day19/reflective-sphere.js"
-import CanvasGridder from "../day19/canvas-gridder.js"
-import Sphere from "../day19/sphere.js"
-import BiVariantGrapher from "../day21/bivargrapher.js"
-import Sky from "../day21/sky.js"
-import OpticalEnvironment from "../day21/optical-env.js"
-import Plane from "../day21/plane.js"
-import RefractiveSphere from "../day21/refractive-sphere.js"
+import Vector3D from "../day20/vector3d.js"
+import Ray from "../day20/ray.js"
+import ReflectiveSphere from "../day20/reflective-sphere.js"
+import CanvasGridder from "../day20/canvas-gridder.js"
+import Sphere from "../day20/sphere.js"
 
-import ReflectiveIcosahedron from "./refl-icos.js"
+import BiVariantGrapher from "./bivargrapher.js"
+import Sky from "./sky.js"
+import OpticalEnvironment from "./optical-env.js"
+import Plane from "./plane.js"
+import RefractiveSphere from "./refractive-sphere.js"
 
 
 const IMG_PARA_ID = 'imgpara'
@@ -19,63 +18,52 @@ const REPEAT_BUTTON_ID = 'rptbtn'
 
 const STATUS_CONTAINER_CLASS = 'progress-container'
 
-const ACTUAL_WIDTH = 800
+const ACTUAL_WIDTH = 1024
 const ACTUAL_HEIGHT = Math.round(ACTUAL_WIDTH*0.75)
-const PIXEL_SIZE = 2
-const ANTI_ALIAS = 5
+const PIXEL_SIZE = 1
+const ANTI_ALIAS = 4
 
-const universalOrigin = new Vector3D(-17,5,7.5)
+let buttonEnabled = false
 
-let statBarElem = null
-let goAgainButton = null
 let imgParagraph = null
-let durationElem = null
-
-let buttonEnabled = true
-
+let statBarElem  = null
 
 onload = () => {
     try {
-        imgParagraph = linkElement(IMG_PARA_ID)
-        goAgainButton = linkElement(REPEAT_BUTTON_ID)
-        durationElem = linkElement(DURATION_TEXT_ID)
-        statBarElem = linkElement(STATUS_BAR_ID)
+        imgParagraph = document.getElementById(IMG_PARA_ID)
+        let goAgainButton = document.getElementById(REPEAT_BUTTON_ID)
+        let durationElem = document.getElementById(DURATION_TEXT_ID)
+        statBarElem = document.getElementById(STATUS_BAR_ID)
+        if (!imgParagraph) {
+            throw 'no ' + IMG_PARA_ID + ' id found on page'
+        }
         initStatusBar()
         insertBlankCanvas()
-        makeImageIfEnabled()
-        goAgainButton.addEventListener('click',()=>makeImageIfEnabled())
+        if (!goAgainButton) {
+            throw 'no ' + REPEAT_BUTTON_ID + ' id found on page'
+        }
+        setTimeout(()=>{
+            processImage(imgParagraph,durationElem)
+            goAgainButton.disabled = false
+            goAgainButton.classList.remove('btndisabled')
+            buttonEnabled = true
+        },0)
+        goAgainButton.addEventListener('click',()=>{
+            if (buttonEnabled) {
+                buttonEnabled = false
+                goAgainButton.disabled = true
+                goAgainButton.classList.add('btndisabled')
+                setTimeout(()=>{
+                    processImage(imgParagraph,durationElem)
+                    goAgainButton.disabled = false
+                    goAgainButton.classList.remove('btndisabled')
+                    buttonEnabled = true
+                },0)
+            }
+        })
     } catch (err) {
         console.error('err = ', err)
         alert ('error = ' + err.toString())  // TODO
-    }
-    function makeImageIfEnabled() {
-        if (buttonEnabled) {
-            enableButton(false)
-            setTimeout(async ()=>{
-                await processImage(imgParagraph,durationElem)
-                enableButton(true)
-            },0)
-        }
-    }
-}
-
-function linkElement(id) {
-    let elem = document.getElementById(id)
-    if (!elem) {
-        throw 'no ' + id + ' id found on page'
-    }
-    return elem
-}
-
-function enableButton(doEnable) {
-    if (doEnable === null || doEnable === true) {
-        buttonEnabled = true
-        goAgainButton.disabled = false
-        goAgainButton.classList.remove('btndisabled')
-    } else {
-        buttonEnabled = false
-        goAgainButton.disabled = true
-        goAgainButton.classList.add('btndisabled')
     }
 }
 
@@ -143,6 +131,8 @@ function statusReporterFunction(frac) {
     }
 }
 
+const universalOrigin = new Vector3D(10,-15,6)
+
 let optEnv = null
 
 function initEnvironment() {
@@ -152,8 +142,8 @@ function initEnvironment() {
         universalOrigin.scalarMult(-1)
     )
     optEnv.setCamera(cameraRay,0.5,universalOrigin.magn())
-    initRandomShapes()
-    optEnv.addOpticalObject(new Plane(-7.5,12,2))
+    initRandomSpheres()
+    optEnv.addOpticalObject(new Plane(-7.5,25,2))
     optEnv.addOpticalObject(new Sky())
 }
 
@@ -165,36 +155,19 @@ function f(x,y) {
     return optEnv.colorFromXY(x,y)
 }
 
-function initRandomShapes() {
-    const TARGET_SHAPE_COUNT = 25
+function initRandomSpheres() {
+    const SPH_COUNT = 8
     const lightV = new Vector3D(0,0,1)
+    let sphereCount = 0
     let rejectCount = 0
-    const shapeTempArray = []
-    const MIN_SPACE = 0.2  // TODO
-    while (shapeTempArray.length < TARGET_SHAPE_COUNT) {
-        let candidateObject = {
-            center: randomCenter()
-        }
-        let rando = Math.random();
-        if (rando < 0.3) {
-            candidateObject.type = 'icos'
-        } else if (rando < 0.7) {
-            candidateObject.type = 'spht'
-        } else if (rando < 0.9) {
-            candidateObject.type = 'sphm'
-        } else {
-            candidateObject.type = 'sphf'
-        }
-        if (candidateObject.type === 'icos') {
-            candidateObject.radius = Math.random()*1.4+1
-        } else {
-            candidateObject.radius = 1
-        }
+    const sphTempArray = []
+    while (sphereCount < SPH_COUNT) {
+        const ctrV = randomCenter()
+        const radius = (Math.random()+1)*1.125
         let hasIntersect = false
-        shapeTempArray.forEach(otherShape=>{
+        sphTempArray.forEach(tmpSph=>{
             if (!hasIntersect) {
-                if (otherShape.center.subt(candidateObject.center).magn() <= 
-                        otherShape.radius+candidateObject.radius+MIN_SPACE) {
+                if (tmpSph.center.subt(ctrV).magnSqr()<=(radius+tmpSph.radius)**2) {
                     hasIntersect = true
                 }
             }
@@ -202,34 +175,22 @@ function initRandomShapes() {
         if (hasIntersect) {
             rejectCount++
         } else {
-            shapeTempArray.push(candidateObject)
+            let sphere = null
+            if (sphereCount < 4) {
+                sphere = new ReflectiveSphere(ctrV,radius,randomColor(0.5,0.7))
+            } else if (sphereCount < 5) {
+                sphere = new Sphere(ctrV,radius,randomColor(),lightV)
+            } else {
+                sphere = new RefractiveSphere(ctrV,radius,randomColor(),1.5)
+            }
+            optEnv.addOpticalObject(sphere)
+            sphTempArray.push({
+                center: ctrV,
+                radius: radius 
+            })
+            sphereCount++
         }
     }
-    const straightUp = new Vector3D(0,0,1)
-    shapeTempArray.forEach(shape=>{
-        const { type } = shape
-        let obj = null
-        switch (type) {
-            case 'icos':
-                obj = new ReflectiveIcosahedron(shape.center,shape.radius,randomColor(0.5,0.6))
-                break;
-            case 'sphm':
-                obj = new ReflectiveSphere(shape.center,shape.radius,randomColor(0.5,0.6))
-                break;
-            case 'spht':
-                obj = new RefractiveSphere(shape.center,shape.radius,randomColor(),1.5)
-                break;
-            case 'sphf':
-                obj = new Sphere(shape.center,shape.radius,randomColor(0.7,0.85),straightUp)
-                break;
-            default:
-                console.error('unexpected shape = ', type, ' - ignored')
-                // obj remains null
-        }
-        if (obj) {
-            optEnv.addOpticalObject(obj)
-        }
-    })
 }
 
 function randomCenter() {

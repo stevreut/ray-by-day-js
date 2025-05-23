@@ -3,6 +3,7 @@ import Ray from "../day20/ray.js"
 import OpticalObject from "../day20/optical-object.js"
 
 class OpticalEnvironment {
+    ASPECT_FACTOR = 4
     constructor() {
         this.optObjList = []
         this.objCount = 0
@@ -18,7 +19,7 @@ class OpticalEnvironment {
         this.optObjList.push(obj)
         this.objCount++
     }
-    setCamera(cameraRay) {
+    setCamera(cameraRay,aperture=0,focalDistance=4) {
         if (!cameraRay instanceof Ray) {
             throw 'attempted to setCamera for non-Ray'
         }
@@ -32,6 +33,12 @@ class OpticalEnvironment {
         this.camera.xUnit = xUnit
         const yUnit = xUnit.cross(dir).normalized()
         this.camera.yUnit = yUnit
+        this.camera.semiAperture = aperture/2
+        this.camera.usingAperture = (this.camera.semiAperture !== 0)
+        if (this.camera.usingAperture) {
+            this.camera.distance = focalDistance
+            this.camera.directionApertureMultiplier = -this.ASPECT_FACTOR/this.camera.distance
+        }
     }
     getObjectCount() {
         return this.objCount
@@ -41,11 +48,7 @@ class OpticalEnvironment {
         if (!ray.count) {
             ray.count = 1
         }
-        // return this.colorFromRay(ray)
         let color = this.colorFromRay(ray)
-        if (!this.isColor(color)) {
-            console.error('non-color: ', color, ' coords = ', x, y)
-        }
         return color
     }
     colorFromRay(ray) {
@@ -113,13 +116,31 @@ class OpticalEnvironment {
         return true
     }
     rayFromXY(x,y) {
+        let origVector = this.camera.orig
         let dirVector = this.camera.xUnit.scalarMult(x)
             .add(this.camera.yUnit.scalarMult(y))
-            .add(this.camera.dir.scalarMult(4))
-        return new Ray(this.camera.orig,
+            .add(this.camera.dir.scalarMult(this.ASPECT_FACTOR))
+        if (this.camera.usingAperture) {
+            const [randX,randY] = randomWithinUnitCircle()
+            const randomBlurVector = this.camera.xUnit.scalarMult(this.camera.semiAperture*randX)
+                .add(this.camera.yUnit.scalarMult(this.camera.semiAperture*randY))
+            origVector = origVector.add(randomBlurVector)
+            dirVector = dirVector.add(randomBlurVector.scalarMult(this.camera.directionApertureMultiplier))
+        }
+        return new Ray(origVector,
             dirVector,
             this.WHITE
         )
+        //
+        function randomWithinUnitCircle() {
+            while (true) {
+                const x = Math.random()*2-1
+                const y = Math.random()*2-1
+                if (x*x+y*y <= 1) {
+                    return [x,y]
+                }
+            }
+        }
     }
     getLeastDistanceObject(ray) {
         let leastDist = null

@@ -1,4 +1,4 @@
-import OpticalObject from "../day19/optical-object.js";
+import OpticalObject from "../day20/optical-object.js";
 
 class Sky extends OpticalObject {
     SKY_BLUE = [0.53125,0.8125,0.90625]

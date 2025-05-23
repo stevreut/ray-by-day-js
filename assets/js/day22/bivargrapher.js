@@ -1,4 +1,4 @@
-import Gridder from "../day19/gridder.js";
+import Gridder from "../day20/gridder.js";
 
 class BiVariantGrapher {
     constructor(gridder,width,height,pixelSize,pixelsPerUnit = 1,bvf,antiAlias = 1,statusReporter) {

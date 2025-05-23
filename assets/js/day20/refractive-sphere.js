@@ -1,17 +1,15 @@
-import Sphere from "../day19/sphere.js"
-import Vector3D from "../day19/vector3d.js"
-import Ray from "../day19/ray.js"
+import Sphere from "./sphere.js"
+import Vector3D from "./vector3d.js"
+import Ray from "./ray.js"
 
 class RefractiveSphere extends Sphere {
-    constructor(center,radius,color,refractiveIndex,gloss=0.125) {
+    constructor(center,radius,color,refractiveIndex) {
         super(center,radius,color,new Vector3D(1,1,1))  // TODO - need to get lightV out of Sphere class
         if (typeof refractiveIndex !== 'number' || refractiveIndex <= 0) {
             throw 'invalid refractiveIndex'
         }
         this.refractiveIndex = refractiveIndex
         this.r2 = radius*radius
-        this.gloss = gloss
-        this.glossComplement = 1-this.gloss
     }
 
     // interceptDistance() inherits from Sphere without alteration
@@ -25,10 +23,7 @@ class RefractiveSphere extends Sphere {
         const surfaceVector1 = dir.scalarMult(dist1/dir.magn()).add(ray.getOrigin())
         const normVect = surfaceVector1.subt(this.center)
         const resultantDir1 = dir.refract(normVect,this.refractiveIndex)
-        const reflectedDir = dir.reflect(normVect)
-        const reflectedColor = ray.color.map(prim=>prim*this.gloss)
-        const reflectedRay = new Ray(surfaceVector1,reflectedDir,reflectedColor)
-        const resultantColor = ray.color.map(prim=>prim*this.glossComplement)
+        const resultantColor = ray.color
         const resultantRay1 = new Ray(surfaceVector1,resultantDir1,resultantColor)
         const dist2 = this.#raySecondDistToSphere(resultantRay1)
         const surfaceVector2 = surfaceVector1.add(resultantRay1.getDirection().normalized().scalarMult(dist2))
@@ -37,7 +32,7 @@ class RefractiveSphere extends Sphere {
             surfaceVector2.add(resultantDir2.normalized().scalarMult(1e-9)),
             resultantDir2,resultantColor    
         )
-        return [resultantRay2,reflectedRay]
+        return resultantRay2
     }
 
     #raySecondDistToSphere(ray) {

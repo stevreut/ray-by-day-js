@@ -1,5 +1,5 @@
-import OpticalObject from "../day19/optical-object.js";
-import Vector3D from "../day19/vector3d.js";
+import OpticalObject from "../day20/optical-object.js";
+import Vector3D from "../day20/vector3d.js";
 
 class Triangle extends OpticalObject {
     constructor (vertex1, vertex2, vertex3, color) {

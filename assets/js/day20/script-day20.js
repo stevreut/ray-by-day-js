@@ -1,23 +1,16 @@
-import Vector3D from "../day19/vector3d.js"
-import BiVariantGrapher from "../day19/bivargrapher.js"
-import Ray from "../day19/ray.js"
-import ReflectiveSphere from "../day19/reflective-sphere.js"
-import Plane from "../day19/plane.js"
-import CanvasGridder from "../day19/canvas-gridder.js"
-import Sphere from "../day19/sphere.js"
-
+import Vector3D from "./vector3d.js"
+import BiVariantGrapher from "./bivargrapher.js"
+import Ray from "./ray.js"
 import OpticalEnvironment from "./optical-env.js"
+import ReflectiveSphere from "./reflective-sphere.js"
 import RefractiveSphere from "./refractive-sphere.js"
-
+import Plane from "./plane.js"
+import CanvasGridder from "./canvas-gridder.js"
+import Sphere from "./sphere.js"
 
 const IMG_PARA_ID = 'imgpara'
 const DURATION_TEXT_ID = 'dur'
 const REPEAT_BUTTON_ID = 'rptbtn'
-
-const ACTUAL_WIDTH = 1024
-const ACTUAL_HEIGHT = Math.round(ACTUAL_WIDTH*0.75)
-const PIXEL_SIZE = 1
-const ANTI_ALIAS = 3
 
 let buttonEnabled = false
 
@@ -60,16 +53,11 @@ onload = () => {
 function processImage(imgParagraph,durationElem) {
     initEnvironment()
     imgParagraph.innerHTML = ''
+    // const gridder = new GridGraph()
     const gridder = new CanvasGridder()
     const startTime = new Date()
-    const grapher = new BiVariantGrapher(
-        gridder,
-        Math.floor(ACTUAL_WIDTH/PIXEL_SIZE),
-        Math.floor(ACTUAL_HEIGHT/PIXEL_SIZE),
-        PIXEL_SIZE, 
-        ACTUAL_HEIGHT/PIXEL_SIZE*0.33,
-        f,ANTI_ALIAS
-    )
+    const grapher = new BiVariantGrapher(gridder,1024,1024*3/4,1,260,f,3)  // TODO - restore after testing
+    // const grapher = new BiVariantGrapher(gridder,160,120,6,52,f,2)
     let canvasElem = grapher.drawGraph()
     const finTime = new Date()
     const durationMs = finTime.getTime()-startTime.getTime()
@@ -102,6 +90,7 @@ function f(x,y) {
 }
 
 function initRandomSpheres() {
+    // const SPH_COUNT = 25
     const SPH_COUNT = 8
     const lightV = new Vector3D(0,0,1)
     let sphereCount = 0

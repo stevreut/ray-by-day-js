@@ -1,5 +1,5 @@
-import OpticalObject from "../day19/optical-object.js"
-import Ray from "../day19/ray.js"
+import OpticalObject from "../day20/optical-object.js"
+import Ray from "../day20/ray.js"
 
 class Plane extends OpticalObject {
     constructor(level,lightingSpread=10,squareSize=1) {

@@ -1,99 +1,73 @@
-import Vector3D from "../day17/vector3d.js"
+import Vector3D from "./vector3d.js"
 import GridGraph from "../day6a/gridgraph.js"
 import BiVariantGrapher from "../day6a/bivargrapher.js"
-import Ray from "../day17/ray.js"
-import OpticalEnvironment from "../day17/optical-env.js"
-import ReflectiveSphere from "../day17/reflective-sphere.js"
-import Plane from "../day17/plane.js"
+import Ray from "./ray.js"
+import OpticalEnvironment from "./optical-env.js"
+import ReflectiveSphere from "./reflective-sphere.js"
+import Plane from "./plane.js"
 
 const IMG_PARA_ID = 'imgpara'
+const DURATION_TEXT_ID = 'dur'
 const REPEAT_BUTTON_ID = 'rptbtn'
-const SWAP_BUTTON_ID = 'swapview'
-const SWAP_TXT_ID = 'stereomode'
-
-let isCrossEyed = true
 
 onload = () => {
     try {
         let imgParagraph = document.getElementById(IMG_PARA_ID)
         let goAgainButton = document.getElementById(REPEAT_BUTTON_ID)
-        let swapButton = document.getElementById(SWAP_BUTTON_ID)
-        let viewModeTxt = document.getElementById(SWAP_TXT_ID)
+        let durationElem = document.getElementById(DURATION_TEXT_ID)
         if (!imgParagraph) {
             throw 'no ' + IMG_PARA_ID + ' id found on page'
         }
         if (!goAgainButton) {
             throw 'no ' + REPEAT_BUTTON_ID + ' id found on page'
         }
-        if (!swapButton) {
-            throw 'no ' + SWAP_BUTTON_ID + ' id found on page'
-        }
-        if (!viewModeTxt) {
-            throw 'no ' + SWAP_TXT_ID + ' id found'
-        }
-        initEnvironment(imgParagraph)
-        processImage(imgParagraph,cameraRightOrigin)
-        processImage(imgParagraph,cameraLeftOrigin)
-        goAgainButton.addEventListener('click',()=>{
-            initEnvironment(imgParagraph)
-            processImage(imgParagraph,cameraRightOrigin)
-            processImage(imgParagraph,cameraLeftOrigin)
-        })
-        swapButton.addEventListener('click',()=>{
-            isCrossEyed = !isCrossEyed
-            if (isCrossEyed) {
-                imgParagraph.classList.remove('parallel')
-                imgParagraph.classList.add('crosseyed')
-                viewModeTxt.value = 'cross-eyed'
-            } else {
-                imgParagraph.classList.remove('crosseyed')
-                imgParagraph.classList.add('parallel')
-                viewModeTxt.value = 'parallel'
-            }
-        })
+        processImage(imgParagraph,durationElem)
+        goAgainButton.addEventListener('click',()=>processImage(imgParagraph,durationElem))
     } catch (err) {
         console.error('err = ', err)
         alert ('error = ' + err.toString())  // TODO
     }
 }
 
-function processImage(imgParagraph,cameraOrigin) {
-    const cameraRay = new Ray(
-        cameraOrigin,
-        cameraOrigin.scalarMult(-1)
-    )
-    optEnv.setCamera(cameraRay)
+function processImage(imgParagraph,durationElem) {
+    initEnvironment()
+    imgParagraph.innerHTML = ''
     const gridder = new GridGraph()
-    const grapher = new BiVariantGrapher(gridder,600,600,1,150,f,2)
+    const startTime = new Date()
+    const grapher = new BiVariantGrapher(gridder,800,600,1,260,f,3)
     let svgElem = grapher.drawGraph()
+    const finTime = new Date()
+    const durationMs = finTime.getTime()-startTime.getTime()
+    const durationSecs = durationMs/1000
     imgParagraph.appendChild(svgElem)
+    durationElem.textContent = 'Image generation duration: ' + durationSecs + ' seconds'
 }
 
-const cameraRightOrigin = new Vector3D(10,-15,15)
-const cameraLeftOrigin = new Vector3D(8,-16.15,15)
+const universalOrigin = new Vector3D(10,-15,15)
 
 let optEnv = null
 
-function initEnvironment(imgParagraph) {
-    imgParagraph.innerHTML = ''
+function initEnvironment() {
     optEnv = new OpticalEnvironment()
+    const cameraRay = new Ray(
+        universalOrigin,
+        universalOrigin.scalarMult(-1)
+    )
+    optEnv.setCamera(cameraRay)
     initRandomSpheres()
     optEnv.addOpticalObject(new Plane(-7.5))
 }
 
 function f(x,y) {
-    if (x*x+y*y >= 3.25) {
-        return [1/3,1/3,1/3]
-    }
     if (!optEnv) {
         throw 'optEnv not initiated'
     }
-    const ray = new Ray(cameraLeftOrigin,new Vector3D(x,y,4))
+    const ray = new Ray(universalOrigin,new Vector3D(x,y,4))
     return optEnv.colorFromXY(x,y)
 }
 
 function initRandomSpheres() {
-    const SPH_COUNT = 12
+    const SPH_COUNT = 25
     const lightV = randomLightDirection()
     let sphereCount = 0
     let rejectCount = 0

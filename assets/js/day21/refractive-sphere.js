@@ -1,6 +1,6 @@
-import Sphere from "../day19/sphere.js"
-import Vector3D from "../day19/vector3d.js"
-import Ray from "../day19/ray.js"
+import Sphere from "../day20/sphere.js"
+import Vector3D from "../day20/vector3d.js"
+import Ray from "../day20/ray.js"
 
 class RefractiveSphere extends Sphere {
     constructor(center,radius,color,refractiveIndex,gloss=0.125) {
@@ -28,10 +28,9 @@ class RefractiveSphere extends Sphere {
         const reflectedDir = dir.reflect(normVect)
         const reflectedColor = ray.color.map(prim=>prim*this.gloss)
         const reflectedRay = new Ray(surfaceVector1,reflectedDir,reflectedColor)
-        let resultantColor = ray.color.map(prim=>prim*this.glossComplement)
+        const resultantColor = ray.color.map(prim=>prim*this.glossComplement)
         const resultantRay1 = new Ray(surfaceVector1,resultantDir1,resultantColor)
         const dist2 = this.#raySecondDistToSphere(resultantRay1)
-        resultantColor = resultantColor.map((prim,idx)=>prim*this.color[idx]**(dist2*0.3))
         const surfaceVector2 = surfaceVector1.add(resultantRay1.getDirection().normalized().scalarMult(dist2))
         const resultantDir2 = resultantDir1.refract(surfaceVector2.subt(this.center),1/this.refractiveIndex)
         const resultantRay2 = new Ray(

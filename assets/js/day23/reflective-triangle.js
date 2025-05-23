@@ -1,5 +1,5 @@
 import Triangle from "./triangle.js"
-import Ray from "../day19/ray.js"
+import Ray from "../day20/ray.js"
 
 class ReflectiveTriangle extends Triangle {
     constructor (vertex1, vertex2, vertex3, color) {

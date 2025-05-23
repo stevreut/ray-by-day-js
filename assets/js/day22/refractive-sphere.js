@@ -1,15 +1,17 @@
-import Sphere from "./sphere.js"
-import Vector3D from "./vector3d.js"
-import Ray from "./ray.js"
+import Sphere from "../day20/sphere.js"
+import Vector3D from "../day20/vector3d.js"
+import Ray from "../day20/ray.js"
 
 class RefractiveSphere extends Sphere {
-    constructor(center,radius,color,refractiveIndex) {
+    constructor(center,radius,color,refractiveIndex,gloss=0.125) {
         super(center,radius,color,new Vector3D(1,1,1))  // TODO - need to get lightV out of Sphere class
         if (typeof refractiveIndex !== 'number' || refractiveIndex <= 0) {
             throw 'invalid refractiveIndex'
         }
         this.refractiveIndex = refractiveIndex
         this.r2 = radius*radius
+        this.gloss = gloss
+        this.glossComplement = 1-this.gloss
     }
 
     // interceptDistance() inherits from Sphere without alteration
@@ -23,16 +25,20 @@ class RefractiveSphere extends Sphere {
         const surfaceVector1 = dir.scalarMult(dist1/dir.magn()).add(ray.getOrigin())
         const normVect = surfaceVector1.subt(this.center)
         const resultantDir1 = dir.refract(normVect,this.refractiveIndex)
-        const resultantColor = ray.color
+        const reflectedDir = dir.reflect(normVect)
+        const reflectedColor = ray.color.map(prim=>prim*this.gloss)
+        const reflectedRay = new Ray(surfaceVector1,reflectedDir,reflectedColor)
+        let resultantColor = ray.color.map(prim=>prim*this.glossComplement)
         const resultantRay1 = new Ray(surfaceVector1,resultantDir1,resultantColor)
         const dist2 = this.#raySecondDistToSphere(resultantRay1)
+        resultantColor = resultantColor.map((prim,idx)=>prim*this.color[idx]**(dist2*0.3))
         const surfaceVector2 = surfaceVector1.add(resultantRay1.getDirection().normalized().scalarMult(dist2))
         const resultantDir2 = resultantDir1.refract(surfaceVector2.subt(this.center),1/this.refractiveIndex)
         const resultantRay2 = new Ray(
             surfaceVector2.add(resultantDir2.normalized().scalarMult(1e-9)),
             resultantDir2,resultantColor    
         )
-        return resultantRay2
+        return [resultantRay2,reflectedRay]
     }
 
     #raySecondDistToSphere(ray) {

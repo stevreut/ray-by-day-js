@@ -1,44 +1,34 @@
-import Vector3D from "../day19/vector3d.js"
-import Ray from "../day19/ray.js"
-import ReflectiveSphere from "../day19/reflective-sphere.js"
-import CanvasGridder from "../day19/canvas-gridder.js"
-import Sphere from "../day19/sphere.js"
+import Vector3D from "../day20/vector3d.js"
+import BiVariantGrapher from "../day20/bivargrapher.js"
+import Ray from "../day20/ray.js"
+import ReflectiveSphere from "../day20/reflective-sphere.js"
+import Plane from "../day20/plane.js"
+import CanvasGridder from "../day20/canvas-gridder.js"
+import Sphere from "../day20/sphere.js"
 
-import BiVariantGrapher from "./bivargrapher.js"
-import Sky from "./sky.js"
 import OpticalEnvironment from "./optical-env.js"
-import Plane from "./plane.js"
 import RefractiveSphere from "./refractive-sphere.js"
 
 
 const IMG_PARA_ID = 'imgpara'
-const STATUS_BAR_ID = 'statbar'
 const DURATION_TEXT_ID = 'dur'
 const REPEAT_BUTTON_ID = 'rptbtn'
-
-const STATUS_CONTAINER_CLASS = 'progress-container'
 
 const ACTUAL_WIDTH = 1024
 const ACTUAL_HEIGHT = Math.round(ACTUAL_WIDTH*0.75)
 const PIXEL_SIZE = 1
-const ANTI_ALIAS = 4
+const ANTI_ALIAS = 3
 
 let buttonEnabled = false
 
-let imgParagraph = null
-let statBarElem  = null
-
 onload = () => {
     try {
-        imgParagraph = document.getElementById(IMG_PARA_ID)
+        let imgParagraph = document.getElementById(IMG_PARA_ID)
         let goAgainButton = document.getElementById(REPEAT_BUTTON_ID)
         let durationElem = document.getElementById(DURATION_TEXT_ID)
-        statBarElem = document.getElementById(STATUS_BAR_ID)
         if (!imgParagraph) {
             throw 'no ' + IMG_PARA_ID + ' id found on page'
         }
-        initStatusBar()
-        insertBlankCanvas()
         if (!goAgainButton) {
             throw 'no ' + REPEAT_BUTTON_ID + ' id found on page'
         }
@@ -67,9 +57,9 @@ onload = () => {
     }
 }
 
-async function processImage(imgParagraph,durationElem) {
+function processImage(imgParagraph,durationElem) {
     initEnvironment()
-    durationElem.textContent = ''
+    imgParagraph.innerHTML = ''
     const gridder = new CanvasGridder()
     const startTime = new Date()
     const grapher = new BiVariantGrapher(
@@ -78,60 +68,17 @@ async function processImage(imgParagraph,durationElem) {
         Math.floor(ACTUAL_HEIGHT/PIXEL_SIZE),
         PIXEL_SIZE, 
         ACTUAL_HEIGHT/PIXEL_SIZE*0.33,
-        f,ANTI_ALIAS,
-        statusReporterFunction
+        f,ANTI_ALIAS
     )
-    let canvasElem = await grapher.drawGraph()
+    let canvasElem = grapher.drawGraph()
     const finTime = new Date()
     const durationMs = finTime.getTime()-startTime.getTime()
     const durationSecs = durationMs/1000
-    imgParagraph.innerHTML = ''
     imgParagraph.appendChild(canvasElem)
     durationElem.textContent = 'Image generation duration: ' + durationSecs + ' seconds'
 }
 
-function initStatusBar() {
-    const statContainers = document.querySelectorAll('.' + STATUS_CONTAINER_CLASS)
-    if (statContainers) {
-        statContainers.forEach(stc=>{
-            stc.style.width = ACTUAL_WIDTH + 'px'
-        })
-    }
-}
-
-function insertBlankCanvas() {
-    const canv = document.createElement('canvas')
-    if (canv) {
-        imgParagraph.innerHTML = ''
-        canv.width = ACTUAL_WIDTH
-        canv.height = ACTUAL_HEIGHT
-        const localContext = canv.getContext('2d')
-        if (localContext) {
-            localContext.fillStyle = '#ddd';
-            localContext.fillRect(0,0,ACTUAL_WIDTH,ACTUAL_HEIGHT)
-            localContext.fillStyle = '#bbb';
-            const currentFont = localContext.font
-            const fontParts = currentFont.split(' ')
-            const newFont = '36px ' + fontParts.slice(1).join(' ')
-            localContext.font = newFont
-            localContext.fillText('Image creation in progress...',30,80)
-        }
-        imgParagraph.appendChild(canv)
-    }
-}
-
-function statusReporterFunction(frac) {
-    if (typeof frac !== 'number') {
-        console.error('status is non-number')
-    } else {
-        let p = Math.round(Math.max(0,Math.min(1,frac))*1000)/10
-        p = p.toFixed(1)
-        statBarElem.textContent = 'Status: ' + p + '% complete'
-        statBarElem.style.width = (p + '%')
-    }
-}
-
-const universalOrigin = new Vector3D(10,-15,6)
+const universalOrigin = new Vector3D(10,-15,15)
 
 let optEnv = null
 
@@ -141,10 +88,9 @@ function initEnvironment() {
         universalOrigin,
         universalOrigin.scalarMult(-1)
     )
-    optEnv.setCamera(cameraRay,0.5,universalOrigin.magn())
+    optEnv.setCamera(cameraRay)
     initRandomSpheres()
-    optEnv.addOpticalObject(new Plane(-7.5,25,2))
-    optEnv.addOpticalObject(new Sky())
+    optEnv.addOpticalObject(new Plane(-7.5,15))
 }
 
 function f(x,y) {
@@ -177,7 +123,7 @@ function initRandomSpheres() {
         } else {
             let sphere = null
             if (sphereCount < 4) {
-                sphere = new ReflectiveSphere(ctrV,radius,randomColor(0.5,0.7))
+                sphere = new ReflectiveSphere(ctrV,radius,randomColor())
             } else if (sphereCount < 5) {
                 sphere = new Sphere(ctrV,radius,randomColor(),lightV)
             } else {
@@ -202,10 +148,10 @@ function randomCenter() {
     return ctr
 }
 
-function randomColor(lo=0.47,hi=0.94) {
+function randomColor() {
     let arr = []
     for (let i=0;i<3;i++) {
-        arr.push(Math.random()*(hi-lo)+lo)
+        arr.push(Math.round(Math.random()*120+120)/255)
     }
     return arr
 }

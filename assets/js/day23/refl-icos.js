@@ -1,7 +1,7 @@
-import OpticalObject from "../day19/optical-object.js";
+import OpticalObject from "../day20/optical-object.js";
 import ReflectiveTriangle from "./reflective-triangle.js";
-import Sphere from "../day19/sphere.js";
-import Vector3D from "../day19/vector3d.js";
+import Sphere from "../day20/sphere.js";
+import Vector3D from "../day20/vector3d.js";
 
 class ReflectiveIcosahedron extends OpticalObject {
     constructor(center,radius,color) {
