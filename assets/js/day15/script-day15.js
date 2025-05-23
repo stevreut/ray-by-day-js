@@ -1,8 +1,8 @@
-import Vector3D from "../day12/vector3d.js"
-import GridGraph from "../day6a/gridgraph.js"
-import BiVariantGrapher from "../day6a/bivargrapher.js"
-import Ray from "../day13/ray.js"
-import ShadowedSphere from "./shadowed-sphere.js"
+import Vector3D from "../day13/vector3d.js"
+import GridGraph from "../day7/gridgraph.js"
+import BiVariantGrapher from "../day7/bivargrapher.js"
+import Ray from "../day14/ray.js"
+import Sphere from "./sphere.js"
 
 const IMG_PARA_ID = 'imgpara'
 const DURATION_TEXT_ID = 'dur'
@@ -56,43 +56,28 @@ function f(x,y) {
         }
     })
     if (leastSphere === null) {
-        return [0.1,0.1,0.3]
+        return [0.2,0.2,0.4]
     } else {
         return spheres[leastSphere].handle(ray)
     }
 }
 
 function initRandomSpheres() {
-    const SPH_COUNT = 25
+    const SPH_COUNT = 12
     spheres = []
-    // const lightV = new Vector3D(1,1,-0.5)
-    const lightV = randomLightDirection()
+    const lightV = new Vector3D(1,1,-0.5)
     if (modeIsRandom) {
         for (let i=0;i<SPH_COUNT;i++) {
-            let sphere = new ShadowedSphere(randomCenter(),(Math.random()+1)*1.125,randomColor(),lightV,spheres)
+            let sphere = new Sphere(randomCenter(),(Math.random()+1)*1.125,randomColor(),lightV)
             spheres.push(sphere)
         }
     } else {
         for (let i=0;i<SPH_COUNT;i++) {
-            let sphere = new ShadowedSphere(orderlyCenter(i),2,randomColor(),lightV,spheres)
+            let sphere = new Sphere(orderlyCenter(i),2,randomColor(),lightV)
             spheres.push(sphere)
         }
     }
     modeIsRandom = !modeIsRandom
-    //
-    function randomLightDirection() {
-        let arr = []
-        for (let i=0;i<3;i++) {
-            arr.push((Math.random()-0.5)*2*(i<2?1:0.5))
-        }
-        let vect = new Vector3D(arr)
-        if (vect.magnSqr === 0) {
-            return randomLightDirection()  // Note recursion
-        } else {
-            vect = vect.normalized()
-            return vect
-        }
-    }
 }
 
 function randomCenter() {
@@ -106,8 +91,8 @@ function randomCenter() {
 
 function orderlyCenter(n) {
     n = Math.round(n)
-    n = n%25
-    let theta = (n+0.3)*Math.PI*2/25
+    n = n%12
+    let theta = (n+0.3)*Math.PI/6
     let x = Math.cos(theta)*7
     let baseSin = Math.sin(theta)*7
     let z = baseSin*12/13

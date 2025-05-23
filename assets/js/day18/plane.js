@@ -1,4 +1,4 @@
-import OpticalObject from "../day14/optical-object.js"
+import OpticalObject from "../day15/optical-object.js"
 
 class Plane extends OpticalObject {
     constructor(level) {

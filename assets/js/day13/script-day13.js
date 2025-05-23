@@ -1,90 +1,106 @@
-import Vector3D from "../day12/vector3d.js"
-import GridGraph from "../day6a/gridgraph.js"
-import BiVariantGrapher from "../day6a/bivargrapher.js"
-import Ray from "./ray.js"
+import Vector3D from "./vector3d.js"
+import BiVariantGrapher from "../day6/bivargrapher.js"
 
-const IMG_PARA_ID = 'imgpara'
-let imgParagraph = null
+const svgAnchorID = 'svghere'
 
 onload = () => {
-    imgParagraph = document.getElementById(IMG_PARA_ID)
-    if (!imgParagraph) {
-        throw 'no ' + IMG_PARA_ID + ' id found on page'
+    const svgAnchor = document.getElementById(svgAnchorID)
+    if (!svgAnchor) {
+        throw 'no ' + svgAnchorID + 'id found on page'
     }
-    initRandomSpheres()
-    imgParagraph.innerHTML = ''
-    const gridder = new GridGraph()
-    const grapher = new BiVariantGrapher(gridder,400,300,2,130,f,2)
-    let svgElem = grapher.drawGraph()
-    imgParagraph.appendChild(svgElem)
-}
-
-let spheres = []
-
-const universalOrigin = new Vector3D(0,0,-30)
-
-function f(x,y) {
-    const ray = new Ray(universalOrigin,new Vector3D(x,y,4))
-    let leastDist = null
-    let leastSphere = null
-    spheres.forEach((sph,idx)=>{
-        let dist = rayDistToSphere(ray,sph)
-        if (dist !== null) {
-            if (dist > 0 && (leastDist == null || dist < leastDist)) {
-                leastDist = dist
-                leastSphere = idx
+    svgAnchor.innerHTML = ''
+    const lightingVector = getLightingVector(true)
+    let svgElem = createLitSvgElemAt(svgAnchor,lightingVector)
+    svgAnchor.appendChild(svgElem)
+    const controlDiv = document.getElementById("controldiv")
+    if (controlDiv) {
+        controlDiv.addEventListener('input',(ev)=>{
+            const targetId = ev.target.id
+            if (targetId.slice(1) === 'Ranger') {
+                const prefix = targetId[0]
+                if ('xyz'.includes(prefix)) {
+                    const numbBox = document.getElementById(prefix+'Rnumb')
+                    if (numbBox) {
+                        numbBox.value = ev.target.value
+                    }
+                }
             }
-        }
-    })
-    if (leastSphere === null) {
-        return [0.2,0.2,0.4]
+        })
+        controlDiv.addEventListener('change',(ev)=>{
+            const targetId = ev.target.id 
+            if (targetId.slice(1) === 'Ranger') {
+                const prefix = targetId[0]
+                if ('xyz'.includes(prefix)) {
+                    const outputElem = document.getElementById('lightvect')
+                    outputElem.value = getLightingVector(false)
+                    outputElem.classList.add('outputhilite')
+                    setInterval(()=>outputElem.classList.remove('outputhilite'),800)
+                    svgAnchor.innerHTML = ''
+                    const lightingVector = getLightingVector(true)
+                    let svgElem = createLitSvgElemAt(svgAnchor,lightingVector)
+                    svgAnchor.appendChild(svgElem)
+                } else {
+                    console.error('What is id ' + id + '?')
+                }
+            }
+        })
+    }
+}
+
+function getLightingVector(doResize) {
+    const x = rectifyRanger('x')
+    const y = rectifyRanger('y')
+    const z = rectifyRanger('z')
+    const workingVector = new Vector3D(x,y,z)
+    // const workingVector = new Vector3D(1,2,3) // TODO
+    if (doResize) {
+        const k = 1/workingVector.magn()
+        const resultVector = workingVector.scalarMult(k)
+        return resultVector
     } else {
-        return spheres[leastSphere].color
+        return workingVector
+    }
+    function rectifyRanger(idPrefix) {
+        const id = idPrefix + 'Ranger'
+        const rangeSliderElem = document.getElementById(id)
+        if (!rangeSliderElem) {
+            throw 'no element for id ' + id
+        }
+        let val = rangeSliderElem.value
+        try {
+            val = parseInt(val)
+            if (Number.isNaN(val)) {
+                val = 1
+            }
+        } catch (err) {
+            val = 1
+        }
+        return val
     }
 }
 
-function rayDistToSphere(ray,sph) {
-    let C = sph.centerV.subt(ray.getOrigin())
-    let D = ray.getDirection()
-    let CD = C.dot(D)
-    let det = CD**2 - D.magnSqr()*(C.magnSqr()-sph.radius**2)
-    if (det <= 0) {
-        return null
-    }
-    let detRoot = Math.sqrt(det)
-    let k = CD - detRoot
-    if (k <= 0) {
-        return null
-    }
-    k /= D.magn()
-    return k
+function createLitSvgElemAt(svgAnchor,lightVector) {
+    const grapher = new BiVariantGrapher(200,200,3,70,f,3)
+    const svg = grapher.drawGraph()
+    return svg
+    //
+    function f(x,y) {
+        const SHADE = 0.2
+        const r2 = x*x+y*y
+        if (r2 >= 1) {
+            let skyVector = new Vector3D(x/8,y/8,-1)
+            skyVector = skyVector.scalarMult(1/skyVector.magn())
+            const skyDotProd = skyVector.dot(lightVector)
+            const k = ((skyDotProd+1)/2)**10*7
+            return [0.03*k,0.1*k,0.3*k]
+        } else {
+            const z = Math.sqrt(1-r2)
+            const surfaceVector = new Vector3D(x,y,z)
+            let dotProd = surfaceVector.dot(lightVector)
+            dotProd = Math.max(0,dotProd)
+            dotProd = dotProd*(1-SHADE)+SHADE
+            return [dotProd*1,dotProd*0.3,dotProd*0.05]
+        }
+    }    
 }
 
-function initRandomSpheres() {
-    spheres = []
-    const SPH_COUNT = 20
-    for (let i=0;i<SPH_COUNT;i++) {
-        let sphere = {}
-        sphere.radius = 2.5
-        sphere.centerV = randomCenter()
-        sphere.color = randomColor()
-        spheres.push(sphere)
-    }
-}
-
-function randomCenter() {
-    let arr = []
-    for (let i=0;i<3;i++) {
-        arr.push((Math.random()-0.5)*10)
-    }
-    let ctr = new Vector3D(arr)
-    return ctr
-}
-
-function randomColor() {
-    let arr = []
-    for (let i=0;i<3;i++) {
-        arr.push(Math.round(Math.random()*120+120)/255)
-    }
-    return arr
-}

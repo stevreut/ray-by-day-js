@@ -1,6 +1,6 @@
-import OpticalObject from "../day14/optical-object.js"
-import Sphere from "../day14/sphere.js"
-import Ray from "../day13/ray.js"
+import OpticalObject from "../day15/optical-object.js"
+import Sphere from "../day15/sphere.js"
+import Ray from "../day14/ray.js"
 
 class ShadowedSphere extends Sphere {
     constructor(center,radius,color,lightingVector,opticalObjectArray) {

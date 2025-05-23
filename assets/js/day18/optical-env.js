@@ -1,6 +1,6 @@
 import Vector3D from "./vector3d.js"
 import Ray from "./ray.js"
-import OpticalObject from "../day14/optical-object.js"
+import OpticalObject from "../day15/optical-object.js"
 
 class OpticalEnvironment {
     constructor() {

@@ -1,4 +1,4 @@
-import Sphere from "../day14/sphere.js"
+import Sphere from "../day15/sphere.js"
 import Vector3D from "./vector3d.js"
 import Ray from "./ray.js"
 

@@ -1,9 +1,9 @@
-import Vector3D from "./vector3d.js"
+import Vector3D from "../day13/vector3d.js"
 import GridGraph from "../day7/gridgraph.js"
 import BiVariantGrapher from "../day7/bivargrapher.js"
-import Ray from "./ray.js"
+import Ray from "../day14/ray.js"
 import OpticalEnvironment from "./optical-env.js"
-import ReflectiveSphere from "./reflective-sphere.js"
+import Sphere from "../day15/sphere.js"
 import Plane from "./plane.js"
 
 const IMG_PARA_ID = 'imgpara'
@@ -34,7 +34,8 @@ function processImage(imgParagraph,durationElem) {
     imgParagraph.innerHTML = ''
     const gridder = new GridGraph()
     const startTime = new Date()
-    const grapher = new BiVariantGrapher(gridder,800,600,1,260,f,3)
+    // const grapher = new BiVariantGrapher(gridder,160,120,5,52,f,3)
+    const grapher = new BiVariantGrapher(gridder,800,600,1,260,f,2)
     let svgElem = grapher.drawGraph()
     const finTime = new Date()
     const durationMs = finTime.getTime()-startTime.getTime()
@@ -43,9 +44,9 @@ function processImage(imgParagraph,durationElem) {
     durationElem.textContent = 'Image generation duration: ' + durationSecs + ' seconds'
 }
 
-const universalOrigin = new Vector3D(10,-15,15)
+const universalOrigin = new Vector3D(9,-22.5,22.5)
 
-let optEnv = null
+let optEnv = null  // TODO
 
 function initEnvironment() {
     optEnv = new OpticalEnvironment()
@@ -55,7 +56,7 @@ function initEnvironment() {
     )
     optEnv.setCamera(cameraRay)
     initRandomSpheres()
-    optEnv.addOpticalObject(new Plane(-7.5))
+    optEnv.addOpticalObject(new Plane(-3))
 }
 
 function f(x,y) {
@@ -69,32 +70,11 @@ function f(x,y) {
 function initRandomSpheres() {
     const SPH_COUNT = 25
     const lightV = randomLightDirection()
-    let sphereCount = 0
-    let rejectCount = 0
-    const sphTempArray = []
-    while (sphereCount < SPH_COUNT) {
-        const ctrV = randomCenter()
-        const radius = (Math.random()+1)*1.125
-        let hasIntersect = false
-        sphTempArray.forEach(tmpSph=>{
-            if (!hasIntersect) {
-                if (tmpSph.center.subt(ctrV).magnSqr()<=(radius+tmpSph.radius)**2) {
-                    hasIntersect = true
-                }
-            }
-        })
-        if (hasIntersect) {
-            rejectCount++
-        } else {
-            const sphere = new ReflectiveSphere(ctrV,radius,randomColor(),lightV)
-            optEnv.addOpticalObject(sphere)
-            sphTempArray.push({
-                center: ctrV,
-                radius: radius 
-            })
-            sphereCount++
-        }
+    for (let i=0;i<SPH_COUNT;i++) {
+        let sphere = new Sphere(randomCenter(),(Math.random()+1)*1.125,randomColor(),lightV)
+        optEnv.addOpticalObject(sphere)
     }
+    //
     function randomLightDirection() {
         let arr = []
         for (let i=0;i<3;i++) {
