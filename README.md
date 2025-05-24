@@ -4,6 +4,8 @@ Demonstration of ray-tracing CGI techniques using the JavaScript language,
 presented in an incremental "day by day" approach where each day's coding 
 example builds on the work demonstrated and discussed on previous days.
 
+*(Note that this repository and its companion site are both still a **work-in-progress** as of now (May 2025).  However, most or all graphics functionality in both is working.  Completion of the corresponding narrative content is expected to be completed around the end of June 2025.)*
+
 
 ## Table of Contents
 
