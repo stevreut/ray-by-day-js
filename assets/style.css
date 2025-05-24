@@ -17,15 +17,31 @@ body {
     border-radius: 2mm;
     display: inline-block;
 }
-.main-ul>li {
-    background-color: #e8e8ef;
-    padding: 2mm;
-    margin: 2.5mm;
+.item {
+    background-color: #e2ecf9;
+    padding: 4mm;
+    margin: 4mm;
     width: 70%;
     border-radius: 1.5mm;
+    font-weight: bold;
+    font-size: 16pt;
 }
-.main-ul>li a {
+.item a {
+    margin-left: 6mm;
     background-color: inherit;
+    text-decoration: none;
+    color: white;
+    background-color: #7ea0d5;
+    padding: 1.5mm;
+    border-radius: 1.5mm;
+    font-size: 13pt;
+}
+.item a:hover {
+    background-color: yellowgreen;
+}
+.item a:active {
+    color: #884;
+    background-color: #fc0;
 }
 .dayh2 {
     color: #44f;
