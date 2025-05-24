@@ -17,11 +17,31 @@ body {
     border-radius: 2mm;
     display: inline-block;
 }
+.prologuelink {
+    display: inline-block;
+    background-color: #37a79f !important;
+    margin-left: 2mm !important;
+    padding: 1cm !important;
+}
+.prologuelink>p {
+    color: inherit;
+    background-color: inherit;
+}
+.prologuelink:hover {
+    background-color: yellowgreen !important;
+}
+.prologuelink>em {
+    color: #054;
+    margin-right: 3mm;
+    font-size: 20pt;
+    font-style: normal;
+    background-color: inherit;
+}
 .item {
     background-color: #e2ecf9;
     padding: 4mm;
-    margin: 4mm;
-    width: 70%;
+    margin: 4mm 4mm 4mm 0;
+    /* width: 70%; */
     border-radius: 1.5mm;
     font-weight: bold;
     font-size: 16pt;
