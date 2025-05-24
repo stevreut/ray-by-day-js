@@ -63,6 +63,13 @@ body {
     color: #884;
     background-color: #fc0;
 }
+.uconst {
+    color: #bbb;
+    background-color: #eee;
+}
+.uconst a {
+    background-color: #aaa;
+}
 .dayh2 {
     color: #44f;
     text-shadow: 2px 4px 8px rgba(68,68,255,0.75)
