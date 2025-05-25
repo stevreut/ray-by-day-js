@@ -10,14 +10,22 @@ const IMG_PARA_ID = 'imgpara'
 const DURATION_TEXT_ID = 'dur'
 const REPEAT_BUTTON_ID = 'rptbtn'
 
+const DEFAULT_IMAGE_WIDTH = 800
+let targetImageWidth = null
+let targetImageHeight = null
+
+let imgParagraph = null
+
+
 onload = () => {
     try {
-        let imgParagraph = document.getElementById(IMG_PARA_ID)
+        imgParagraph = document.getElementById(IMG_PARA_ID)
         let goAgainButton = document.getElementById(REPEAT_BUTTON_ID)
         let durationElem = document.getElementById(DURATION_TEXT_ID)
         if (!imgParagraph) {
             throw 'no ' + IMG_PARA_ID + ' id found on page'
         }
+        setImageDimensions()        
         if (!goAgainButton) {
             throw 'no ' + REPEAT_BUTTON_ID + ' id found on page'
         }
@@ -29,12 +37,24 @@ onload = () => {
     }
 }
 
+function setImageDimensions() {
+    const containerWidth = imgParagraph.clientWidth
+    if (containerWidth && Number.isInteger(containerWidth) && containerWidth > 10
+        && containerWidth <= 600) {
+            targetImageWidth = containerWidth
+    } else {
+            targetImageWidth = DEFAULT_IMAGE_WIDTH
+    }
+    targetImageHeight = Math.round(targetImageWidth*0.75)
+}
+
 function processImage(imgParagraph,durationElem) {
     initEnvironment()
     imgParagraph.innerHTML = ''
     const gridder = new GridGraph()
     const startTime = new Date()
-    const grapher = new BiVariantGrapher(gridder,800,600,1,260,f,3)
+    const grapher = new BiVariantGrapher(gridder,targetImageWidth,targetImageHeight,1,
+        Math.round(targetImageWidth*0.33),f,3) 
     let svgElem = grapher.drawGraph()
     const finTime = new Date()
     const durationMs = finTime.getTime()-startTime.getTime()
@@ -67,7 +87,7 @@ function f(x,y) {
 }
 
 function initRandomSpheres() {
-    const SPH_COUNT = 25
+    const SPH_COUNT = 17
     const lightV = randomLightDirection()
     let sphereCount = 0
     let rejectCount = 0

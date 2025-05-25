@@ -4,6 +4,11 @@ import BiVariantGrapher from "../day7/bivargrapher.js"
 import Ray from "./ray.js"
 
 const IMG_PARA_ID = 'imgpara'
+
+const DEFAULT_IMAGE_WIDTH = 400
+let targetImageWidth = null
+let targetImageHeight = null
+
 let imgParagraph = null
 
 onload = () => {
@@ -11,12 +16,26 @@ onload = () => {
     if (!imgParagraph) {
         throw 'no ' + IMG_PARA_ID + ' id found on page'
     }
+    setImageDimensions()
     initRandomSpheres()
     imgParagraph.innerHTML = ''
     const gridder = new GridGraph()
-    const grapher = new BiVariantGrapher(gridder,400,300,2,130,f,2)
+    const grapher = new BiVariantGrapher(gridder,
+        targetImageWidth,targetImageHeight,2,
+        Math.round(targetImageWidth*0.325),f,2)
     let svgElem = grapher.drawGraph()
     imgParagraph.appendChild(svgElem)
+}
+
+function setImageDimensions() {
+    const containerWidth = imgParagraph.clientWidth
+        if (containerWidth && Number.isInteger(containerWidth) && containerWidth > 10
+        && containerWidth <= 600) {
+            targetImageWidth = containerWidth
+    } else {
+            targetImageWidth = DEFAULT_IMAGE_WIDTH
+    }
+    targetImageHeight = Math.round(targetImageWidth*0.75)
 }
 
 let spheres = []
