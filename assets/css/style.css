@@ -20,12 +20,23 @@ body {
 .prologuelink {
     display: inline-block;
     background-color: #37a79f !important;
-    margin-left: 2mm !important;
+    margin: 2mm 2mm 2mm 0 !important;
     padding: 1cm !important;
 }
 .prologuelink>p {
     color: inherit;
     background-color: inherit;
+}
+.prologuelink em {
+    color: inherit;
+    background-color: #6cd0bb;
+    border: none;
+    border-radius: 1mm;
+    padding: 5pt;
+    font-style: normal;
+}
+.prologuelink em:hover {
+    background-color: #fc0;
 }
 .prologuelink:hover {
     background-color: yellowgreen !important;
@@ -187,6 +198,56 @@ em {
     color: #5c7ea0;
     width: 0%;
     text-align: left;
+}
+
+@media screen and (max-width: 480px) {
+    body {
+        margin: 2mm;
+        border: none;
+        padding: 1mm;
+    }
+    .subduedh1 {
+        margin-bottom: 3mm;
+        padding: 1mm;
+        border-radius: 3mm;
+        display: inline-block;
+    }
+    .prologuelink {
+        display: block;
+    }
+    .prologuelink>p {
+        display: block;
+    }
+    .prologuelink em {
+        padding: 1pt;
+    }
+    .item {
+        padding: 2mm;
+        margin: 1.5mm 1.5mm 1.5mm 0;
+        border-radius: 1mm;
+        font-weight: bold;
+        font-size: 13pt;
+    }
+    .item a {
+        display: block;
+        margin: 1.5mm 0 0 0;
+        font-size: 11pt;
+    }
+    .imgdiv {
+        border: solid 1px #ddd;
+        padding: 2mm;
+        margin: 1.5mm 0;
+    }
+    .imgdiv img, .imgdiv svg, .imgdiv canvas, .imgdiv table {
+        width: 80%;
+        box-shadow: 0 4px 10px #000;
+        margin-bottom: 4mm;
+    }
+    .innerdiv {
+        padding: 2mm;
+        margin: 2mm 2mm 2mm 0;
+        border: none;
+    }
 }
 
 
