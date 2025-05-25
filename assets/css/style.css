@@ -192,6 +192,7 @@ em {
     margin: 10px 0px 15px 0px;
 }
 .progress-bar {
+    display: inline-block;
     height: 100%;
     background: #cdd5e9;
     font-family: 'Courier New', Courier, monospace;
@@ -239,8 +240,9 @@ em {
         margin: 1.5mm 0;
     }
     .imgdiv img, .imgdiv svg, .imgdiv canvas, .imgdiv table {
-        width: 80%;
-        box-shadow: 0 4px 10px #000;
+        max-width: 100%;
+        height: auto;
+        box-shadow: 0 4px 10px #85a2bc;
         margin-bottom: 4mm;
     }
     .innerdiv {

@@ -40,7 +40,6 @@ onload = () => {
         goAgainButton = linkElement(REPEAT_BUTTON_ID)
         durationElem = linkElement(DURATION_TEXT_ID)
         statBarElem = linkElement(STATUS_BAR_ID)
-        initStatusBar()
         insertBlankCanvas()
         makeImageIfEnabled()
         goAgainButton.addEventListener('click',()=>makeImageIfEnabled())
@@ -100,15 +99,6 @@ async function processImage(imgParagraph,durationElem) {
     imgParagraph.innerHTML = ''
     imgParagraph.appendChild(canvasElem)
     durationElem.textContent = 'Image generation duration: ' + durationSecs + ' seconds'
-}
-
-function initStatusBar() {
-    const statContainers = document.querySelectorAll('.' + STATUS_CONTAINER_CLASS)
-    if (statContainers) {
-        statContainers.forEach(stc=>{
-            stc.style.width = ACTUAL_WIDTH + 'px'
-        })
-    }
 }
 
 function insertBlankCanvas() {
