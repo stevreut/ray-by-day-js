@@ -19,9 +19,10 @@ const REPEAT_BUTTON_ID = 'rptbtn'
 
 const STATUS_CONTAINER_CLASS = 'progress-container'
 
-const ACTUAL_WIDTH = 800
-const ACTUAL_HEIGHT = Math.round(ACTUAL_WIDTH*0.75)
-const PIXEL_SIZE = 2
+const DEFAULT_IMAGE_WIDTH = 1024
+let targetImageWidth = null
+let targetImageHeight = null
+let PIXEL_SIZE = 2
 const ANTI_ALIAS = 5
 
 const universalOrigin = new Vector3D(-17,5,7.5)
@@ -40,6 +41,7 @@ onload = () => {
         goAgainButton = linkElement(REPEAT_BUTTON_ID)
         durationElem = linkElement(DURATION_TEXT_ID)
         statBarElem = linkElement(STATUS_BAR_ID)
+        setImageDimensions()
         insertBlankCanvas()
         makeImageIfEnabled()
         goAgainButton.addEventListener('click',()=>makeImageIfEnabled())
@@ -78,6 +80,18 @@ function enableButton(doEnable) {
     }
 }
 
+function setImageDimensions() {
+    const containerWidth = imgParagraph.clientWidth
+    if (containerWidth && Number.isInteger(containerWidth) && containerWidth > 10
+        && containerWidth <= 600) {
+            targetImageWidth = containerWidth
+    } else {
+            targetImageWidth = DEFAULT_IMAGE_WIDTH
+    }
+    targetImageHeight = Math.round(targetImageWidth*0.75)
+    PIXEL_SIZE = (targetImageWidth<=512?1:2)
+}
+
 async function processImage(imgParagraph,durationElem) {
     initEnvironment()
     durationElem.textContent = ''
@@ -85,10 +99,10 @@ async function processImage(imgParagraph,durationElem) {
     const startTime = new Date()
     const grapher = new BiVariantGrapher(
         gridder,
-        Math.floor(ACTUAL_WIDTH/PIXEL_SIZE),
-        Math.floor(ACTUAL_HEIGHT/PIXEL_SIZE),
+        Math.floor(targetImageWidth/PIXEL_SIZE),
+        Math.floor(targetImageHeight/PIXEL_SIZE),
         PIXEL_SIZE, 
-        ACTUAL_HEIGHT/PIXEL_SIZE*0.33,
+        targetImageHeight/PIXEL_SIZE*0.33,
         f,ANTI_ALIAS,
         statusReporterFunction
     )
@@ -105,12 +119,12 @@ function insertBlankCanvas() {
     const canv = document.createElement('canvas')
     if (canv) {
         imgParagraph.innerHTML = ''
-        canv.width = ACTUAL_WIDTH
-        canv.height = ACTUAL_HEIGHT
+        canv.width = targetImageWidth
+        canv.height = targetImageHeight
         const localContext = canv.getContext('2d')
         if (localContext) {
             localContext.fillStyle = '#ddd';
-            localContext.fillRect(0,0,ACTUAL_WIDTH,ACTUAL_HEIGHT)
+            localContext.fillRect(0,0,targetImageWidth,targetImageHeight)
             localContext.fillStyle = '#bbb';
             const currentFont = localContext.font
             const fontParts = currentFont.split(' ')

@@ -73,3 +73,34 @@ em {
     font-weight: bold;
     background-color: #fe0;
 }
+
+@media screen and (max-width: 480px) {
+    #settings {
+        padding: 1.5mm;
+    }
+    #settings input {
+        border-width: 1px;
+    }
+    #settings input[requireint="false"] {
+        border-width: 1px;
+    }
+    #settings th {
+        padding: 1.5mm;
+    }
+    #settings td { 
+        padding: 1mm;
+    }
+    .settingsbox {
+        padding: 1mm;
+    }
+    dt {
+        padding: 1mm 2mm;
+        margin: 1mm 1mm 1mm 0;
+    }
+    dd {
+        margin-left: 1mm;
+    }
+    button {
+        margin: 1mm 0;
+    }
+}

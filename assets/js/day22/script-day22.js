@@ -10,7 +10,6 @@ import OpticalEnvironment from "./optical-env.js"
 import Plane from "./plane.js"
 import RefractiveSphere from "./refractive-sphere.js"
 
-
 const IMG_PARA_ID = 'imgpara'
 const STATUS_BAR_ID = 'statbar'
 const DURATION_TEXT_ID = 'dur'
@@ -18,8 +17,9 @@ const REPEAT_BUTTON_ID = 'rptbtn'
 
 const STATUS_CONTAINER_CLASS = 'progress-container'
 
-const ACTUAL_WIDTH = 1024
-const ACTUAL_HEIGHT = Math.round(ACTUAL_WIDTH*0.75)
+const DEFAULT_IMAGE_WIDTH = 1024
+let targetImageWidth = null
+let targetImageHeight = null
 const PIXEL_SIZE = 1
 const ANTI_ALIAS = 4
 
@@ -37,6 +37,7 @@ onload = () => {
         if (!imgParagraph) {
             throw 'no ' + IMG_PARA_ID + ' id found on page'
         }
+        setImageDimensions()
         insertBlankCanvas()
         if (!goAgainButton) {
             throw 'no ' + REPEAT_BUTTON_ID + ' id found on page'
@@ -66,6 +67,17 @@ onload = () => {
     }
 }
 
+function setImageDimensions() {
+    const containerWidth = imgParagraph.clientWidth
+    if (containerWidth && Number.isInteger(containerWidth) && containerWidth > 10
+        && containerWidth <= 600) {
+            targetImageWidth = containerWidth
+    } else {
+            targetImageWidth = DEFAULT_IMAGE_WIDTH
+    }
+    targetImageHeight = Math.round(targetImageWidth*0.75)
+}
+
 async function processImage(imgParagraph,durationElem) {
     initEnvironment()
     durationElem.textContent = ''
@@ -73,10 +85,10 @@ async function processImage(imgParagraph,durationElem) {
     const startTime = new Date()
     const grapher = new BiVariantGrapher(
         gridder,
-        Math.floor(ACTUAL_WIDTH/PIXEL_SIZE),
-        Math.floor(ACTUAL_HEIGHT/PIXEL_SIZE),
+        Math.floor(targetImageWidth/PIXEL_SIZE),
+        Math.floor(targetImageHeight/PIXEL_SIZE),
         PIXEL_SIZE, 
-        ACTUAL_HEIGHT/PIXEL_SIZE*0.33,
+        targetImageHeight/PIXEL_SIZE*0.33,
         f,ANTI_ALIAS,
         statusReporterFunction
     )
@@ -93,12 +105,12 @@ function insertBlankCanvas() {
     const canv = document.createElement('canvas')
     if (canv) {
         imgParagraph.innerHTML = ''
-        canv.width = ACTUAL_WIDTH
-        canv.height = ACTUAL_HEIGHT
+        canv.width = targetImageWidth
+        canv.height = targetImageHeight
         const localContext = canv.getContext('2d')
         if (localContext) {
             localContext.fillStyle = '#ddd';
-            localContext.fillRect(0,0,ACTUAL_WIDTH,ACTUAL_HEIGHT)
+            localContext.fillRect(0,0,targetImageWidth,targetImageHeight)
             localContext.fillStyle = '#bbb';
             const currentFont = localContext.font
             const fontParts = currentFont.split(' ')
