@@ -12,16 +12,23 @@ const IMG_PARA_ID = 'imgpara'
 const DURATION_TEXT_ID = 'dur'
 const REPEAT_BUTTON_ID = 'rptbtn'
 
+const DEFAULT_IMAGE_WIDTH = 1024
+let targetImageWidth = null
+let targetImageHeight = null
+
 let buttonEnabled = false
+
+let imgParagraph = null
 
 onload = () => {
     try {
-        let imgParagraph = document.getElementById(IMG_PARA_ID)
+        imgParagraph = document.getElementById(IMG_PARA_ID)
         let goAgainButton = document.getElementById(REPEAT_BUTTON_ID)
         let durationElem = document.getElementById(DURATION_TEXT_ID)
         if (!imgParagraph) {
             throw 'no ' + IMG_PARA_ID + ' id found on page'
         }
+        setImageDimensions()        
         if (!goAgainButton) {
             throw 'no ' + REPEAT_BUTTON_ID + ' id found on page'
         }
@@ -50,14 +57,24 @@ onload = () => {
     }
 }
 
+function setImageDimensions() {
+    const containerWidth = imgParagraph.clientWidth
+    if (containerWidth && Number.isInteger(containerWidth) && containerWidth > 10
+        && containerWidth <= 600) {
+            targetImageWidth = containerWidth
+    } else {
+            targetImageWidth = DEFAULT_IMAGE_WIDTH
+    }
+    targetImageHeight = Math.round(targetImageWidth*0.75)
+}
+
 function processImage(imgParagraph,durationElem) {
     initEnvironment()
     imgParagraph.innerHTML = ''
-    // const gridder = new GridGraph()
     const gridder = new CanvasGridder()
     const startTime = new Date()
-    const grapher = new BiVariantGrapher(gridder,1024,1024*3/4,1,260,f,3)  // TODO - restore after testing
-    // const grapher = new BiVariantGrapher(gridder,160,120,6,52,f,2)
+    const grapher = new BiVariantGrapher(gridder,targetImageWidth,targetImageHeight,1,
+        Math.round(targetImageWidth*0.33),f,3) 
     let canvasElem = grapher.drawGraph()
     const finTime = new Date()
     const durationMs = finTime.getTime()-startTime.getTime()

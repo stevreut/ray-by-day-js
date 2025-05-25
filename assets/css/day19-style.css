@@ -1,13 +1,23 @@
+* {
+    color: #ccc;
+    background-color: #444;
+}
+.dayh2 {
+    color: #6582f6;
+    text-shadow: none;
+}
 #stereoframe {
     border-radius: 10px;
 }
 #stereoframe, #stereoframe>h3, #stereoframe>div, #stereoframe>p {
-    background-color: #555;
+    background-color: #000;
 }
 #stereoframe>h3 {
     color: #aaa;
 }
 #stereoframe svg {
+    width: auto;
+    height: auto; 
     box-shadow: none;
 }
 #imgpara {
@@ -19,4 +29,16 @@
 }
 .parallel {
     flex-direction: row-reverse;
+}
+button {
+    border-color: #444;
+    background-color: #444;
+    color: #000;
+}
+input {
+    background-color: #69697e;
+    color: #000;
+}
+.hopdiv {
+    background-color: #777;
 }

@@ -11,11 +11,16 @@ const REPEAT_BUTTON_ID = 'rptbtn'
 const SWAP_BUTTON_ID = 'swapview'
 const SWAP_TXT_ID = 'stereomode'
 
+let imgParagraph = null
+
+const DEFAULT_SINGLE_EYE_IMAGE_SIZE = 600
+let targetImageSize = null
+
 let isCrossEyed = true
 
 onload = () => {
     try {
-        let imgParagraph = document.getElementById(IMG_PARA_ID)
+        imgParagraph = document.getElementById(IMG_PARA_ID)
         let goAgainButton = document.getElementById(REPEAT_BUTTON_ID)
         let swapButton = document.getElementById(SWAP_BUTTON_ID)
         let viewModeTxt = document.getElementById(SWAP_TXT_ID)
@@ -31,6 +36,7 @@ onload = () => {
         if (!viewModeTxt) {
             throw 'no ' + SWAP_TXT_ID + ' id found'
         }
+        setImageSize()
         initEnvironment(imgParagraph)
         processImage(imgParagraph,cameraRightOrigin)
         processImage(imgParagraph,cameraLeftOrigin)
@@ -57,6 +63,15 @@ onload = () => {
     }
 }
 
+function setImageSize() {
+    const containerWidth = imgParagraph.clientWidth
+    if (containerWidth && Number.isInteger(containerWidth) && containerWidth > 10) {
+        targetImageSize = Math.round(containerWidth/2)-3
+    } else {
+        targetImageSize = DEFAULT_SINGLE_EYE_IMAGE_SIZE
+    }
+}
+
 function processImage(imgParagraph,cameraOrigin) {
     const cameraRay = new Ray(
         cameraOrigin,
@@ -64,7 +79,9 @@ function processImage(imgParagraph,cameraOrigin) {
     )
     optEnv.setCamera(cameraRay)
     const gridder = new GridGraph()
-    const grapher = new BiVariantGrapher(gridder,600,600,1,150,f,2)
+    const grapher = new BiVariantGrapher(gridder,
+        targetImageSize,targetImageSize,1,Math.round(targetImageSize/4),f,
+        (targetImageSize<DEFAULT_SINGLE_EYE_IMAGE_SIZE?3:2))
     let svgElem = grapher.drawGraph()
     imgParagraph.appendChild(svgElem)
 }
@@ -83,12 +100,11 @@ function initEnvironment(imgParagraph) {
 
 function f(x,y) {
     if (x*x+y*y >= 3.25) {
-        return [1/3,1/3,1/3]
+        return [0,0,0]
     }
     if (!optEnv) {
         throw 'optEnv not initiated'
     }
-    const ray = new Ray(cameraLeftOrigin,new Vector3D(x,y,4))
     return optEnv.colorFromXY(x,y)
 }
 

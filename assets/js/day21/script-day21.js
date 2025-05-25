@@ -14,21 +14,25 @@ const IMG_PARA_ID = 'imgpara'
 const DURATION_TEXT_ID = 'dur'
 const REPEAT_BUTTON_ID = 'rptbtn'
 
-const ACTUAL_WIDTH = 1024
-const ACTUAL_HEIGHT = Math.round(ACTUAL_WIDTH*0.75)
+const DEFAULT_IMAGE_WIDTH = 1024
+let targetImageWidth = null
+let targetImageHeight = null
 const PIXEL_SIZE = 1
 const ANTI_ALIAS = 3
 
 let buttonEnabled = false
 
+let imgParagraph = null
+
 onload = () => {
     try {
-        let imgParagraph = document.getElementById(IMG_PARA_ID)
+        imgParagraph = document.getElementById(IMG_PARA_ID)
         let goAgainButton = document.getElementById(REPEAT_BUTTON_ID)
         let durationElem = document.getElementById(DURATION_TEXT_ID)
         if (!imgParagraph) {
             throw 'no ' + IMG_PARA_ID + ' id found on page'
         }
+        setImageDimensions()        
         if (!goAgainButton) {
             throw 'no ' + REPEAT_BUTTON_ID + ' id found on page'
         }
@@ -57,6 +61,17 @@ onload = () => {
     }
 }
 
+function setImageDimensions() {
+    const containerWidth = imgParagraph.clientWidth
+    if (containerWidth && Number.isInteger(containerWidth) && containerWidth > 10
+        && containerWidth <= 600) {
+            targetImageWidth = containerWidth
+    } else {
+            targetImageWidth = DEFAULT_IMAGE_WIDTH
+    }
+    targetImageHeight = Math.round(targetImageWidth*0.75)
+}
+
 function processImage(imgParagraph,durationElem) {
     initEnvironment()
     imgParagraph.innerHTML = ''
@@ -64,10 +79,10 @@ function processImage(imgParagraph,durationElem) {
     const startTime = new Date()
     const grapher = new BiVariantGrapher(
         gridder,
-        Math.floor(ACTUAL_WIDTH/PIXEL_SIZE),
-        Math.floor(ACTUAL_HEIGHT/PIXEL_SIZE),
+        Math.floor(targetImageWidth/PIXEL_SIZE),
+        Math.floor(targetImageHeight/PIXEL_SIZE),
         PIXEL_SIZE, 
-        ACTUAL_HEIGHT/PIXEL_SIZE*0.33,
+        targetImageHeight/PIXEL_SIZE*0.33,
         f,ANTI_ALIAS
     )
     let canvasElem = grapher.drawGraph()
