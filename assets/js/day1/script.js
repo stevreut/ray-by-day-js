@@ -21,7 +21,7 @@ onload = async function() {
     svgImgRef.textContent = str1 + ' ...'
     let str2 = await codex.getCodeLines('../assets/images/day1-static.svg',1,10)
     svgCodeElem.textContent = str2 + '  ...'
-    let str3 = await codex.getCodeLines('../assets/js/day1/script-day1.js',28,52)
+    let str3 = await codex.getCodeLines('../assets/js/day1/script.js',28,52)
     makeSvgCodeElem.textContent = str3
 }
 
