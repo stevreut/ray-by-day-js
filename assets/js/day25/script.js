@@ -4,11 +4,12 @@ import ReflectiveSphere from "../day20/reflective-sphere.js"
 import CanvasGridder from "../day20/canvas-gridder.js"
 import Sphere from "../day20/sphere.js"
 import BiVariantGrapher from "../day22/bivargrapher.js"
-import Sky from "../day22/sky.js"
 import OpticalEnvironment from "../day22/optical-env.js"
 import Plane from "../day22/plane.js"
 import RefractiveSphere from "../day22/refractive-sphere.js"
 import ReflectiveIcosahedron from "../day23/refl-icos.js"
+
+import SunnySky from "./sunny-sky.js"
 
 
 const IMG_PARA_ID = 'imgpara'
@@ -24,7 +25,9 @@ let targetImageHeight = null
 let PIXEL_SIZE = 2
 const ANTI_ALIAS = 5
 
-const universalOrigin = new Vector3D(-17,5,7.5)
+const universalOrigin = new Vector3D (-17,5,3) // change to Vector3D(-17,5,7.5) after testing
+
+const sunVector = new Vector3D(-5,-17,10)
 
 let statBarElem = null
 let goAgainButton = null
@@ -154,10 +157,10 @@ function initEnvironment() {
         universalOrigin,
         universalOrigin.scalarMult(-1)
     )
-    optEnv.setCamera(cameraRay,0.5,universalOrigin.magn())
+    optEnv.setCamera(cameraRay,0.25,universalOrigin.magn())
     initRandomShapes()
     optEnv.addOpticalObject(new Plane(-7.5,12,2))
-    optEnv.addOpticalObject(new Sky())
+    optEnv.addOpticalObject(new SunnySky(sunVector))
 }
 
 function f(x,y) {
