@@ -27,7 +27,11 @@ const ANTI_ALIAS = 5
 
 const universalOrigin = new Vector3D (-17,5,3) // change to Vector3D(-17,5,7.5) after testing
 
-const sunVector = new Vector3D(-5,-17,10)
+const sunVector = new Vector3D(
+    Math.random(),
+    Math.random(),
+    (Math.random()+1.05)*0.5
+)
 
 let statBarElem = null
 let goAgainButton = null
@@ -211,7 +215,6 @@ function initRandomShapes() {
             shapeTempArray.push(candidateObject)
         }
     }
-    const straightUp = new Vector3D(0,0,1)
     shapeTempArray.forEach(shape=>{
         const { type } = shape
         let obj = null
@@ -226,7 +229,7 @@ function initRandomShapes() {
                 obj = new RefractiveSphere(shape.center,shape.radius,randomColor(),1.5)
                 break;
             case 'sphf':
-                obj = new Sphere(shape.center,shape.radius,randomColor(0.7,0.85),straightUp)
+                obj = new Sphere(shape.center,shape.radius,randomColor(0.7,0.85),sunVector)
                 break;
             default:
                 console.error('unexpected shape = ', type, ' - ignored')
