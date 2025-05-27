@@ -26,12 +26,7 @@ let PIXEL_SIZE = 2
 const ANTI_ALIAS = 5
 
 const universalOrigin = new Vector3D (-17,5,3) // change to Vector3D(-17,5,7.5) after testing
-
-const sunVector = new Vector3D(
-    Math.random(),
-    Math.random(),
-    (Math.random()+1.05)*0.5
-)
+let sunVector = null
 
 let statBarElem = null
 let goAgainButton = null
@@ -156,6 +151,7 @@ function statusReporterFunction(frac) {
 let optEnv = null
 
 function initEnvironment() {
+    sunVector = randomSunDirection()
     optEnv = new OpticalEnvironment()
     const cameraRay = new Ray(
         universalOrigin,
@@ -177,7 +173,7 @@ function f(x,y) {
 
 function initRandomShapes() {
     const TARGET_SHAPE_COUNT = 25
-    const lightV = new Vector3D(0,0,1)
+    // const lightV = new Vector3D(0,0,1)
     let rejectCount = 0
     const shapeTempArray = []
     const MIN_SPACE = 0.2  // TODO
@@ -195,11 +191,12 @@ function initRandomShapes() {
         } else {
             candidateObject.type = 'sphf'
         }
-        if (candidateObject.type === 'icos') {
-            candidateObject.radius = Math.random()*1.4+1
-        } else {
-            candidateObject.radius = 1
-        }
+        candidateObject.radius = 1
+        // if (candidateObject.type === 'icos') {
+        //     candidateObject.radius = Math.random()*1.4+1
+        // } else {
+        //     candidateObject.radius = 1
+        // }
         let hasIntersect = false
         shapeTempArray.forEach(otherShape=>{
             if (!hasIntersect) {
@@ -256,4 +253,17 @@ function randomColor(lo=0.47,hi=0.94) {
         arr.push(Math.random()*(hi-lo)+lo)
     }
     return arr
+}
+
+function randomSunDirection() {
+    while (true) {
+        const x = Math.random()*2-1
+        const y = Math.random()*2-1
+        const z = Math.random()*2-1
+        if (z >= 0 &&
+            x*x + y*y + z*z <= 1 &&
+            (x != 0 || y != 0 || z != 0)) {
+                return new Vector3D(x,y,z)
+        }
+    }
 }

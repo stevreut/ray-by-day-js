@@ -11,8 +11,6 @@ class SunnySky extends Sky {
     SUN_AURA_COS_COMPLEMENT = 1-this.SUN_AURA_COS
     constructor(sunDirection) {
         super()
-        console.log('SunnySky constructor invoked')
-        console.log('sunDirection = ', sunDirection)
         if (!sunDirection) {
             throw 'no sunDirection provided'
         }
