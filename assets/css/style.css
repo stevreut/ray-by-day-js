@@ -166,10 +166,16 @@ label {
     margin-top: 1cm;
 }
 .hopdiv>a, .hopdiv>button {
+    text-decoration: none;
+    font-weight: bold;
     padding: 3mm;
-    color: #fff;
+    color: #def;
     background-color: #44f;
     border-radius: 1.5mm;
+}
+.hopdiv>a:hover {
+    color: yellow;
+    background-color: yellowgreen;
 }
 code, pre {
     font-family: 'Courier New', Courier, monospace;
