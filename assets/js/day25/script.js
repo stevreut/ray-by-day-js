@@ -27,7 +27,6 @@ let targetImageHeight = null
 let PIXEL_SIZE = 2
 const ANTI_ALIAS = 5
 
-// const universalOrigin = new Vector3D(-17,5,7.5)
 let sunVector = null
 
 let statBarElem = null
@@ -50,7 +49,7 @@ onload = () => {
         goAgainButton.addEventListener('click',()=>makeImageIfEnabled())
     } catch (err) {
         console.error('err = ', err)
-        alert ('error = ' + err.toString())  // TODO
+        alert ('error = ' + err.toString())
     }
     function makeImageIfEnabled() {
         if (buttonEnabled) {
@@ -202,6 +201,9 @@ function initRandomShapes() {
                         otherShape.radius+candidateObject.radius+MIN_SPACE) {
                     hasIntersect = true
                 }
+                if (candidateObject.center.magn()+radius-3<MIN_SPACE) {
+                    hasIntersect = true
+                }
             }
         })
         if (hasIntersect) {
@@ -290,9 +292,11 @@ function randomCameraPosition() {
     const LO_LAT = 3
     const HI_LAT = 70
     const longitude = (Math.random()-0.5)*2*Math.PI
-    let latitude = Math.random()*(HI_LAT-LO_LAT)+LO_LAT  // camera elevation angle - between LO_LAT and HI_LAT degrees
+    let latitude = Math.random()**2 // **2 skews towards lower values
+    latitude = latitude*(HI_LAT-LO_LAT)+LO_LAT  // camera elevation angle - between LO_LAT and HI_LAT degrees
     latitude *= Math.PI/180 // converted to radians
-    const distance = Math.random()*(HI_DIST-LO_DIST)+LO_DIST  // camera distance - between LO_DIST and HI_DIST
+    let distance = Math.sqrt(Math.random())  // sqrt skews towards higher values, still between 0 and 1
+    distance *= (HI_DIST-LO_DIST)+LO_DIST  // camera distance - between LO_DIST and HI_DIST
     const z = Math.sin(latitude)*distance 
     const cosDist = Math.cos(latitude)*distance
     const x = Math.cos(longitude)*cosDist
