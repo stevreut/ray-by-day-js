@@ -11,6 +11,8 @@ import ReflectiveIcosahedron from "../day23/refl-icos.js"
 
 import SunnySky from "./sunny-sky.js"
 
+import OpticalObjectGroup from "./optobj-group.js"
+
 
 const IMG_PARA_ID = 'imgpara'
 const STATUS_BAR_ID = 'statbar'
@@ -25,7 +27,7 @@ let targetImageHeight = null
 let PIXEL_SIZE = 2
 const ANTI_ALIAS = 5
 
-const universalOrigin = new Vector3D (-17,5,3) // change to Vector3D(-17,5,7.5) after testing
+const universalOrigin = new Vector3D(-17,5,7.5)
 let sunVector = null
 
 let statBarElem = null
@@ -161,6 +163,7 @@ function initEnvironment() {
     initRandomShapes()
     optEnv.addOpticalObject(new Plane(-7.5,12,2))
     optEnv.addOpticalObject(new SunnySky(sunVector))
+    optEnv.addOpticalObject(makeGroupObject())
 }
 
 function f(x,y) {
@@ -173,10 +176,9 @@ function f(x,y) {
 
 function initRandomShapes() {
     const TARGET_SHAPE_COUNT = 25
-    // const lightV = new Vector3D(0,0,1)
     let rejectCount = 0
     const shapeTempArray = []
-    const MIN_SPACE = 0.2  // TODO
+    const MIN_SPACE = 0.2
     while (shapeTempArray.length < TARGET_SHAPE_COUNT) {
         let candidateObject = {
             center: randomCenter()
@@ -192,11 +194,6 @@ function initRandomShapes() {
             candidateObject.type = 'sphf'
         }
         candidateObject.radius = 1
-        // if (candidateObject.type === 'icos') {
-        //     candidateObject.radius = Math.random()*1.4+1
-        // } else {
-        //     candidateObject.radius = 1
-        // }
         let hasIntersect = false
         shapeTempArray.forEach(otherShape=>{
             if (!hasIntersect) {
@@ -266,4 +263,22 @@ function randomSunDirection() {
                 return new Vector3D(x,y,z)
         }
     }
+}
+
+function makeGroupObject() {
+    let objList = []
+    objList.push(new ReflectiveSphere(
+        new Vector3D(1,0,0), 2, [0.7, 0.5, 0.5]
+    ))
+    objList.push(new ReflectiveSphere(
+        new Vector3D(-0.5,0.86,0), 2, [0.5, 0.7, 0.5]
+    ))
+    objList.push(new ReflectiveSphere(
+        new Vector3D(-0.5,-0.86,0), 2, [0.5, 0.5, 0.7]
+    ))
+    objList.push(new ReflectiveSphere(
+        new Vector3D(0,0,0), 2.5, [0.5,0.5,0.5]
+    ))
+    const groupObj = new OpticalObjectGroup(new Vector3D(0,0,0),3,objList)
+    return groupObj
 }
