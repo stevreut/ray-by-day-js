@@ -27,7 +27,7 @@ let targetImageHeight = null
 let PIXEL_SIZE = 2
 const ANTI_ALIAS = 5
 
-const universalOrigin = new Vector3D(-17,5,7.5)
+// const universalOrigin = new Vector3D(-17,5,7.5)
 let sunVector = null
 
 let statBarElem = null
@@ -106,7 +106,13 @@ async function processImage(imgParagraph,durationElem) {
         Math.floor(targetImageHeight/PIXEL_SIZE),
         PIXEL_SIZE, 
         targetImageHeight/PIXEL_SIZE*0.33,
-        f,ANTI_ALIAS,
+        (x,y) => {
+            if (!optEnv) {
+                throw 'optEnv not initiated'
+            }
+            return optEnv.colorFromXY(x,y)
+        },
+        ANTI_ALIAS,
         statusReporterFunction
     )
     let canvasElem = await grapher.drawGraph()
@@ -155,23 +161,18 @@ let optEnv = null
 function initEnvironment() {
     sunVector = randomSunDirection()
     optEnv = new OpticalEnvironment()
+    const cameraOrigin = new randomCameraPosition()
+    const cameraDirection = cameraOrigin.scalarMult(-1)
+    const cameraOriginDistance = cameraOrigin.magn()
     const cameraRay = new Ray(
-        universalOrigin,
-        universalOrigin.scalarMult(-1)
+        cameraOrigin,
+        cameraDirection
     )
-    optEnv.setCamera(cameraRay,0.25,universalOrigin.magn())
+    optEnv.setCamera(cameraRay,0.25,cameraOriginDistance-3)
     initRandomShapes()
     optEnv.addOpticalObject(new Plane(-7.5,12,2))
     optEnv.addOpticalObject(new SunnySky(sunVector))
     optEnv.addOpticalObject(makeGroupObject())
-}
-
-function f(x,y) {
-    if (!optEnv) {
-        throw 'optEnv not initiated'
-    }
-    const ray = new Ray(universalOrigin,new Vector3D(x,y,4))
-    return optEnv.colorFromXY(x,y)
 }
 
 function initRandomShapes() {
@@ -281,4 +282,21 @@ function makeGroupObject() {
     ))
     const groupObj = new OpticalObjectGroup(new Vector3D(0,0,0),3,objList)
     return groupObj
+}
+
+function randomCameraPosition() {
+    const LO_DIST = 5
+    const HI_DIST = 20
+    const LO_LAT = 3
+    const HI_LAT = 70
+    const longitude = (Math.random()-0.5)*2*Math.PI
+    let latitude = Math.random()*(HI_LAT-LO_LAT)+LO_LAT  // camera elevation angle - between LO_LAT and HI_LAT degrees
+    latitude *= Math.PI/180 // converted to radians
+    const distance = Math.random()*(HI_DIST-LO_DIST)+LO_DIST  // camera distance - between LO_DIST and HI_DIST
+    const z = Math.sin(latitude)*distance 
+    const cosDist = Math.cos(latitude)*distance
+    const x = Math.cos(longitude)*cosDist
+    const y = Math.sin(longitude)*cosDist
+    const vec = new Vector3D(x,y,z)
+    return vec
 }
