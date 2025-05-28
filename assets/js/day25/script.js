@@ -201,7 +201,7 @@ function initRandomShapes() {
                         otherShape.radius+candidateObject.radius+MIN_SPACE) {
                     hasIntersect = true
                 }
-                if (candidateObject.center.magn()+radius-3<MIN_SPACE) {
+                if (candidateObject.center.magn()<3+candidateObject.radius+MIN_SPACE) {
                     hasIntersect = true
                 }
             }
