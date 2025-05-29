@@ -12,6 +12,7 @@ import ReflectiveIcosahedron from "../day23/refl-icos.js"
 import SunnySky from "./sunny-sky.js"
 
 import OpticalObjectGroup from "./optobj-group.js"
+import ReflectiveCube from "./refl-cube.js"
 
 
 const IMG_PARA_ID = 'imgpara'
@@ -171,7 +172,7 @@ function initEnvironment() {
     initRandomShapes()
     optEnv.addOpticalObject(new Plane(-7.5,12,2))
     optEnv.addOpticalObject(new SunnySky(sunVector))
-    optEnv.addOpticalObject(makeGroupObject())
+    optEnv.addOpticalObject(makeFacetedSolid())
 }
 
 function initRandomShapes() {
@@ -268,22 +269,9 @@ function randomSunDirection() {
     }
 }
 
-function makeGroupObject() {
-    let objList = []
-    objList.push(new ReflectiveSphere(
-        new Vector3D(1,0,0), 2, [0.7, 0.5, 0.5]
-    ))
-    objList.push(new ReflectiveSphere(
-        new Vector3D(-0.5,0.86,0), 2, [0.5, 0.7, 0.5]
-    ))
-    objList.push(new ReflectiveSphere(
-        new Vector3D(-0.5,-0.86,0), 2, [0.5, 0.5, 0.7]
-    ))
-    objList.push(new ReflectiveSphere(
-        new Vector3D(0,0,0), 2.5, [0.5,0.5,0.5]
-    ))
-    const groupObj = new OpticalObjectGroup(new Vector3D(0,0,0),3,objList)
-    return groupObj
+function makeFacetedSolid() {
+    return new ReflectiveCube(
+        new Vector3D(0,0,0),2.5,[0.9,0.4,0.4])
 }
 
 function randomCameraPosition() {
