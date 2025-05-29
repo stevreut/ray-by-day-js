@@ -11,7 +11,7 @@ class Triangle extends OpticalObject {
         }
         let isValid = true
         this.verts.forEach(vert=>{
-            if (!vert instanceof Vector3D) {
+            if (!(vert instanceof Vector3D)) {
                 isValid = false
             }
         })

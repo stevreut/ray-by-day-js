@@ -14,7 +14,7 @@ class SunnySky extends Sky {
         if (!sunDirection) {
             throw 'no sunDirection provided'
         }
-        if (!sunDirection instanceof Vector3D) {
+        if (!(sunDirection instanceof Vector3D)) {
             throw 'invalid sunDirection provided, expecting Vector3D'
         }
         if (sunDirection.magnSqr() === 0) {

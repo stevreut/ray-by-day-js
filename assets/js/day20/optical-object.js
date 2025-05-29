@@ -7,7 +7,7 @@ class OpticalObject {
     }
 
     handle(ray) {
-        if (! ray instanceof Ray) {
+        if (!(ray instanceof Ray)) {
             throw 'attempt to handle non-Ray'
         }
         return [1,1,1]

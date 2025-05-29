@@ -333,7 +333,7 @@ function intersectsCameraPath(obj) {
         }
     }
     const { center, radius } = obj
-    if (!center instanceof Vector3D || typeof radius !== 'number') {
+    if (!(center instanceof Vector3D) || typeof radius !== 'number') {
         console.error('ignoring object with unexpected attributes')
         return true
     }

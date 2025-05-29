@@ -12,17 +12,15 @@ class OpticalObjectGroup extends OpticalObject {
         if (!Array.isArray(objList)) {
             throw 'objList is not an array'
         }
-        this.objectList = []
         this.env = new OpticalEnvironment()
         objList.forEach(obj=>{
             this.addComponentObject(obj)
         })
     }
     addComponentObject(obj) {
-        if (!obj || !(obj instanceof OpticalObject)) {
+        if (!obj || !(obj instanceof OpticalObject)) {  // TODO - is the 1st of these 2 tests necessary?
             throw 'attempt to add other than OpticalObject'
         }
-        this.objectList.push(obj)
         this.env.addOpticalObject(obj)
     }
     interceptDistance(ray) {

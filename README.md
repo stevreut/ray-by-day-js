@@ -45,7 +45,7 @@ As noted above, this repository contains code in the following languages:
 
 In addition, with regard to JavaScript, it should be noted that fairly extensive use is made of these aspects of the language:
 
-- SVG formatting : [Scalable Network Graphics](https://developer.mozilla.org/en-US/docs/Web/SVG)
+- SVG formatting : [Scalable Vector Graphics](https://developer.mozilla.org/en-US/docs/Web/SVG)
 - the JavaScript Canvas API : [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API)
 
 # Installation

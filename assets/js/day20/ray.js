@@ -3,8 +3,8 @@ import Vector3D from './vector3d.js'
 class Ray {
 
     constructor(origin,direction,color) {
-        if (!origin instanceof Vector3D ||
-            !direction instanceof Vector3D) {
+        if (!(origin instanceof Vector3D) ||
+            !(direction instanceof Vector3D)) {
                 throw 'non-Vector3D where Vector3D expected'
         }
         this.orig = origin

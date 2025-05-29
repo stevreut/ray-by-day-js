@@ -10,14 +10,14 @@ class OpticalEnvironment {
     }
     SKY_BLUE = [135/255,206/255,235/255]
     addOpticalObject(obj) {
-        if (!obj instanceof OpticalObject) {
+        if (!(obj instanceof OpticalObject)) {
             throw 'attempted to add non-OpticalObject'
         }
         this.optObjList.push(obj)
         this.objCount++
     }
     setCamera(cameraRay) {
-        if (!cameraRay instanceof Ray) {
+        if (!(cameraRay instanceof Ray)) {
             throw 'attempted to setCamera for non-Ray'
         }
         this.camera = {}

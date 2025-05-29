@@ -2,7 +2,7 @@ import Gridder from "./gridder.js";
 
 class BiVariantGrapher {
     constructor(gridder,width,height,pixelSize,pixelsPerUnit = 1,bvf,antiAlias = 1) {
-        if (! gridder instanceof Gridder){
+        if (!(gridder instanceof Gridder)){
             throw 'not an instance of Gridder'
         }
         this.gridder = gridder

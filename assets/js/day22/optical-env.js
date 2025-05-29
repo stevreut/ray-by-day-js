@@ -13,14 +13,14 @@ class OpticalEnvironment {
     WHITE = [1,1,1]
     MAX_ITERATIONS = 11
     addOpticalObject(obj) {
-        if (!obj instanceof OpticalObject) {
+        if (!(obj instanceof OpticalObject)) {
             throw 'attempted to add non-OpticalObject'
         }
         this.optObjList.push(obj)
         this.objCount++
     }
     setCamera(cameraRay,aperture=0,focalDistance=4) {
-        if (!cameraRay instanceof Ray) {
+        if (!(cameraRay instanceof Ray)) {
             throw 'attempted to setCamera for non-Ray'
         }
         this.camera = {}
@@ -109,7 +109,7 @@ class OpticalEnvironment {
                 return false
         }
         arr.forEach(itm=>{
-            if (! itm instanceof Ray) {
+            if (!(itm instanceof Ray)) {
                 return false
             }
         })

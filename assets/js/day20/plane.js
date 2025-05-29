@@ -14,7 +14,7 @@ class Plane extends OpticalObject {
         this.lightSpreadSqr = lightingSpread**2
     }
     interceptDistance(ray) {
-        if (! ray instanceof Ray) {
+        if (!(ray instanceof Ray)) {
             throw 'attempt to interceptDistance() on non-Ray'
         }
         const dir = ray.getDirection()
@@ -31,7 +31,7 @@ class Plane extends OpticalObject {
         return mult*dir.magn()
     }
     handle(ray) {
-        if (! ray instanceof Ray) {
+        if (!(ray instanceof Ray)) {
             throw 'attempt to handle() on non-Ray'
         }
         const dir = ray.getDirection()
