@@ -157,6 +157,44 @@ label {
     color: #ff0000;
     font-weight: bold;
 }
+/* .footnote {
+    border: solid 1px #0087ff;
+    padding: 5mm;
+    margin-top: 3cm;
+}
+.footnote dt {
+    display: inline;
+    font-size: 9pt;
+    font-weight: bold;
+    color: #0087ff;
+}
+.footnote dd {
+    display: inline;
+    margin-left: 3mm;
+    font-size: 8pt;
+} */
+.footnote {
+    margin-top: 3cm;
+    padding: 5mm;
+    border: solid 1px #0087ff;
+    dl {
+        display: grid;
+        grid-template-columns: max-content auto;
+    }
+    dt {
+        grid-column-start: 1;
+        margin: 4mm 0;
+        font-size: 10pt;
+        font-weight: bold;
+        color: #0087ff;
+    }
+
+    dd {
+        grid-column-start: 2;
+        margin: 4mm 0 4mm 3mm;
+        font-size: 9pt;
+    }
+}
 .hopdiv {
     display: flex;
     justify-content: space-between;

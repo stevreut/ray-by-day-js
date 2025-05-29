@@ -65,7 +65,7 @@ simply view the source code of the web pages in the site.
 
 https://opensource.org/license/mit/ 
 
-(See also the [LICENSE](https://github.com/stevreut/ray-by-day-js/blob/main/README.md) file in this repository.)
+(See also the [LICENSE](https://github.com/stevreut/ray-by-day-js/blob/main/LICENSE) file in this repository.)
 
 # Author
 
