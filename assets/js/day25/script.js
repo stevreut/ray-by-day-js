@@ -7,11 +7,11 @@ import BiVariantGrapher from "../day22/bivargrapher.js"
 import OpticalEnvironment from "../day22/optical-env.js"
 import Plane from "../day22/plane.js"
 import RefractiveSphere from "../day22/refractive-sphere.js"
-import ReflectiveIcosahedron from "../day23/refl-icos.js"
+
+import ReflectiveIcosahedron from "./refl-icos.js"
 
 import SunnySky from "./sunny-sky.js"
 
-import OpticalObjectGroup from "./optobj-group.js"
 import ReflectiveCube from "./refl-cube.js"
 
 
