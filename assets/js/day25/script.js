@@ -14,7 +14,7 @@ import SunnySky from "./sunny-sky.js"
 
 import ReflectiveCube from "./refl-cube.js"
 import ReflectiveTetrahedron from "./refl-tetra.js"
-// import ReflectiveDodecahedron from "./refl-dodeca.js"
+import ReflectiveDodecahedron from "./refl-dodeca.js"
 
 
 const IMG_PARA_ID = 'imgpara'
@@ -186,18 +186,20 @@ function initRandomShapes() {
             center: randomCenter()
         }
         let rando = Math.random();
-        if (rando < 0.16) {
+        if (rando < 0.14) {
             candidateObject.type = 'icos'
-        } else if (rando < 0.32) {
+        } else if (rando < 0.29) {
             candidateObject.type = 'spht'
-        } else if (rando < 0.48) {
+        } else if (rando < 0.43) {
             candidateObject.type = 'sphm'
-        } else if (rando < 0.64) {
+        } else if (rando < 0.57) {
             candidateObject.type = 'sphf'
-        } else if (rando < 0.8) {
+        } else if (rando < 0.71) {
             candidateObject.type = 'cube'
-        } else {
+        } else if (rando < 0.86) {
             candidateObject.type = 'tetr'
+        } else {
+            candidateObject.type = 'dode'
         }
         candidateObject.radius = 1
         let hasIntersect = false
@@ -236,6 +238,9 @@ function initRandomShapes() {
                 break;
             case 'tetr':
                 obj = new ReflectiveTetrahedron(shape.center,shape.radius,[0.5,0.65,0.5])
+                break;
+            case 'dode':
+                obj = new ReflectiveDodecahedron(shape.center,shape.radius,[0.65,0.7,0.8])
                 break;
             default:
                 console.error('unexpected shape = ', type, ' - ignored')
