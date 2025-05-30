@@ -3,41 +3,36 @@ import ReflectiveFacetedSolid from "./refl-faceted-solid.js";
 
 class ReflectiveCube extends ReflectiveFacetedSolid {
     constructor(center,edgeLen,color) {
-        const halfEdge = edgeLen/2
-        const vList = []
-        // Define the 8 vertices of the cube and add each to vList (list of 
-        // vertices)
-        const cList = [
-            [-1, 1, 1],  // 0
-            [ 1, 1, 1],  // 1
-            [ 1,-1, 1],  // 2
-            [-1,-1, 1],  // 3
-            [-1, 1,-1],  // 4
-            [ 1, 1,-1],  // 5
-            [ 1,-1,-1],  // 6
-            [-1,-1,-1]   // 7
+        const radius = Math.sqrt(3)/2*edgeLen
+        const Z1 = 1/3*radius
+        const Z2 = -1/3*radius
+        const WD = Math.sqrt(8)/3*radius
+        const TH2 = Math.PI/3
+        const vList = []  // list of vertices
+        vList.push(new Vector3D(0,0,radius))
+        for (let i=1;i<=3;i++) {
+            vList.push(new Vector3D(
+                Math.cos((i-1)*2*TH2)*WD,
+                Math.sin((i-1)*2*TH2)*WD,
+                Z1))
+        }
+        for (let j=4;j<=6;j++) {
+            vList.push(new Vector3D(
+                Math.cos(((j-4)*2+1)*TH2)*WD,
+                Math.sin(((j-4)*2+1)*TH2)*WD,
+                Z2))
+        }
+        vList.push(new Vector3D(0,0,-radius))
+        // fList = list of facets (squares), specified by
+        // indices into the vList array
+        const fList = [
+            [0,1,4,2],
+            [0,2,5,3],
+            [0,3,6,1],
+            [6,1,4,7],
+            [5,3,6,7],
+            [4,2,5,7]
         ]
-        cList.forEach(trip=>{
-            // For now (TODO), arbitrary rotation of 0.2 radians to give a more
-            // interesting effect
-            const theta = 0.2
-            const x = (trip[0]*Math.cos(theta) - trip[1]*Math.sin(theta))*halfEdge
-            const y = (trip[1]*Math.cos(theta) + trip[0]*Math.sin(theta))*halfEdge
-            const z = trip[2]*halfEdge
-            vList.push(new Vector3D(x,y,z))
-        })
-        // Create a list of facets, each containing a list of vertex numbers (the
-        // indices into vList) which define the corners of a polygon
-        const fList = []
-        // Six faces for a cube
-        fList.push([0,1,2,3])
-        fList.push([0,1,5,4])
-        fList.push([1,2,6,5])
-        fList.push([2,3,7,6])
-        fList.push([0,3,7,4])
-        fList.push([4,5,6,7])
-        // interceptDistance() and handle() rely entire on
-        // the super class implementations
         super(center,color,vList,fList)
     }
 }

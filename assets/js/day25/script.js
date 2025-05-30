@@ -13,6 +13,8 @@ import ReflectiveIcosahedron from "./refl-icos.js"
 import SunnySky from "./sunny-sky.js"
 
 import ReflectiveCube from "./refl-cube.js"
+import ReflectiveTetrahedron from "./refl-tetra.js"
+// import ReflectiveDodecahedron from "./refl-dodeca.js"
 
 
 const IMG_PARA_ID = 'imgpara'
@@ -172,7 +174,6 @@ function initEnvironment() {
     initRandomShapes()
     optEnv.addOpticalObject(new Plane(-7.5,12,2))
     optEnv.addOpticalObject(new SunnySky(sunVector))
-    optEnv.addOpticalObject(makeFacetedSolid())
 }
 
 function initRandomShapes() {
@@ -185,14 +186,18 @@ function initRandomShapes() {
             center: randomCenter()
         }
         let rando = Math.random();
-        if (rando < 0.3) {
+        if (rando < 0.16) {
             candidateObject.type = 'icos'
-        } else if (rando < 0.7) {
+        } else if (rando < 0.32) {
             candidateObject.type = 'spht'
-        } else if (rando < 0.9) {
+        } else if (rando < 0.48) {
             candidateObject.type = 'sphm'
-        } else {
+        } else if (rando < 0.64) {
             candidateObject.type = 'sphf'
+        } else if (rando < 0.8) {
+            candidateObject.type = 'cube'
+        } else {
+            candidateObject.type = 'tetr'
         }
         candidateObject.radius = 1
         let hasIntersect = false
@@ -200,9 +205,6 @@ function initRandomShapes() {
             if (!hasIntersect) {
                 if (otherShape.center.subt(candidateObject.center).magn() <= 
                         otherShape.radius+candidateObject.radius+MIN_SPACE) {
-                    hasIntersect = true
-                }
-                if (candidateObject.center.magn()<3+candidateObject.radius+MIN_SPACE) {
                     hasIntersect = true
                 }
             }
@@ -228,6 +230,12 @@ function initRandomShapes() {
                 break;
             case 'sphf':
                 obj = new Sphere(shape.center,shape.radius,randomColor(0.7,0.85),sunVector)
+                break;
+            case 'cube':
+                obj = new ReflectiveCube(shape.center,shape.radius*2/Math.sqrt(3),[0.8,0.5,0.5])
+                break;
+            case 'tetr':
+                obj = new ReflectiveTetrahedron(shape.center,shape.radius,[0.5,0.65,0.5])
                 break;
             default:
                 console.error('unexpected shape = ', type, ' - ignored')
@@ -267,11 +275,6 @@ function randomSunDirection() {
                 return new Vector3D(x,y,z)
         }
     }
-}
-
-function makeFacetedSolid() {
-    return new ReflectiveCube(
-        new Vector3D(0,0,0),2.5,[0.9,0.4,0.4])
 }
 
 function randomCameraPosition() {
