@@ -170,37 +170,24 @@ function initEnvironment() {
         cameraOrigin,
         cameraDirection
     )
-    optEnv.setCamera(cameraRay,0.25,cameraOriginDistance-3)
+    optEnv.setCamera(cameraRay,0.25,cameraOriginDistance)
     initRandomShapes()
     optEnv.addOpticalObject(new Plane(-7.5,12,2))
     optEnv.addOpticalObject(new SunnySky(sunVector))
 }
 
 function initRandomShapes() {
-    const TARGET_SHAPE_COUNT = 25
+    const TARGET_SHAPE_COUNT = 15
     let rejectCount = 0
     const shapeTempArray = []
     const MIN_SPACE = 0.2
+    const SHAPE_NAMES = 'icos;spht;sphm;sphf;cube;tetr;dode'.split(';')
     while (shapeTempArray.length < TARGET_SHAPE_COUNT) {
         let candidateObject = {
             center: randomCenter()
         }
-        let rando = Math.random();
-        if (rando < 0.14) {
-            candidateObject.type = 'icos'
-        } else if (rando < 0.29) {
-            candidateObject.type = 'spht'
-        } else if (rando < 0.43) {
-            candidateObject.type = 'sphm'
-        } else if (rando < 0.57) {
-            candidateObject.type = 'sphf'
-        } else if (rando < 0.71) {
-            candidateObject.type = 'cube'
-        } else if (rando < 0.86) {
-            candidateObject.type = 'tetr'
-        } else {
-            candidateObject.type = 'dode'
-        }
+        let rando = Math.floor(Math.random()*7)
+        candidateObject.type = SHAPE_NAMES[rando]
         candidateObject.radius = 1
         let hasIntersect = false
         shapeTempArray.forEach(otherShape=>{
@@ -285,7 +272,7 @@ function randomSunDirection() {
 function randomCameraPosition() {
     const LO_DIST = 5
     const HI_DIST = 20
-    const LO_LAT = 3
+    const LO_LAT = -15
     const HI_LAT = 70
     const longitude = (Math.random()-0.5)*2*Math.PI
     let latitude = Math.random()**2 // **2 skews towards lower values
