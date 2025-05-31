@@ -271,9 +271,9 @@ function randomSunDirection() {
 
 function randomCameraPosition() {
     const LO_DIST = 5
-    const HI_DIST = 20
-    const LO_LAT = -15
-    const HI_LAT = 70
+    const HI_DIST = 15
+    const LO_LAT = 3
+    const HI_LAT = 40
     const longitude = (Math.random()-0.5)*2*Math.PI
     let latitude = Math.random()**2 // **2 skews towards lower values
     latitude = latitude*(HI_LAT-LO_LAT)+LO_LAT  // camera elevation angle - between LO_LAT and HI_LAT degrees
