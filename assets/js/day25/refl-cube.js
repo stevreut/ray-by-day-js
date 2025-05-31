@@ -2,8 +2,7 @@ import Vector3D from "../day20/vector3d.js";
 import ReflectiveFacetedSolid from "./refl-faceted-solid.js";
 
 class ReflectiveCube extends ReflectiveFacetedSolid {
-    constructor(center,edgeLen,color) {
-        const radius = Math.sqrt(3)/2*edgeLen
+    constructor(center,radius,color) {
         const Z1 = 1/3*radius
         const Z2 = -1/3*radius
         const WD = Math.sqrt(8)/3*radius

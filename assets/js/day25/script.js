@@ -1,8 +1,8 @@
 import Vector3D from "../day20/vector3d.js"
 import Ray from "../day20/ray.js"
-import ReflectiveSphere from "../day20/reflective-sphere.js"
+// import ReflectiveSphere from "../day20/reflective-sphere.js"
 import CanvasGridder from "../day20/canvas-gridder.js"
-import Sphere from "../day20/sphere.js"
+// import Sphere from "../day20/sphere.js"
 import BiVariantGrapher from "../day22/bivargrapher.js"
 import OpticalEnvironment from "../day22/optical-env.js"
 import Plane from "../day22/plane.js"
@@ -15,6 +15,7 @@ import SunnySky from "./sunny-sky.js"
 import ReflectiveCube from "./refl-cube.js"
 import ReflectiveTetrahedron from "./refl-tetra.js"
 import ReflectiveDodecahedron from "./refl-dodeca.js"
+import ReflectiveOctahedron from "./refl-octa.js"
 
 
 const IMG_PARA_ID = 'imgpara'
@@ -177,16 +178,16 @@ function initEnvironment() {
 }
 
 function initRandomShapes() {
-    const TARGET_SHAPE_COUNT = 15
+    const TARGET_SHAPE_COUNT = 25
     let rejectCount = 0
     const shapeTempArray = []
     const MIN_SPACE = 0.2
-    const SHAPE_NAMES = 'icos;spht;sphm;sphf;cube;tetr;dode'.split(';')
+    const SHAPE_NAMES = 'icos;spht;spht;cube;tetr;dode;octa'.split(';')
     while (shapeTempArray.length < TARGET_SHAPE_COUNT) {
         let candidateObject = {
             center: randomCenter()
         }
-        let rando = Math.floor(Math.random()*7)
+        let rando = Math.floor(Math.random()*SHAPE_NAMES.length)
         candidateObject.type = SHAPE_NAMES[rando]
         candidateObject.radius = 1
         let hasIntersect = false
@@ -211,23 +212,26 @@ function initRandomShapes() {
             case 'icos':
                 obj = new ReflectiveIcosahedron(shape.center,shape.radius,randomColor(0.5,0.6))
                 break;
-            case 'sphm':
-                obj = new ReflectiveSphere(shape.center,shape.radius,randomColor(0.5,0.6))
-                break;
+            // case 'sphm':
+            //     obj = new ReflectiveSphere(shape.center,shape.radius,randomColor(0.5,0.6))
+            //     break;
             case 'spht':
                 obj = new RefractiveSphere(shape.center,shape.radius,randomColor(),1.5)
                 break;
-            case 'sphf':
-                obj = new Sphere(shape.center,shape.radius,randomColor(0.7,0.85),sunVector)
-                break;
+            // case 'sphf':
+            //     obj = new Sphere(shape.center,shape.radius,randomColor(0.7,0.85),sunVector)
+            //     break;
             case 'cube':
-                obj = new ReflectiveCube(shape.center,shape.radius*2/Math.sqrt(3),[0.8,0.5,0.5])
+                obj = new ReflectiveCube(shape.center,shape.radius,[0.8,0.5,0.5])
                 break;
             case 'tetr':
-                obj = new ReflectiveTetrahedron(shape.center,shape.radius,[0.5,0.65,0.5])
+                obj = new ReflectiveTetrahedron(shape.center,shape.radius,[0.5,0.55,0.5])
                 break;
             case 'dode':
                 obj = new ReflectiveDodecahedron(shape.center,shape.radius,[0.65,0.7,0.8])
+                break;
+            case 'octa':
+                obj = new ReflectiveOctahedron(shape.center,shape.radius,[0.675,0.435,0.55])
                 break;
             default:
                 console.error('unexpected shape = ', type, ' - ignored')
