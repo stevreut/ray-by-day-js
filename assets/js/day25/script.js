@@ -22,47 +22,48 @@ const IMG_PARA_ID = 'imgpara'
 const STATUS_BAR_ID = 'statbar'
 const DURATION_TEXT_ID = 'dur'
 const REPEAT_BUTTON_ID = 'rptbtn'
+const HI_QUALITY_BUTTON_ID = 'highqbtn'
 
 const STATUS_CONTAINER_CLASS = 'progress-container'
 
 const DEFAULT_IMAGE_WIDTH = 1024
 let targetImageWidth = null
 let targetImageHeight = null
-let PIXEL_SIZE = 2
-const ANTI_ALIAS = 5
+let pixelSize = null
+let antiAlias = null
 
 let sunVector = null
 
 let statBarElem = null
 let goAgainButton = null
+let highQualityButton = null
 let imgParagraph = null
 let durationElem = null
 
-let buttonEnabled = true
 
-
-onload = () => {
+onload = async () => {
     try {
         imgParagraph = linkElement(IMG_PARA_ID)
         goAgainButton = linkElement(REPEAT_BUTTON_ID)
+        highQualityButton = linkElement(HI_QUALITY_BUTTON_ID)
         durationElem = linkElement(DURATION_TEXT_ID)
         statBarElem = linkElement(STATUS_BAR_ID)
-        setImageDimensions()
+        setImageDimensions(false)
         insertBlankCanvas()
-        makeImageIfEnabled()
-        goAgainButton.addEventListener('click',()=>makeImageIfEnabled())
+        initEnvironment()
+        await processImage(imgParagraph,durationElem)
+        goAgainButton.addEventListener('click',async ()=>{
+            setImageDimensions(false)
+            initEnvironment()
+            await processImage(imgParagraph,durationElem)
+        })
+        highQualityButton.addEventListener('click',async ()=>{
+            setImageDimensions(true)
+            await processImage(imgParagraph,durationElem)
+        })
     } catch (err) {
         console.error('err = ', err)
         alert ('error = ' + err.toString())
-    }
-    function makeImageIfEnabled() {
-        if (buttonEnabled) {
-            enableButton(false)
-            setTimeout(async ()=>{
-                await processImage(imgParagraph,durationElem)
-                enableButton(true)
-            },0)
-        }
     }
 }
 
@@ -74,48 +75,52 @@ function linkElement(id) {
     return elem
 }
 
-function enableButton(doEnable) {
+function enableButton(button,doEnable) {
     if (doEnable === null || doEnable === true) {
-        buttonEnabled = true
-        goAgainButton.disabled = false
-        goAgainButton.classList.remove('btndisabled')
+        button.disabled = false
+        button.classList.remove('btndisabled')
     } else {
-        buttonEnabled = false
-        goAgainButton.disabled = true
-        goAgainButton.classList.add('btndisabled')
+        button.disabled = true
+        button.classList.add('btndisabled')
     }
 }
 
-function setImageDimensions() {
+function setImageDimensions(isHiQuality) {
     const containerWidth = imgParagraph.clientWidth
-    if (containerWidth && Number.isInteger(containerWidth) && containerWidth > 10
-        && containerWidth <= 600) {
-            targetImageWidth = containerWidth
+    if (isHiQuality) {
+        targetImageWidth = DEFAULT_IMAGE_WIDTH
     } else {
-            targetImageWidth = DEFAULT_IMAGE_WIDTH
+        if (containerWidth && Number.isInteger(containerWidth) && containerWidth > 10
+            && containerWidth <= 600) {
+                targetImageWidth = containerWidth
+        } else {
+                targetImageWidth = DEFAULT_IMAGE_WIDTH
+        }
     }
     targetImageHeight = Math.round(targetImageWidth*0.75)
-    PIXEL_SIZE = (targetImageWidth<=512?1:2)
+    pixelSize = (isHiQuality?1:(targetImageWidth<=512?1:3))
+    antiAlias = (isHiQuality?5:3)
 }
 
 async function processImage(imgParagraph,durationElem) {
-    initEnvironment()
     durationElem.textContent = ''
+    enableButton(goAgainButton,false)
+    enableButton(highQualityButton,false)
     const gridder = new CanvasGridder()
     const startTime = new Date()
     const grapher = new BiVariantGrapher(
         gridder,
-        Math.floor(targetImageWidth/PIXEL_SIZE),
-        Math.floor(targetImageHeight/PIXEL_SIZE),
-        PIXEL_SIZE, 
-        targetImageHeight/PIXEL_SIZE*0.33,
+        Math.floor(targetImageWidth/pixelSize),
+        Math.floor(targetImageHeight/pixelSize),
+        pixelSize, 
+        targetImageHeight/pixelSize*0.33,
         (x,y) => {
             if (!optEnv) {
                 throw 'optEnv not initiated'
             }
             return optEnv.colorFromXY(x,y)
         },
-        ANTI_ALIAS,
+        antiAlias,
         statusReporterFunction
     )
     let canvasElem = await grapher.drawGraph()
@@ -125,6 +130,8 @@ async function processImage(imgParagraph,durationElem) {
     imgParagraph.innerHTML = ''
     imgParagraph.appendChild(canvasElem)
     durationElem.textContent = 'Image generation duration: ' + durationSecs + ' seconds'
+    enableButton(goAgainButton,true)
+    enableButton(highQualityButton,true)
 }
 
 function insertBlankCanvas() {

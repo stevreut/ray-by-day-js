@@ -89,6 +89,7 @@ button {
     background-color: #999;
     color: #fff;
     padding: 1.5mm;
+    margin: 1mm 1mm 1mm 0;
     border: solid 2px #bbb;
     border-radius: 1.5mm;
 }
