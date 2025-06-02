@@ -333,6 +333,13 @@ em {
         margin: 2mm 2mm 2mm 0;
         border: none;
     }
+    .titled-code-exc {
+        font-size: 9pt;
+    }
+    .code-exc {
+        font-size: 8pt;
+    }
+
 }
 
 
