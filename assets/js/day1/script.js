@@ -13,7 +13,7 @@ onload = async function() {
             throw 'missing expected id(s)'
     }
     makeSvgButton.addEventListener('click',()=>{
-        const svgStr = getSvgContent()
+        const svgStr = getSvgContent(30,30,5)  // 30 virtual pixels on each side -> 150x150 actual pixels
         textAreaElem.value = svgStr
     })
     clearButton.addEventListener('click',()=>textAreaElem.value='')
@@ -21,34 +21,58 @@ onload = async function() {
     let codef = new CodeFormatter()
     let str1 = await codex.getCodeLines('./day1.html',13,14)
     svgImgRef.replaceWith(codef.formatTitledExcerptElement("<img> element tag referencing static SVG file",str1,true))
-    let str2 = await codex.getCodeLines('../assets/images/day1-static.svg',1,15)
-    svgCodeElem.replaceWith(codef.formatTitledExcerptElement("First 15 lines of day1-static.svg",str2))
-    let str3 = await codex.getCodeLines('../assets/js/day1/script.js',30,54)
+    let str2 = await codex.getCodeLines('../assets/images/day1-static.svg',1,35)
+    svgCodeElem.replaceWith(codef.formatTitledExcerptElement("First 35 lines of day1-static.svg",str2))
+    let str3 = await codex.getCodeLines('../assets/js/day1/script.js',30,78)
     makeSvgCodeElem.replaceWith(codef.formatTitledExcerptElement("getSvgContent() from script.js",str3))
 }
 
-function getSvgContent() {
-    const SVGNS = 'http://www.w3.org/2000/svg'
-    const WID = 150
-    const HGT = 150
-    const MINDIM = Math.min(WID,HGT)
-    let svg = '<?xml version="1.0" encoding="utf-8"?>'
-    svg += '\n<svg width="' + WID + '" height="' + HGT + '" '
-    svg += 'viewBox="0 0 ' + WID + ' ' + HGT + '" '
-    svg += 'xmlns="' + SVGNS + '">'
-    for (let row=0;row<HGT;row+=10) {
-        for (let col=0;col<WID;col+=10) {
-            let rect = '<rect x="' + col + '" y="' + row + 
-                '" width="10" height="10" stroke="#888" fill="'
-            if (col**2+row**2 < MINDIM**2) {
-                rect += '#0088ff'
+function getSvgContent(width,height,pixelSize) {
+    const SVGNS = 'http://www.w3.org/2000/svg'  // This namespace is required in SVG files.
+    const actualWidth = width*pixelSize
+    const actualHeight = height*pixelSize
+    let svgString = '<?xml version="1.0" encoding="utf-8"?>'  // XML header
+    svgString += `\n<svg width="${actualWidth}" height="${actualHeight}" ` +
+        `viewBox="0 0 ${actualWidth} ${actualHeight} " xmlns="${SVGNS}">`
+    for (let row=0;row<height;row++) {
+        const vertOffset = row*pixelSize  // offset in actual pixels from TOP
+        const y = row/(height-1)
+        for (let col=0;col<width;col++) {
+            const horizOffset = col*pixelSize  // offset in actual pixels from LEFT
+            const x = col/(width-1)  // convenience variable for calculating color
+            const rr = x*x+y*y       // square of the distance from the upper left
+            let colorHex
+            if (rr > 0.8) {
+                colorHex = '#ff8800'  // orange
+            } else if (rr > 0.6) {
+                colorHex = '#0088ff'  // medium blue
             } else {
-                rect += '#aabbaa'
+                if (y > 0.4) {
+                    colorHex = '#ff0000'  // red
+                } else {
+                    colorHex = '#00cc00'  // light green
+                }
             }
-            rect += '"/>'
-            svg += '\n  ' + rect
+            // Construct the XML/SVG element for a virtual pixel.  This will be
+            // a square of 'pixelSize' on all four sides.  It is formatted in the SVG
+            // file as a rectangle ('<rect ...') but is specifically square since 
+            // its specified dimensions ('width=...', 'height=...') have the same
+            // values.
+            //
+            // The 'x=' and 'y=' attributes in the XML/SVG element indicate how far
+            // the rectangle (square in this case) is from the left and top margins,
+            // respectively.
+            //
+            // The 'fill=' attribute specifies the color of the rectangle.  The optional
+            // 'stroke=' and 'stroke-width=' attributes specify the color of the 
+            // rectangles' borders and the width of those borders, respectively.
+            let rectangleElemStr = 
+                `\n  <rect x="${vertOffset}" y="${horizOffset}" ` +
+                `width="${pixelSize}" height="${pixelSize}" ` +
+                `stroke="#fff" stroke-width="1" fill="${colorHex}"/>`
+            svgString += rectangleElemStr
         }
     }
-    svg += '\n</svg>\n'
-    return svg;
+    svgString += '\n</svg>\n'  // Complete the <svg> element that contains the <rect> elements
+    return svgString;
 }

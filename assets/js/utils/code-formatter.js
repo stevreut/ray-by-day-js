@@ -38,7 +38,6 @@ class CodeFormatter {
             newStr += (truncLine + '\n')
         })
         while (strLines.length > 0 && strLines[strLines.length-1] === '\n') {
-            console.log('removing \n from "' + strLines + '"')
             strLines = strLines.slice(0,strLines.length-1)
         }
         return newStr
