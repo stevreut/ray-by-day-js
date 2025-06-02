@@ -26,9 +26,14 @@ class RefractiveSphere extends Sphere {
         const normVect = surfaceVector1.subt(this.center)
         const resultantDir1 = dir.refract(normVect,this.refractiveIndex)
         const reflectedDir = dir.reflect(normVect)
-        const reflectedColor = ray.color.map(prim=>prim*this.gloss)
+        // reflectedFraction is the fraction of light that is reflected off the surface
+        // rather than refracted through the surface.  This value is calculated according to
+        // Schick's Approximation - a simple but less precise version of Fresnel's
+        // Equations.
+        const reflectedFraction = this.gloss+this.glossComplement*(1-Math.abs(dir.cosAngleBetween(normVect)))**5
+        const reflectedColor = ray.color.map(prim=>prim*reflectedFraction)
         const reflectedRay = new Ray(surfaceVector1,reflectedDir,reflectedColor)
-        let resultantColor = ray.color.map(prim=>prim*this.glossComplement)
+        let resultantColor = ray.color.map(prim=>prim*(1-reflectedFraction))
         const resultantRay1 = new Ray(surfaceVector1,resultantDir1,resultantColor)
         const dist2 = this.#raySecondDistToSphere(resultantRay1)
         resultantColor = resultantColor.map((prim,idx)=>prim*this.color[idx]**(dist2*0.3))

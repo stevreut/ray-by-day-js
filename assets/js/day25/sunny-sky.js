@@ -7,7 +7,7 @@ class SunnySky extends Sky {
     SUN_YELLOW = this.SUN_YELLOW_BASE.map(prim=>prim*this.SUN_MULTIPLIER)
     SUN_COS = 0.999 // TODO - restore to 0.999989 (?)
     SUN_AURA_COS = 0.7
-    AURA_MULTIPLIER = 0.6
+    AURA_MULTIPLIER = 1.6
     AURA_YELLOW = this.SUN_YELLOW_BASE.map(prim=>prim*this.AURA_MULTIPLIER)
     SUN_AURA_COS_COMPLEMENT = 1-this.SUN_AURA_COS
     constructor(sunDirection) {
