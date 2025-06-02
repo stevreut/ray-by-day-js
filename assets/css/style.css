@@ -255,15 +255,21 @@ em {
     color: #004;
     background-color: #e5edff;
     margin: 0;
-    padding: 1.5mm;
+    padding: 1.5mm 3mm;
     border-bottom: solid 1px #94b5be;
+}
+.titled-code-title * {
+    background-color: inherit;
 }
 .titled-code-exc {
     color: #448;
     background-color: #f8f9ff;
     margin: 0;
-    padding: 1.5mm;
+    padding: 1.5mm 5mm;
     overflow-x: scroll;
+}
+.titled-code-exc * {
+    background-color: inherit;
 }
 .code-exc {
     border: solid 2px #9eadbd;

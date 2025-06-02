@@ -6,8 +6,8 @@ onload = async function() {
     const textAreaElem = document.getElementById('svgtextarea')
     const clearButton = document.getElementById('clearbtn')
     let svgImgRef = document.getElementById('imgrefcode')
-    const svgCodeElem = document.getElementById('svgcode')
-    const makeSvgCodeElem = this.document.getElementById('makesvgcode')
+    let svgCodeElem = document.getElementById('svgcode')
+    let makeSvgCodeElem = this.document.getElementById('makesvgcode')
     if (!(makeSvgButton && textAreaElem && clearButton && svgImgRef && 
         svgCodeElem && makeSvgCodeElem)) {
             throw 'missing expected id(s)'
@@ -20,12 +20,11 @@ onload = async function() {
     let codex = new CodeExtractor()
     let codef = new CodeFormatter()
     let str1 = await codex.getCodeLines('./day1.html',13,14)
-    // svgImgRef.textContent = str1 + ' ...'
-    svgImgRef = codef.formatTitledExcerptElement("HTML excerpt...",str1)
-    let str2 = await codex.getCodeLines('../assets/images/day1-static.svg',1,10)
-    svgCodeElem.textContent = str2 + '  ...'
-    let str3 = await codex.getCodeLines('../assets/js/day1/script.js',28,52)
-    makeSvgCodeElem.textContent = str3
+    svgImgRef.replaceWith(codef.formatTitledExcerptElement("<img> element tag referencing static SVG file",str1,true))
+    let str2 = await codex.getCodeLines('../assets/images/day1-static.svg',1,15)
+    svgCodeElem.replaceWith(codef.formatTitledExcerptElement("First 15 lines of day1-static.svg",str2))
+    let str3 = await codex.getCodeLines('../assets/js/day1/script.js',30,54)
+    makeSvgCodeElem.replaceWith(codef.formatTitledExcerptElement("getSvgContent() from script.js",str3))
 }
 
 function getSvgContent() {
