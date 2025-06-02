@@ -23,6 +23,8 @@ const STATUS_BAR_ID = 'statbar'
 const DURATION_TEXT_ID = 'dur'
 const REPEAT_BUTTON_ID = 'rptbtn'
 const HI_QUALITY_BUTTON_ID = 'highqbtn'
+const SAVE_IMAGE_BUTTON_ID = 'savebtn'
+const IMG_CANVAS_ID = 'renderedcanvas'
 
 const STATUS_CONTAINER_CLASS = 'progress-container'
 
@@ -37,6 +39,7 @@ let sunVector = null
 let statBarElem = null
 let goAgainButton = null
 let highQualityButton = null
+let saveImageButton = null
 let imgParagraph = null
 let durationElem = null
 
@@ -46,6 +49,7 @@ onload = async () => {
         imgParagraph = linkElement(IMG_PARA_ID)
         goAgainButton = linkElement(REPEAT_BUTTON_ID)
         highQualityButton = linkElement(HI_QUALITY_BUTTON_ID)
+        saveImageButton = linkElement(SAVE_IMAGE_BUTTON_ID)
         durationElem = linkElement(DURATION_TEXT_ID)
         statBarElem = linkElement(STATUS_BAR_ID)
         setImageDimensions(false)
@@ -60,6 +64,14 @@ onload = async () => {
         highQualityButton.addEventListener('click',async ()=>{
             setImageDimensions(true)
             await processImage(imgParagraph,durationElem)
+            enableButton(highQualityButton,false)
+        })
+        saveImageButton.addEventListener('click',async ()=>{
+            enableButton(goAgainButton,false)
+            enableButton(highQualityButton,false)
+            await saveImageAsDownload()
+            enableButton(goAgainButton,true)
+            enableButton(highQualityButton,true)
         })
     } catch (err) {
         console.error('err = ', err)
@@ -106,6 +118,7 @@ async function processImage(imgParagraph,durationElem) {
     durationElem.textContent = ''
     enableButton(goAgainButton,false)
     enableButton(highQualityButton,false)
+    enableButton(saveImageButton,false)
     const gridder = new CanvasGridder()
     const startTime = new Date()
     const grapher = new BiVariantGrapher(
@@ -129,9 +142,11 @@ async function processImage(imgParagraph,durationElem) {
     const durationSecs = durationMs/1000
     imgParagraph.innerHTML = ''
     imgParagraph.appendChild(canvasElem)
+    canvasElem.id = IMG_CANVAS_ID
     durationElem.textContent = 'Image generation duration: ' + durationSecs + ' seconds'
     enableButton(goAgainButton,true)
     enableButton(highQualityButton,true)
+    enableButton(saveImageButton,true)
 }
 
 function insertBlankCanvas() {
@@ -163,6 +178,24 @@ function statusReporterFunction(frac) {
         p = p.toFixed(1)
         statBarElem.textContent = 'Status: ' + p + '% complete'
         statBarElem.style.width = (p + '%')
+    }
+}
+
+async function saveImageAsDownload() {
+    const canv = document.getElementById(IMG_CANVAS_ID)
+    if (canv) {
+        const url = canv.toDataURL('image/png')
+        if (url && typeof url === 'string') {
+            const link = document.createElement("a")
+            if (link) {
+                link.href = url
+                const fname = 'ray-trace-with-object-grouping-' +
+                    (new Date()).getTime() + '.png'
+                link.download = fname
+                link.click()
+                enableButton(saveImageButton,false)
+            }
+        }
     }
 }
 
