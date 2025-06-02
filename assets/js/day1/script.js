@@ -1,10 +1,11 @@
 import CodeExtractor from "../utils/code-extractor.js"
+import CodeFormatter from "../utils/code-formatter.js"
 
 onload = async function() {
     const makeSvgButton = document.getElementById('makesvgbtn')
     const textAreaElem = document.getElementById('svgtextarea')
     const clearButton = document.getElementById('clearbtn')
-    const svgImgRef = document.getElementById('imgrefcode')
+    let svgImgRef = document.getElementById('imgrefcode')
     const svgCodeElem = document.getElementById('svgcode')
     const makeSvgCodeElem = this.document.getElementById('makesvgcode')
     if (!(makeSvgButton && textAreaElem && clearButton && svgImgRef && 
@@ -17,8 +18,10 @@ onload = async function() {
     })
     clearButton.addEventListener('click',()=>textAreaElem.value='')
     let codex = new CodeExtractor()
+    let codef = new CodeFormatter()
     let str1 = await codex.getCodeLines('./day1.html',13,14)
-    svgImgRef.textContent = str1 + ' ...'
+    // svgImgRef.textContent = str1 + ' ...'
+    svgImgRef = codef.formatTitledExcerptElement("HTML excerpt...",str1)
     let str2 = await codex.getCodeLines('../assets/images/day1-static.svg',1,10)
     svgCodeElem.textContent = str2 + '  ...'
     let str3 = await codex.getCodeLines('../assets/js/day1/script.js',28,52)

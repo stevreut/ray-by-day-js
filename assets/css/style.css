@@ -245,6 +245,38 @@ em {
     width: 0%;
     text-align: left;
 }
+.titled-code {
+    border: solid 2px #9eadbd;
+    border-radius: 2mm;
+    overflow: hidden;
+    margin: 5mm 0;
+}
+.titled-code-title {
+    color: #004;
+    background-color: #e5edff;
+    margin: 0;
+    padding: 1.5mm;
+    border-bottom: solid 1px #94b5be;
+}
+.titled-code-exc {
+    color: #448;
+    background-color: #f8f9ff;
+    margin: 0;
+    padding: 1.5mm;
+    overflow-x: scroll;
+}
+.code-exc {
+    border: solid 2px #9eadbd;
+    border-radius: 2mm;
+    overflow: hidden;
+    margin: 5mm 0;
+    color: #448;
+    background-color: #f8f9ff;
+    margin: 0;
+    padding: 1.5mm;
+    overflow-x: scroll;
+}
+
 
 @media screen and (max-width: 480px) {
     body {
