@@ -1,12 +1,8 @@
-import CodeExtractor from "../utils/code-extractor.js"
-import CodeFormatter from "../utils/code-formatter.js"
+import CommonCodeUtility from "../utils/code-common.js"
 
-let codex = null
-let codef = null
+let commonUtilsObj = new CommonCodeUtility()
 
 onload = async function() {
-    codex = new CodeExtractor()
-    codef = new CodeFormatter()
     const randomChangeButton = document.getElementById('chgbtn')
     if (!randomChangeButton) {
         throw 'no chgbtn id on page'
@@ -22,40 +18,23 @@ onload = async function() {
             }
         }
     })
-    const colorButton = document.getElementById('setcolorbtn')
-    if (colorButton) {
-        colorButton.addEventListener('click',()=>{
+    const changeSpecificCellButton = document.getElementById('setcolorbtn')
+    if (changeSpecificCellButton) {
+        changeSpecificCellButton.addEventListener('click',()=>{
             const rects = document.querySelectorAll('svg rect')
             const idx = parseInt(document.getElementById('txtrow').value)*20 +
                 parseInt(document.getElementById('txtcol').value)
             rects[idx].setAttribute('fill',document.getElementById('txtcolor').value)    
         })
     }
-    insertTitledCodeAtPreexistingElementById('svgcode','./day2.html',24,38,
-        "Beginning of embedded SVG content (plus ...)",true)
+    const pageUrl = './day2.html'
     const scriptUrl = '../assets/js/day2/script.js'
-    insertTitledCodeAtPreexistingElementById('randomchgcode',
-        scriptUrl,14,24,"script.js ...",true)
-    insertTitledCodeAtPreexistingElementById('specchgcode',scriptUrl,27,32,
+    commonUtilsObj.insertTitledCodeAtPreexistingElement('svgcode',pageUrl,24,38,
+        "Beginning of embedded SVG content (plus ...)",true)
+    commonUtilsObj.insertTitledCodeAtPreexistingElement('randomchgcode',
+        scriptUrl,10,20,"script.js ...",true)
+    commonUtilsObj.insertTitledCodeAtPreexistingElement('specchgcode',scriptUrl,23,28,
         'script.js ...',true)
-}
-
-async function insertTitledCodeAtPreexistingElementById(id,codeFileName,firstLine,lastLine,title,doLeftShift) {
-    if (!codex || !codef) {
-        console.error ('required objects not found')
-        return
-    }
-    const element = document.getElementById(id)
-    if (!element) {
-        console.error('no id=', id, ' found for code insertion')
-        return
-    }
-    const codeLinesAsString = await codex.getCodeLines(codeFileName,firstLine,lastLine)
-    if (!codeLinesAsString) {
-        console.error('error retrieving code lines from ', codeFileName)
-        return
-    }
-    element.replaceWith(codef.formatTitledExcerptElement(title,codeLinesAsString,doLeftShift))
 }
 
 function getRandomColor() {
