@@ -33,7 +33,7 @@ function getSvgContent(width,height,pixelSize) {
     const actualHeight = height*pixelSize
     let svgString = '<?xml version="1.0" encoding="utf-8"?>'  // XML header
     svgString += `\n<svg width="${actualWidth}" height="${actualHeight}" ` +
-        `viewBox="0 0 ${actualWidth} ${actualHeight} " xmlns="${SVGNS}">`
+        `viewBox="0 0 ${actualWidth} ${actualHeight}" xmlns="${SVGNS}">`
     for (let row=0;row<height;row++) {
         const vertOffset = row*pixelSize  // offset in actual pixels from TOP
         const y = row/(height-1)

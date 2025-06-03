@@ -142,6 +142,12 @@ label {
     display: grid;
     grid-template-columns: auto auto;
 }
+.labeldiv>input {
+    text-align: center;
+}
+.labeldiv>input[type=number] {
+    text-align: right;
+}
 .label3div {
     display: grid;
     grid-template-columns: auto auto auto;
