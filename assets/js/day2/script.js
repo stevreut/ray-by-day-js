@@ -31,12 +31,12 @@ onload = async function() {
             rects[idx].setAttribute('fill',document.getElementById('txtcolor').value)    
         })
     }
-    await insertTitledCodeAtPreexistingElementById('svgcode','./day2.html',24,38,
+    insertTitledCodeAtPreexistingElementById('svgcode','./day2.html',24,38,
         "Beginning of embedded SVG content (plus ...)",true)
     const scriptUrl = '../assets/js/day2/script.js'
-    await insertTitledCodeAtPreexistingElementById('randomchgcode',
+    insertTitledCodeAtPreexistingElementById('randomchgcode',
         scriptUrl,14,24,"script.js ...",true)
-    await insertTitledCodeAtPreexistingElementById('specchgcode',scriptUrl,27,32,
+    insertTitledCodeAtPreexistingElementById('specchgcode',scriptUrl,27,32,
         'script.js ...',true)
 }
 

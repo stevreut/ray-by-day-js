@@ -1,7 +1,7 @@
 import CodeExtractor from "./code-extractor.js"
 
 class CodeFormatter {
-    formatTitledExcerptElement(title,contentStr,doShiftLeft=false) {
+    formatTitledExcerptElement(title,contentStr,doShiftLeft=true) {
         const outerDiv = document.createElement("div")
         outerDiv.className = "titled-code"
         const titleDiv = document.createElement("div")

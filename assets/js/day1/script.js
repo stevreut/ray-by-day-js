@@ -1,7 +1,9 @@
-import CodeExtractor from "../utils/code-extractor.js"
-import CodeFormatter from "../utils/code-formatter.js"
+// import CodeExtractor from "../utils/code-extractor.js"
+// import CodeFormatter from "../utils/code-formatter.js"
+import CommonCodeUtility from "../utils/code-common.js"
 
 onload = async function() {
+    let commonUtilObj = new CommonCodeUtility()
     const makeSvgButton = document.getElementById('makesvgbtn')
     const textAreaElem = document.getElementById('svgtextarea')
     const clearButton = document.getElementById('clearbtn')
@@ -17,14 +19,18 @@ onload = async function() {
         textAreaElem.value = svgStr
     })
     clearButton.addEventListener('click',()=>textAreaElem.value='')
-    let codex = new CodeExtractor()
-    let codef = new CodeFormatter()
-    let str1 = await codex.getCodeLines('./day1.html',19,22)
-    svgImgRef.replaceWith(codef.formatTitledExcerptElement("<img> element tag referencing static SVG file (plus surrounding <div>)",str1,true))
-    let str2 = await codex.getCodeLines('../assets/images/day1-static.svg',1,35)
-    svgCodeElem.replaceWith(codef.formatTitledExcerptElement("First 35 lines of day1-static.svg",str2))
-    let str3 = await codex.getCodeLines('../assets/js/day1/script.js',30,78)
-    makeSvgCodeElem.replaceWith(codef.formatTitledExcerptElement("getSvgContent() from script.js",str3))
+    const scriptUrl = '../assets/js/day1/script.js'
+    const svgUrl = '../assets/images/day1-static.svg'
+    const pageUrl = './day1.html'
+    commonUtilObj.insertTitledCodeAtPreexistingElement(
+        /*'imgrefcode'*/svgImgRef,pageUrl,19,22,  // TODO
+        '<img> element tag referencing static SVG file (plus surrounding <div>)')
+    commonUtilObj.insertTitledCodeAtPreexistingElement(
+        'svgcode',svgUrl,1,35,
+        'First 35 lines of day1-static.svg')
+    commonUtilObj.insertTitledCodeAtPreexistingElement(
+        'makesvgcode',scriptUrl,36,84,
+        'getSvgContent() from script.js')
 }
 
 function getSvgContent(width,height,pixelSize) {
