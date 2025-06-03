@@ -1,7 +1,12 @@
 import CodeExtractor from "../utils/code-extractor.js"
 import CodeFormatter from "../utils/code-formatter.js"
 
+let codex = null
+let codef = null
+
 onload = async function() {
+    codex = new CodeExtractor()
+    codef = new CodeFormatter()
     const randomChangeButton = document.getElementById('chgbtn')
     if (!randomChangeButton) {
         throw 'no chgbtn id on page'
@@ -26,25 +31,31 @@ onload = async function() {
             rects[idx].setAttribute('fill',document.getElementById('txtcolor').value)    
         })
     }
-    const codex = new CodeExtractor()
-    const codef = new CodeFormatter()
-    if (codex && codef) {
-        const svgCodeElem = document.getElementById('svgcode')
-        if (svgCodeElem) {
-            const linesStr = await codex.getCodeLines('./day2.html',24,38)
-            svgCodeElem.replaceWith(codef.formatTitledExcerptElement("Beginning of embedded SVG content (plus ...)",linesStr,true))
-        }
-        const randomChangeCodeElem = this.document.getElementById('randomchgcode')
-        if (randomChangeCodeElem) {
-            const randomChangeCodeLines = await codex.getCodeLines('../assets/js/day2/script.js',9,19)
-            randomChangeCodeElem.replaceWith(codef.formatTitledExcerptElement("script.js ...",randomChangeCodeLines,true))
-        }
-        const specChangeElem = this.document.getElementById('specchgcode')
-        if (specChangeElem) {
-            const specifiedCodeLines = await codex.getCodeLines('../assets/js/day2/script.js',22,27)
-            specChangeElem.replaceWith(codef.formatTitledExcerptElement("script.js ...",specifiedCodeLines,true))
-        }
+    await insertTitledCodeAtPreexistingElementById('svgcode','./day2.html',24,38,
+        "Beginning of embedded SVG content (plus ...)",true)
+    const scriptUrl = '../assets/js/day2/script.js'
+    await insertTitledCodeAtPreexistingElementById('randomchgcode',
+        scriptUrl,14,24,"script.js ...",true)
+    await insertTitledCodeAtPreexistingElementById('specchgcode',scriptUrl,27,32,
+        'script.js ...',true)
+}
+
+async function insertTitledCodeAtPreexistingElementById(id,codeFileName,firstLine,lastLine,title,doLeftShift) {
+    if (!codex || !codef) {
+        console.error ('required objects not found')
+        return
     }
+    const element = document.getElementById(id)
+    if (!element) {
+        console.error('no id=', id, ' found for code insertion')
+        return
+    }
+    const codeLinesAsString = await codex.getCodeLines(codeFileName,firstLine,lastLine)
+    if (!codeLinesAsString) {
+        console.error('error retrieving code lines from ', codeFileName)
+        return
+    }
+    element.replaceWith(codef.formatTitledExcerptElement(title,codeLinesAsString,doLeftShift))
 }
 
 function getRandomColor() {
