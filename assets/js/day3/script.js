@@ -1,12 +1,13 @@
+import CommonCodeUtility from "../utils/code-common.js"
+
 const svgAnchorID = "svghere"
 const selectID = "idselect"
+const CODE_EXC_ID = 'dynsvgcode'
 
-const SVGNS = 'http://www.w3.org/2000/svg'
-const DIM = 150
-const SUBDIM = 10
-const elemsAcross = Math.floor(DIM/SUBDIM)
+let commonUtilObj = null
 
 onload = () => {
+    commonUtilObj = new CommonCodeUtility()
     const svgAnchor = document.getElementById(svgAnchorID)
     if (!svgAnchor) {
         throw 'no ' + svgAnchorID + 'id found on page'
@@ -14,20 +15,22 @@ onload = () => {
     svgAnchor.innerHTML = ''
     let svgElem = createSvgElemAt(svgAnchor)
     setDropDown(selectID)
+    const scriptUrl = '../assets/js/day3/script.js'
+    commonUtilObj.insertTitledCodeAtPreexistingElement(CODE_EXC_ID,scriptUrl,22,63,'script.js - dynamic SVG creation in DOM')
 }
 
+const SVGNS = 'http://www.w3.org/2000/svg'
+const DIM = 160
+const SUBDIM = 8
+
 function createSvgElemAt(anch) {
+    // IMPORTANT:  Note the use of createElementNS() rather than
+    // createElement()
     const svg = document.createElementNS(SVGNS,'svg')
     svg.setAttribute('width', DIM*2)
     svg.setAttribute('height', DIM*2)
     svg.setAttribute('viewBox', '0 0 ' + DIM + ' ' + DIM)
-    // const testRect = document.createElementNS(SVGNS,'rect')
-    // testRect.setAttribute('width', DIM)
-    // testRect.setAttribute('height',DIM)
-    // testRect.setAttribute('x',0)
-    // testRect.setAttribute('y',0)
-    // testRect.setAttribute('fill','red')
-    // svg.appendChild(testRect)
+    const elemsAcross = Math.floor(DIM/SUBDIM)
     for (let row=0;row<elemsAcross;row++) {
         for (let col=0;col<elemsAcross;col++) {
             createRectangleAt(row,col,svg)
@@ -38,14 +41,22 @@ function createSvgElemAt(anch) {
 }
 
 function createRectangleAt(r,c,svgParent) {
+    // IMPORTANT:  Note the use of createElementNS() rather than
+    // createElement()
     const rect = document.createElementNS(SVGNS,"rect")
     rect.setAttribute('x',c*SUBDIM)
     rect.setAttribute('y',r*SUBDIM)
     rect.setAttribute('width',SUBDIM)
     rect.setAttribute('height',SUBDIM)
     rect.setAttribute('stroke','#888')
-    const color = (c**2+r**2<225?'#0088ff':'#aabbaa')
+    // 'c' and 'r' are our column and row, respectively.
+    // Based on the two values, we determine the color
+    // of the 'virtual pixel' (SVG <rect> element)
+    const color = (c**2+r**2<300?'#0088ff':'#aabbaa')
     rect.setAttribute('fill',color)
+    // Here we attach in id attribute of the form 'r1c1' where 
+    // the number after 'r' is the row and the number after 'c' 
+    // is the column.  
     const id = 'r'+r+'c'+c
     rect.setAttribute('id',id)
     svgParent.appendChild(rect)
