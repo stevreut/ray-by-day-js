@@ -73,6 +73,10 @@ class Color {
         let newValues = this.primaries.map((val,idx)=>val+color.primaries[idx])
         return new Color(newValues)
     }
+    overDistance(dist) {
+        let newValues = this.primaries.map(val=>val**dist)
+        return new Color(newValues)
+    }
     static sum(colors) {
         if (!Array.isArray(colors)) {
             throw 'non-array used as parameter to Color.sum()'

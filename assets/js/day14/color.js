@@ -88,6 +88,10 @@ class Color {
         }
         return new Color(sumColor)
     }
+    overDistance(dist) {
+        let newValues = this.primaries.map(val=>val**dist)
+        return new Color(newValues)
+    }
     static avg(colors) {
         if (!Array.isArray(colors)) {
             throw 'non-array given to Color.avg()'

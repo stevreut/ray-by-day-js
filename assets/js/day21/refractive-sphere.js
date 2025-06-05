@@ -1,6 +1,7 @@
 import Sphere from "../day20/sphere.js"
 import Vector3D from "../day20/vector3d.js"
 import Ray from "../day20/ray.js"
+import Color from "../day20/color.js"
 
 class RefractiveSphere extends Sphere {
     constructor(center,radius,color,refractiveIndex,gloss=0.125) {
@@ -31,12 +32,15 @@ class RefractiveSphere extends Sphere {
         // Schick's Approximation - a simple but less precise version of Fresnel's
         // Equations.
         const reflectedFraction = this.gloss+this.glossComplement*(1-Math.abs(dir.cosAngleBetween(normVect)))**5
-        const reflectedColor = ray.color.map(prim=>prim*reflectedFraction)
+        // const reflectedColor = ray.color.map(prim=>prim*reflectedFraction)
+        const reflectedColor = ray.color.scalarMult(reflectedFraction)
         const reflectedRay = new Ray(surfaceVector1,reflectedDir,reflectedColor)
-        let resultantColor = ray.color.map(prim=>prim*(1-reflectedFraction))
+        // let resultantColor = ray.color.map(prim=>prim*(1-reflectedFraction))
+        let resultantColor = ray.color.filter(1-reflectedFraction)
         const resultantRay1 = new Ray(surfaceVector1,resultantDir1,resultantColor)
         const dist2 = this.#raySecondDistToSphere(resultantRay1)
-        resultantColor = resultantColor.map((prim,idx)=>prim*this.color[idx]**(dist2*0.3))
+        // resultantColor = resultantColor.map((prim,idx)=>prim*this.color[idx]**(dist2*0.3))
+        resultantColor = resultantColor.filter(this.color.overDistance(dist2*0.3))  // TODO
         const surfaceVector2 = surfaceVector1.add(resultantRay1.getDirection().normalized().scalarMult(dist2))
         const resultantDir2 = resultantDir1.refract(surfaceVector2.subt(this.center),1/this.refractiveIndex)
         const resultantRay2 = new Ray(

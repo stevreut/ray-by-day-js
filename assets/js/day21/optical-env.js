@@ -1,5 +1,6 @@
 import Vector3D from "../day20/vector3d.js"
 import Ray from "../day20/ray.js"
+import Color from "../day20/color.js"
 import OpticalObject from "../day20/optical-object.js"
 
 class OpticalEnvironment {
@@ -8,8 +9,12 @@ class OpticalEnvironment {
         this.objCount = 0
         this.camera = null
     }
-    SKY_BLUE = [0.53125,0.8125,0.90625]
-    WHITE = [1,1,1]
+    static SKY_BLUE
+    static WHITE
+    static {
+        OpticalEnvironment.SKY_BLUE = new Color([135/255,206/255,235/255])
+        OpticalEnvironment.WHITE = new Color()
+    }
     MAX_ITERATIONS = 11
     addOpticalObject(obj) {
         if (!(obj instanceof OpticalObject)) {
@@ -43,7 +48,7 @@ class OpticalEnvironment {
         }
         // return this.colorFromRay(ray)
         let color = this.colorFromRay(ray)
-        if (!this.isColor(color)) {
+        if (!(color instanceof Color)) {
             console.error('non-color: ', color, ' coords = ', x, y)
         }
         return color
@@ -55,16 +60,16 @@ class OpticalEnvironment {
         }
         let { leastDist, leastDistObj } = this.getLeastDistanceObject(ray)
         if (leastDist === null) {
-            return this.SKY_BLUE.map((prim,idx)=>prim*ray.color[idx])
+            return ray.color.filter(OpticalEnvironment.SKY_BLUE)
         }
         let result = leastDistObj.handle(ray)
         let rayArray = []
         if (result instanceof Ray) {
             rayArray.push(result)
+        } else if (result instanceof Color) {
+            return result  // color - expected return type of this method
         } else if (Array.isArray(result)) {
-            if (this.isColor(result)) {
-                return result  // color - expected return type of this method
-            } else if (this.isRayArray(result)) {
+            if (this.isRayArray(result)) {
                 rayArray = result
             } else {
                 console.error('invalid return result ', result, ' ', typeof result)
@@ -78,27 +83,13 @@ class OpticalEnvironment {
             console.error('bad result type = ', typeof result, ' result = ', result)
             throw 'unexpected result type - neither array nor Ray'
         }
-        let sumColor = [0,0,0]
+        let colorStack = []
         rayArray.forEach(subRay=>{
             subRay.count = ray.count+1  // IMPORTANT!
             const subColor = this.colorFromRay(subRay)  // NOTE: RECURSIVE!!
-            for (let i=0;i<3;i++) {
-                sumColor[i] += subColor[i]
-            }
+            colorStack.push(subColor)
         })
-        return sumColor
-    }
-    isColor(arr) {
-        if (!Array.isArray(arr) ||
-            arr.length !== 3) {
-                return false
-        }
-        arr.forEach(itm=>{
-            if (typeof itm !== 'number') {
-                return false
-            }
-        })
-        return true
+        return Color.sum(colorStack)
     }
     isRayArray(arr) {
         if (!Array.isArray(arr) || 
@@ -118,7 +109,7 @@ class OpticalEnvironment {
             .add(this.camera.dir.scalarMult(4))
         return new Ray(this.camera.orig,
             dirVector,
-            this.WHITE
+            OpticalEnvironment.WHITE
         )
     }
     getLeastDistanceObject(ray) {
