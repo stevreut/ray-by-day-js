@@ -1,7 +1,8 @@
 import Vector3D from "../day13/vector3d.js"
 import GridGraph from "../day7/gridgraph.js"
-import BiVariantGrapher from "../day7/bivargrapher.js"
+import BiVariantGrapher from "../day14/bivargrapher.js"
 import Ray from "../day14/ray.js"
+import Color from "../day14/color.js"
 import OpticalEnvironment from "./optical-env.js"
 import Sphere from "../day15/sphere.js"
 import Plane from "./plane.js"
@@ -123,5 +124,5 @@ function randomColor() {
     for (let i=0;i<3;i++) {
         arr.push(Math.round(Math.random()*120+120)/255)
     }
-    return arr
+    return new Color(arr)
 }

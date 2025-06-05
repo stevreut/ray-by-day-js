@@ -1,3 +1,5 @@
+import Color from "../day14/color.js"
+
 class OpticalObject {
 
     interceptDistance(ray) {
@@ -5,7 +7,7 @@ class OpticalObject {
     }
 
     handle(ray) {
-        return [1,1,1]
+        return new Color()
     }
     
 }

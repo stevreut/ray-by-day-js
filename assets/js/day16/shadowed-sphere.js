@@ -5,7 +5,7 @@ import Color from "../day14/color.js"
 class ShadowedSphere extends Sphere {
     static WHITE_COLOR
     static {
-        this.WHITE_COLOR = new Color()
+        ShadowedSphere.WHITE_COLOR = new Color()
     }
     constructor(center,radius,color,lightingVector,opticalObjectArray) {
         super(center,radius,color,lightingVector)
@@ -18,7 +18,7 @@ class ShadowedSphere extends Sphere {
         }
         const dir = ray.getDirection()
         let surfVect = dir.scalarMult(dist/dir.magn()).add(ray.getOrigin())
-        let surfRay = new Ray(surfVect,this.lighting,Color.WHITE_COLOR)
+        let surfRay = new Ray(surfVect,this.lighting,ShadowedSphere.WHITE_COLOR)
         if (this.#isInShadow(surfRay)) {
             return this.color.scalarMult(0.2)
         } else {
