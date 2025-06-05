@@ -1,7 +1,8 @@
 import Vector3D from "../day13/vector3d.js"
 import GridGraph from "../day7/gridgraph.js"
-import BiVariantGrapher from "../day7/bivargrapher.js"
+import BiVariantGrapher from "../day14/bivargrapher.js"
 import Ray from "../day14/ray.js"
+import Color from "../day14/color.js"
 import ShadowedSphere from "./shadowed-sphere.js"
 
 const IMG_PARA_ID = 'imgpara'
@@ -61,6 +62,7 @@ function processImage(imgParagraph,durationElem) {
 let spheres = []
 
 const universalOrigin = new Vector3D(0,0,-30)
+const DARK_BLUE_BG_COLOR = new Color(0.1,0.1,0.3)
 
 function f(x,y) {
     const ray = new Ray(universalOrigin,new Vector3D(x,y,4))
@@ -76,7 +78,7 @@ function f(x,y) {
         }
     })
     if (leastSphere === null) {
-        return [0.1,0.1,0.3]
+        return DARK_BLUE_BG_COLOR
     } else {
         return spheres[leastSphere].handle(ray)
     }
@@ -85,7 +87,6 @@ function f(x,y) {
 function initRandomSpheres() {
     const SPH_COUNT = 25
     spheres = []
-    // const lightV = new Vector3D(1,1,-0.5)
     const lightV = randomLightDirection()
     if (modeIsRandom) {
         for (let i=0;i<SPH_COUNT;i++) {
@@ -140,5 +141,5 @@ function randomColor() {
     for (let i=0;i<3;i++) {
         arr.push(Math.round(Math.random()*120+120)/255)
     }
-    return arr
+    return new Color(arr)
 }

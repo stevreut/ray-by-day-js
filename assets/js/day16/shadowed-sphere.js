@@ -1,8 +1,12 @@
-import OpticalObject from "../day15/optical-object.js"
 import Sphere from "../day15/sphere.js"
 import Ray from "../day14/ray.js"
+import Color from "../day14/color.js"
 
 class ShadowedSphere extends Sphere {
+    static WHITE_COLOR
+    static {
+        this.WHITE_COLOR = new Color()
+    }
     constructor(center,radius,color,lightingVector,opticalObjectArray) {
         super(center,radius,color,lightingVector)
         this.optObjArr = opticalObjectArray
@@ -14,27 +18,24 @@ class ShadowedSphere extends Sphere {
         }
         const dir = ray.getDirection()
         let surfVect = dir.scalarMult(dist/dir.magn()).add(ray.getOrigin())
-        let surfRay = new Ray(surfVect,this.lighting,[1,1,1])
+        let surfRay = new Ray(surfVect,this.lighting,Color.WHITE_COLOR)
         if (this.#isInShadow(surfRay)) {
-            let newColor = this.color.map(prim=>{return prim*0.2 /*TODO*/})
-            return newColor
+            return this.color.scalarMult(0.2)
         } else {
             let normVect = surfVect.subt(this.center).normalized()
             let dot = this.lighting.dot(normVect)
-            dot = Math.max(0,dot)
-            dot = (dot*0.8)+0.2  // TODO
-            let newColor = this.color.map(prim=>{return prim*dot})
-            return newColor
+            dot = Math.max(0,dot)*0.8+0.2
+            return this.color.scalarMult(dot)
         }
     }
 
     #isInShadow(ray) {
         let isShadowed = false
         this.optObjArr.forEach(obj=>{
-            if (obj != this) {  // 
+            if (!isShadowed && obj != this) {
                 let dist = obj.interceptDistance(ray)
                 if (dist !== null && dist > 0) {
-                    isShadowed = true  // TODO - inefficient - loop still continues
+                    isShadowed = true
                 }
             }
         })
