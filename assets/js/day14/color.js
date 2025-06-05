@@ -81,6 +81,8 @@ class Color {
         console.log('detected array ...')
         if (colors.length === 0) {
             return new Color(0,0,0)
+        } else if (colors.length === 1) {
+            return colors[0]
         }
         let sumColor = [...colors[0].primaries]
         console.log('sum initialized ...')
@@ -95,6 +97,8 @@ class Color {
         }
         if (colors.length === 0) {
             return new Color(0,0,0)  // lenient processing rather than division by zero
+        } else if (colors.length === 1) {
+            return colors[0]  // no point in recalculating
         }
         return Color.sum(colors).scalarMult(1/colors.length)
     }
