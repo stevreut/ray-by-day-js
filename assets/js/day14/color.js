@@ -74,18 +74,15 @@ class Color {
         return new Color(newValues)
     }
     static sum(colors) {
-        console.log('entered sum ...')
         if (!Array.isArray(colors)) {
             throw 'non-array used as parameter to Color.sum()'
         }
-        console.log('detected array ...')
         if (colors.length === 0) {
             return new Color(0,0,0)
         } else if (colors.length === 1) {
             return colors[0]
         }
         let sumColor = [...colors[0].primaries]
-        console.log('sum initialized ...')
         for (let i=1; i<colors.length; i++) {
             sumColor = sumColor.map((elem,idx)=>elem+colors[i].primaries[idx])
         }
