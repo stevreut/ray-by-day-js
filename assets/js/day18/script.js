@@ -1,10 +1,11 @@
 import Vector3D from "./vector3d.js"
 import GridGraph from "../day7/gridgraph.js"
-import BiVariantGrapher from "../day7/bivargrapher.js"
+import BiVariantGrapher from "../day14/bivargrapher.js"
 import Ray from "./ray.js"
+import Color from "../day14/color.js"
 import OpticalEnvironment from "./optical-env.js"
 import ReflectiveSphere from "./reflective-sphere.js"
-import Plane from "./plane.js"
+import Plane from "../day17/plane.js"
 
 const IMG_PARA_ID = 'imgpara'
 const DURATION_TEXT_ID = 'dur'
@@ -145,5 +146,5 @@ function randomColor() {
     for (let i=0;i<3;i++) {
         arr.push(Math.round(Math.random()*120+120)/255)
     }
-    return arr
+    return new Color(arr)
 }
