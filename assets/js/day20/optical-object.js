@@ -1,3 +1,4 @@
+import Color from "./color.js"
 import Ray from "./ray.js"
 
 class OpticalObject {
@@ -10,7 +11,7 @@ class OpticalObject {
         if (!(ray instanceof Ray)) {
             throw 'attempt to handle non-Ray'
         }
-        return [1,1,1]
+        return new Color()
     }
     
 }

@@ -1,4 +1,5 @@
 import OpticalObject from "./optical-object.js";
+import Color from "./color.js"
 
 class Sphere extends OpticalObject {
     #radiusSqr
@@ -8,6 +9,9 @@ class Sphere extends OpticalObject {
         this.center = center
         this.radius = radius
         this.#radiusSqr = radius**2 
+        if (!(color instanceof Color)) {
+            throw 'not a Color object'
+        } 
         this.color = color
         this.lighting = lightingVector.normalized()
     }
@@ -27,9 +31,7 @@ class Sphere extends OpticalObject {
         let dotProd = this.lighting.dot(normVect)
         dotProd = Math.max(0,dotProd)
         dotProd = (dotProd*0.8)+0.2
-        let newColor = this.color.map(prim=>{return prim*dotProd})
-        newColor = newColor.map((prim,idx)=>prim*ray.color[idx])
-        return newColor
+        return this.color.scalarMult(dotProd)
     }
 
     rayDistToSphere(ray) {

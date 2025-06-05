@@ -1,4 +1,5 @@
 import Vector3D from './vector3d.js'
+import Color from "./color.js"
 
 class Ray {
 
@@ -10,16 +11,11 @@ class Ray {
         this.orig = origin
         this.dir = direction
         if (['null','undefined'].includes (typeof color)) {
-            this.color = [1,1,1]  // white (by default)
-        } else if (Array.isArray(color) && color.length === 3) {
-            color.forEach(prim=>{
-                if (typeof prim !== 'number') {
-                    throw 'invalid color parameter'
-                }
-            })
-            this.color = color
+            this.color = new Color()  // white (by default)
+        } else if (!(color instanceof Color)) {
+            throw 'color parameter not Color instance'
         } else {
-            throw 'invalid color parameter'
+            this.color = color
         }
     }
     getOrigin() {

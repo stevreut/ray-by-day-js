@@ -48,8 +48,9 @@ class Plane extends OpticalObject {
         let x = Math.floor(org.getX()+mult*dir.getX())
         let y = Math.floor(org.getY()+mult*dir.getY())
         let isWhite = ((x+y)%2 === 0)
-        const intense = this.lightSpreadSqr/(x*x+y*y+this.lightSpreadSqr)
-        return (isWhite?[intense*ray.color[0],intense*ray.color[1],intense*ray.color[2]]:[0.3*intense*ray.color[0],0.3*intense*ray.color[1],0.3*intense*ray.color[2]])
+        let intensity = 100/(x*x+y*y+100)
+        if (!isWhite) { intensity *= 0.3 }
+        return ray.color.scalarMult(intensity)
     }
 }
 

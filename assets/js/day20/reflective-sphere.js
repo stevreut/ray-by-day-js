@@ -16,13 +16,10 @@ class ReflectiveSphere extends Sphere {
         let surfVect = dir.scalarMult(dist/dir.magn()).add(ray.getOrigin())
         let normVect = surfVect.subt(this.center)
         let resultantDir = dir.reflect(normVect)
-        let resultantColor = this.color.map((prim,idx)=>{
-            return prim*ray.color[idx]
-        })
+        let resultantColor = ray.color.filter(this.color)
         let resultantRay = new Ray(surfVect,resultantDir,resultantColor)
         return resultantRay
     }
-
 }
 
 export default ReflectiveSphere

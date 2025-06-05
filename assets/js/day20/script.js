@@ -1,6 +1,7 @@
 import Vector3D from "./vector3d.js"
 import BiVariantGrapher from "./bivargrapher.js"
 import Ray from "./ray.js"
+import Color from "./color.js"
 import OpticalEnvironment from "./optical-env.js"
 import ReflectiveSphere from "./reflective-sphere.js"
 import RefractiveSphere from "./refractive-sphere.js"
@@ -159,5 +160,5 @@ function randomColor() {
     for (let i=0;i<3;i++) {
         arr.push(Math.round(Math.random()*120+120)/255)
     }
-    return arr
+    return new Color(arr)
 }

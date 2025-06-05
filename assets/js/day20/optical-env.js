@@ -1,5 +1,6 @@
 import Vector3D from "./vector3d.js"
 import Ray from "./ray.js"
+import Color from "./color.js"
 import OpticalObject from "./optical-object.js"
 
 class OpticalEnvironment {
@@ -8,7 +9,12 @@ class OpticalEnvironment {
         this.objCount = 0
         this.camera = null
     }
-    SKY_BLUE = [135/255,206/255,235/255]
+    static SKY_BLUE
+    static WHITE
+    static {
+        OpticalEnvironment.SKY_BLUE = new Color([135/255,206/255,235/255])
+        OpticalEnvironment.WHITE = new Color()
+    }
     addOpticalObject(obj) {
         if (!(obj instanceof OpticalObject)) {
             throw 'attempted to add non-OpticalObject'
@@ -41,7 +47,7 @@ class OpticalEnvironment {
         while (!done) {
             let { leastDist, leastDistObj } = this.getLeastDistanceObject(ray)
             if (leastDist === null) {
-                return this.SKY_BLUE.map((prim,idx)=>prim*ray.color[idx])
+                return ray.color.filter(OpticalEnvironment.SKY_BLUE)
             } else {
                 count++
                 if (count > 10) {
@@ -66,7 +72,7 @@ class OpticalEnvironment {
             .add(this.camera.dir.scalarMult(4))
         return new Ray(this.camera.orig,
             dirVector,
-            [1,1,1]  // white
+            OpticalEnvironment.WHITE
         )
     }
     getLeastDistanceObject(ray) {
