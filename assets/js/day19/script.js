@@ -1,10 +1,11 @@
 import Vector3D from "../day18/vector3d.js"
 import GridGraph from "../day7/gridgraph.js"
-import BiVariantGrapher from "../day7/bivargrapher.js"
+import BiVariantGrapher from "../day14/bivargrapher.js"
 import Ray from "../day18/ray.js"
+import Color from "../day14/color.js"
 import OpticalEnvironment from "../day18/optical-env.js"
 import ReflectiveSphere from "../day18/reflective-sphere.js"
-import Plane from "../day18/plane.js"
+import Plane from "../day17/plane.js"
 
 const IMG_PARA_ID = 'imgpara'
 const REPEAT_BUTTON_ID = 'rptbtn'
@@ -98,9 +99,11 @@ function initEnvironment(imgParagraph) {
     optEnv.addOpticalObject(new Plane(-7.5))
 }
 
+const BLACK = new Color(0,0,0)
+
 function f(x,y) {
     if (x*x+y*y >= 3.25) {
-        return [0,0,0]
+        return BLACK
     }
     if (!optEnv) {
         throw 'optEnv not initiated'
@@ -167,5 +170,5 @@ function randomColor() {
     for (let i=0;i<3;i++) {
         arr.push(Math.round(Math.random()*120+120)/255)
     }
-    return arr
+    return new Color(arr)
 }
