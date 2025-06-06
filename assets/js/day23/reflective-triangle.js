@@ -9,10 +9,7 @@ class ReflectiveTriangle extends Triangle {
         const dist = super.interceptDistance(ray)  // TODO - generally
         const newDirection = ray.getDirection().reflect(this.planeNormalV)
         const newOrigin = ray.getOrigin().add(ray.getDirection().normalized().scalarMult(dist)).add(newDirection.normalized().scalarMult(1e-6))
-        const newColor = []
-        for (let i=0;i<3;i++) {
-            newColor.push(this.color[i]*ray.color[i])
-        }
+        const newColor = ray.color.filter(this.color)
         const newRay = new Ray(newOrigin,newDirection,newColor)
         return newRay
     }

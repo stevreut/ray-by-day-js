@@ -79,9 +79,7 @@ class Triangle extends OpticalObject {
         }
     }
     handle(ray) {
-        const rColor = ray.color
-        const color = this.color.map((prim,idx)=>prim*rColor[idx])
-        return color
+        return ray.color.filter(this.color)
     }
 }
 
