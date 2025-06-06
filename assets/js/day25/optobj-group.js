@@ -1,5 +1,6 @@
 import OpticalObject from "../day20/optical-object.js"
 import OpticalEnvironment from "../day20/optical-env.js"  // TODO - might not need
+import Color from "../day20/color.js"
 import Sphere from "../day20/sphere.js"
 import Vector3D from "../day20/vector3d.js"
 
@@ -8,7 +9,7 @@ class OpticalObjectGroup extends OpticalObject {
         super()
         this.center = center  // TODO - validation, must be Vector3D
         this.radius = radius  // TODO - validation, must be positive number
-        this.envelopeSphere = new Sphere(this.center, this.radius, [0,0,0], new Vector3D(0,0,1))  
+        this.envelopeSphere = new Sphere(this.center, this.radius, new Color(), new Vector3D(0,0,1))  
         if (!Array.isArray(objList)) {
             throw 'objList is not an array'
         }

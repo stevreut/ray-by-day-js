@@ -35,7 +35,7 @@ class SunnySky extends Sky {
             let a = (cosSunAngle-this.SUN_AURA_COS)/this.SUN_AURA_COS_COMPLEMENT
             a = a*a
             // skyColor = skyColor.map((prim,idx)=>prim+this.AURA_YELLOW[idx]*a)
-            skyColor = skyColor.add(SunnySky.AURA_YELLOW.scaleMult(a))
+            skyColor = skyColor.add(SunnySky.AURA_YELLOW.scalarMult(a))
         }
         // const result = ray.color.map((prim,idx)=>prim*skyColor[idx])
         const result = ray.color.filter(skyColor)
