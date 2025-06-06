@@ -214,7 +214,7 @@ function initEnvironment() {
     )
     optEnv.setCamera(cameraRay,0.25,cameraOriginDistance)
     initRandomShapes()
-    optEnv.addOpticalObject(new Plane(-7.5,12,2))
+    optEnv.addOpticalObject(new Plane(-7.5,5,2.5/*,new Color(0.6,0.6,0.6),new Color(0.2,0.1,0.2)*/))
     optEnv.addOpticalObject(new SunnySky(sunVector))
 }
 

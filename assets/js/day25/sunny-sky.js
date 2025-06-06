@@ -4,12 +4,16 @@ import Color from "../day20/color.js"
 
 class SunnySky extends Sky {
     static SUN_YELLOW_BASE = new Color(1,0.98046875,0.6875)
-    static SUN_MULTIPLIER = 5
+    static SUN_MULTIPLIER = 4
+    static AURA_MULTIPLIER = 0.5
     static SUN_YELLOW = SunnySky.SUN_YELLOW_BASE.scalarMult(this.SUN_MULTIPLIER)
-    SUN_COS = 0.999 // TODO - restore to 0.999989 (?)
-    SUN_AURA_COS = 0.7
-    AURA_MULTIPLIER = 1.6
     static AURA_YELLOW = SunnySky.SUN_YELLOW_BASE.scalarMult(this.AURA_MULTIPLIER)
+    static {
+        console.log ('SUN YELLOW : ', this.SUN_YELLOW)
+        console.log ('AURA ', this.AURA_YELLOW)
+    }
+    SUN_COS = 0.99994 // TODO - restore to 0.999989 (?)
+    SUN_AURA_COS = 0.7
     SUN_AURA_COS_COMPLEMENT = 1-this.SUN_AURA_COS
     constructor(sunDirection) {
         super()

@@ -1,8 +1,9 @@
 import OpticalObject from "../day20/optical-object.js"
 import Ray from "../day20/ray.js"
+import Color from "../day20/color.js"
 
 class Plane extends OpticalObject {
-    constructor(level,lightingSpread=10,squareSize=1) {
+    constructor(level,lightingSpread=10,squareSize=1,lightColor,darkColor) {
         super()
         if (typeof level !== 'number') {
             throw 'non-number level given'
@@ -13,6 +14,17 @@ class Plane extends OpticalObject {
         }
         this.lightSpreadSqr = lightingSpread**2
         this.squareSize = squareSize
+        if (lightColor instanceof Color) {
+            this.lightColor = lightColor
+        } else {
+            this.lightColor = new Color(0.83,0.83,0.83)
+        }
+        if (darkColor instanceof Color) {
+            this.darkColor = darkColor
+        } else {
+            this.darkColor = new Color(0,0,0)
+        }
+        console.log('dark = ', this.darkColor, '  light = ', this.lightColor)
     }
     interceptDistance(ray) {
         if (!(ray instanceof Ray)) {
@@ -49,9 +61,15 @@ class Plane extends OpticalObject {
         let x = Math.floor((org.getX()+mult*dir.getX())/this.squareSize)
         let y = Math.floor((org.getY()+mult*dir.getY())/this.squareSize)
         let isWhite = ((x+y)%2 === 0)
-        let intensity = 100/(x*x+y*y+100)
-        if (!isWhite) { intensity *= 0.3 }
-        return ray.color.scalarMult(intensity)
+        let intensity = this.lightSpreadSqr/(x*x+y*y+this.lightSpreadSqr)
+        let filterColor = null
+        if (isWhite) {
+            filterColor = this.lightColor.scalarMult(intensity)
+        } else {
+            filterColor = this.darkColor.scalarMult(intensity)
+        }
+        filterColor = filterColor.add(this.darkColor.add(this.lightColor).scalarMult(0.3))
+        return ray.color.filter(filterColor)
     }
 }
 
