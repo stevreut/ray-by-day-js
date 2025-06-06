@@ -8,7 +8,7 @@ class Sphere extends OpticalObject {
         // TODO - validation - accept on faith just for now
         this.center = center
         this.radius = radius
-        this.#radiusSqr = radius**2 
+        this.#radiusSqr = radius**2
         if (!(color instanceof Color)) {
             throw 'not a Color object'
         } 
@@ -31,7 +31,7 @@ class Sphere extends OpticalObject {
         let dotProd = this.lighting.dot(normVect)
         dotProd = Math.max(0,dotProd)
         dotProd = (dotProd*0.8)+0.2
-        return this.color.scalarMult(dotProd)
+        return ray.color.filter(this.color).scalarMult(dotProd)
     }
 
     rayDistToSphere(ray) {

@@ -31,7 +31,7 @@ class Sphere extends OpticalObject {
         let dot = this.lighting.dot(normVect)
         dot = Math.max(0,dot)
         dot = (dot*0.8)+0.2
-        return this.color.scalarMult(dot)
+        return this.color.filter(this.color).scalarMult(dot)
     }
 
     rayDistToSphere(ray) {

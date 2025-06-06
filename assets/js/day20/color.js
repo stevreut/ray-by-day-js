@@ -35,7 +35,18 @@ class Color {
         return this.primaries[2]
     }
     getPrimaryByte(primaryNum) {
-        return Math.round(this.primaries[primaryNum]*255)
+        let val
+        if ([0,1,2].includes(primaryNum)) {
+            val = this.primaries[primaryNum]
+            if (Number.isNaN(val)) {
+                val = 0
+            }
+        } else {
+            val = 0
+        }
+        val = Math.min(1,Math.max(0,val))
+        val = Math.round(val*255)
+        return Math.round(val)
     }
     getPrimaryBytes() {
         let res = []
