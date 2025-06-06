@@ -1,4 +1,5 @@
 import Gridder from "../day20/gridder.js";
+import Color from "../day20/color.js"
 
 class BiVariantGrapher {
     constructor(gridder,width,height,pixelSize,pixelsPerUnit = 1,bvf,antiAlias = 1,statusReporter) {
@@ -15,11 +16,7 @@ class BiVariantGrapher {
         if (!bvf) {
             this.colorFunction = null
         } else {
-            if (typeof bvf !== 'function') {
-                throw 'bvf argument is not a function'
-            } else {
-                this.colorFunction = bvf
-            }
+            this.setFunction(bvf)
         }
         if (typeof antiAlias !== 'number' || 
             Number.isNaN(antiAlias) ||
@@ -54,6 +51,11 @@ class BiVariantGrapher {
         } else {
             this.colorFunction = bvf
         }
+        // One-off test
+        const result = this.colorFunction(0,0)
+        if (!(result instanceof Color)) {
+            throw 'function bvf did not return instance of Color on initial test'
+        }
     }
     async drawGraph() {
         if (!this.colorFunction) {
@@ -63,29 +65,22 @@ class BiVariantGrapher {
             let y = (this.height/2-j)/this.pixelsPerUnit  // TODO
             for (let i=0;i<this.width;i++) {
                 let x = (i-this.width/2)/this.pixelsPerUnit  // TODO
-                let realColorArray = null
+                let avgColor = null
                 if (!this.usingAntiAlias) {
-                    realColorArray = this.colorFunction(x,y)
+                    avgColor = this.colorFunction(x,y)
                 } else {
-                    realColorArray = [0,0,0]
+                    let componentColors = []
                     for (let ii=0;ii<this.antiAlias;ii++) {
                         let xx = x+ii*this.antiAliasDelta+this.antiAliasOffset
                         for (let jj=0;jj<this.antiAlias;jj++) {
                             let yy = y+jj*this.antiAliasDelta+this.antiAliasOffset
                             let addendColor = this.colorFunction(xx,yy)
-                            for (let k=0;k<3;k++) {
-                                realColorArray[k] += addendColor[k]
-                            }
+                            componentColors.push(addendColor)
                         }
                     }
-                    realColorArray = realColorArray.map(itm=>itm*this.antiAliasMultiplier)
+                    avgColor = Color.avg(componentColors)
                 }
-                let pixelColor = null
-                if (this.#validColorArray(realColorArray)) {
-                    pixelColor = this.#bracketRealColor(realColorArray)
-                } else {
-                    pixelColor = [0,0,0]
-                }
+                const pixelColor = avgColor.getPrimaryBytes()
                 this.gridder.putPixel(i,j,...pixelColor)
             }
             if (this.usingReporter) {
@@ -97,26 +92,6 @@ class BiVariantGrapher {
             this.statReporter(1)  // 100% - i.e. complete
         }
         return this.gridder.getHTMLElement()
-    }
-    #validColorArray(arr) {
-        if (!Array.isArray(arr) || arr.length !== 3) {
-            return false
-        }
-        let isValid = true
-        arr.forEach(num=>{
-            if (typeof num !== 'number' || Number.isNaN(num)) {
-                isValid = false
-            }
-        })
-        return isValid
-    }
-    #bracketRealColor(rColr) {
-        let pixCol = rColr.map(prim=>{
-            let realPrim = prim*255
-            realPrim = Math.min(255,Math.max(0,realPrim))
-            return Math.round(realPrim)
-        })
-        return pixCol
     }
 }
 
