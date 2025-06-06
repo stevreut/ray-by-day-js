@@ -1,4 +1,5 @@
 import Vector3D from "../day20/vector3d.js"
+import Color from "../day20/color.js"
 import OpticalObjectGroup from "./optobj-group.js"
 import ReflectiveTriangle from "../day23/reflective-triangle.js"
 
@@ -7,14 +8,9 @@ class ReflectiveFacetedSolid extends OpticalObjectGroup {
         if (!(center instanceof Vector3D)) {
             throw 'center is not a Vector3D object'
         }
-        if (!Array.isArray(color) || color.length !== 3) {
+        if (!(color instanceof Color)) {
             throw 'invalid color (1)'
         }
-        color.forEach(prim=>{
-            if (typeof prim !== 'number' || !Number.isFinite(prim) || prim < 0) {
-                throw 'invalid color (2)'
-            }
-        })
         if (!Array.isArray(relativeVertexList)) {
             throw 'relativeVertexList is not an array'
         }

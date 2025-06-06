@@ -1,5 +1,6 @@
 import Vector3D from "../day20/vector3d.js"
 import Ray from "../day20/ray.js"
+import Color from "../day20/color.js"
 // import ReflectiveSphere from "../day20/reflective-sphere.js"
 import CanvasGridder from "../day20/canvas-gridder.js"
 // import Sphere from "../day20/sphere.js"
@@ -262,16 +263,20 @@ function initRandomShapes() {
             //     obj = new Sphere(shape.center,shape.radius,randomColor(0.7,0.85),sunVector)
             //     break;
             case 'cube':
-                obj = new ReflectiveCube(shape.center,shape.radius,[0.8,0.5,0.5])
+                obj = new ReflectiveCube(shape.center,shape.radius,
+                    new Color(0.8,0.5,0.5))
                 break;
             case 'tetr':
-                obj = new ReflectiveTetrahedron(shape.center,shape.radius,[0.5,0.55,0.5])
+                obj = new ReflectiveTetrahedron(shape.center,shape.radius,
+                    new Color(0.5,0.55,0.5))
                 break;
             case 'dode':
-                obj = new ReflectiveDodecahedron(shape.center,shape.radius,[0.65,0.7,0.8])
+                obj = new ReflectiveDodecahedron(shape.center,shape.radius,
+                    new Color(0.65,0.7,0.8))
                 break;
             case 'octa':
-                obj = new ReflectiveOctahedron(shape.center,shape.radius,[0.675,0.435,0.55])
+                obj = new ReflectiveOctahedron(shape.center,shape.radius,
+                    new Color(0.675,0.435,0.55))
                 break;
             default:
                 console.error('unexpected shape = ', type, ' - ignored')
@@ -297,7 +302,7 @@ function randomColor(lo=0.47,hi=0.94) {
     for (let i=0;i<3;i++) {
         arr.push(Math.random()*(hi-lo)+lo)
     }
-    return arr
+    return new Color(arr)
 }
 
 function randomSunDirection() {
