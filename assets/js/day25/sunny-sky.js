@@ -8,11 +8,7 @@ class SunnySky extends Sky {
     static AURA_MULTIPLIER = 0.5
     static SUN_YELLOW = SunnySky.SUN_YELLOW_BASE.scalarMult(this.SUN_MULTIPLIER)
     static AURA_YELLOW = SunnySky.SUN_YELLOW_BASE.scalarMult(this.AURA_MULTIPLIER)
-    static {
-        console.log ('SUN YELLOW : ', this.SUN_YELLOW)
-        console.log ('AURA ', this.AURA_YELLOW)
-    }
-    SUN_COS = 0.99994 // TODO - restore to 0.999989 (?)
+    SUN_COS = 0.99994 // TODO - restore to 0.999989 (a more accurate figure for the sun's arc radius)
     SUN_AURA_COS = 0.7
     SUN_AURA_COS_COMPLEMENT = 1-this.SUN_AURA_COS
     constructor(sunDirection) {

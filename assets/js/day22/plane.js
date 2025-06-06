@@ -24,7 +24,6 @@ class Plane extends OpticalObject {
         } else {
             this.darkColor = new Color(0,0,0)
         }
-        console.log('dark = ', this.darkColor, '  light = ', this.lightColor)
     }
     interceptDistance(ray) {
         if (!(ray instanceof Ray)) {
