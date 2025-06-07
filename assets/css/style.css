@@ -99,6 +99,16 @@ button:hover {
 button:active {
     background-color: #44f;
 }
+select {
+    background-color: #999;
+    color: #fff;
+    padding: 1.5mm;
+    margin: 1mm 1mm 1mm 0;
+    border: solid 2px #bbb;
+    border-radius: 1.5mm;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+}
 textarea {
     width: 100%;
     padding: 4mm;

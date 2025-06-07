@@ -25,6 +25,26 @@ class OpticalEnvironment {
         this.optObjList.push(obj)
         this.objCount++
     }
+    removeOpticalObjectsByClassName(className) {
+        let i = this.optObjList.length-1
+        let loopCount = 0
+        while (i >= 0) {
+            loopCount++
+            while (i > 0 && i >= this.optObjList.length) {
+                i--
+            }
+            if (loopCount > 1000) {  // sanity check (might need adjusting)
+                throw 'exceeded maximum anticipated number of environmental objects'
+            }
+            let name = this.optObjList[i].constructor.name
+            let matches = (className === name)
+            if (matches) {
+                this.optObjList.splice(i,1)
+                this.objCount--
+            }
+            i--
+        }
+    }
     setCamera(cameraRay,aperture=0,focalDistance=4) {
         if (!(cameraRay instanceof Ray)) {
             throw 'attempted to setCamera for non-Ray'

@@ -1,9 +1,7 @@
 import Vector3D from "../day20/vector3d.js"
 import Ray from "../day20/ray.js"
 import Color from "../day20/color.js"
-// import ReflectiveSphere from "../day20/reflective-sphere.js"
 import CanvasGridder from "../day20/canvas-gridder.js"
-// import Sphere from "../day20/sphere.js"
 import BiVariantGrapher from "../day22/bivargrapher.js"
 import OpticalEnvironment from "../day22/optical-env.js"
 import Plane from "../day22/plane.js"
@@ -12,6 +10,7 @@ import RefractiveSphere from "../day22/refractive-sphere.js"
 import ReflectiveIcosahedron from "./refl-icos.js"
 
 import SunnySky from "./sunny-sky.js"
+import NightSky from "./night-sky.js"
 
 import ReflectiveCube from "./refl-cube.js"
 import ReflectiveTetrahedron from "./refl-tetra.js"
@@ -24,8 +23,11 @@ const STATUS_BAR_ID = 'statbar'
 const DURATION_TEXT_ID = 'dur'
 const REPEAT_BUTTON_ID = 'rptbtn'
 const HI_QUALITY_BUTTON_ID = 'highqbtn'
+const LO_QUALITY_BUTTON_ID = 'lowqbtn'
 const SAVE_IMAGE_BUTTON_ID = 'savebtn'
+const MODE_SELECT_ID = 'daymodeselect'
 const IMG_CANVAS_ID = 'renderedcanvas'
+
 
 const STATUS_CONTAINER_CLASS = 'progress-container'
 
@@ -40,6 +42,8 @@ let sunVector = null
 let statBarElem = null
 let goAgainButton = null
 let highQualityButton = null
+let lowQualityButton = null
+let dayModeSelect = null
 let saveImageButton = null
 let imgParagraph = null
 let durationElem = null
@@ -50,13 +54,19 @@ onload = async () => {
         imgParagraph = linkElement(IMG_PARA_ID)
         goAgainButton = linkElement(REPEAT_BUTTON_ID)
         highQualityButton = linkElement(HI_QUALITY_BUTTON_ID)
+        lowQualityButton = linkElement(LO_QUALITY_BUTTON_ID)
+        dayModeSelect = linkElement(MODE_SELECT_ID)
         saveImageButton = linkElement(SAVE_IMAGE_BUTTON_ID)
         durationElem = linkElement(DURATION_TEXT_ID)
         statBarElem = linkElement(STATUS_BAR_ID)
         setImageDimensions(false)
         insertBlankCanvas()
+        handleDayNightModeChange()
         initEnvironment()
         await processImage(imgParagraph,durationElem)
+        dayModeSelect.addEventListener('change',()=>{
+            handleDayNightModeChange()
+        })
         goAgainButton.addEventListener('click',async ()=>{
             setImageDimensions(false)
             initEnvironment()
@@ -65,14 +75,23 @@ onload = async () => {
         highQualityButton.addEventListener('click',async ()=>{
             setImageDimensions(true)
             await processImage(imgParagraph,durationElem)
-            enableButton(highQualityButton,false)
+            enableButton(highQualityButton,true)
+            enableButton(lowQualityButton,true)
+        })
+        lowQualityButton.addEventListener('click',async ()=>{
+            setImageDimensions(false)
+            await processImage(imgParagraph,durationElem)
+            enableButton(highQualityButton,true)
+            enableButton(lowQualityButton,true)
         })
         saveImageButton.addEventListener('click',async ()=>{
             enableButton(goAgainButton,false)
             enableButton(highQualityButton,false)
+            enableButton(lowQualityButton,false)
             await saveImageAsDownload()
             enableButton(goAgainButton,true)
             enableButton(highQualityButton,true)
+            enableButton(lowQualityButton,true)
         })
     } catch (err) {
         console.error('err = ', err)
@@ -119,6 +138,7 @@ async function processImage(imgParagraph,durationElem) {
     durationElem.textContent = ''
     enableButton(goAgainButton,false)
     enableButton(highQualityButton,false)
+    enableButton(lowQualityButton,false)
     enableButton(saveImageButton,false)
     const gridder = new CanvasGridder()
     const startTime = new Date()
@@ -147,6 +167,7 @@ async function processImage(imgParagraph,durationElem) {
     durationElem.textContent = 'Image generation duration: ' + durationSecs + ' seconds'
     enableButton(goAgainButton,true)
     enableButton(highQualityButton,true)
+    enableButton(lowQualityButton,true)
     enableButton(saveImageButton,true)
 }
 
@@ -169,6 +190,25 @@ function insertBlankCanvas() {
         }
         imgParagraph.appendChild(canv)
     }
+}
+
+function handleDayNightModeChange() {
+    let isNight = isNightMode()
+    dayModeSelect.style.backgroundColor = (isNight?"#151547":"#ffffdd")
+    dayModeSelect.style.color = (isNight?"#bcc8f8":"inherit")
+    if (optEnv) {
+        if (isNight) {
+            optEnv.removeOpticalObjectsByClassName('SunnySky')
+            optEnv.addOpticalObject(new NightSky())
+        } else {
+            optEnv.removeOpticalObjectsByClassName('NightSky')
+            optEnv.addOpticalObject(new SunnySky(randomSunDirection()))
+        }
+    }
+}
+
+function isNightMode() {
+    return (dayModeSelect.value === 'night')
 }
 
 function statusReporterFunction(frac) {
@@ -203,7 +243,6 @@ async function saveImageAsDownload() {
 let optEnv = null
 
 function initEnvironment() {
-    sunVector = randomSunDirection()
     optEnv = new OpticalEnvironment()
     const cameraOrigin = new randomCameraPosition()
     const cameraDirection = cameraOrigin.scalarMult(-1)
@@ -215,7 +254,12 @@ function initEnvironment() {
     optEnv.setCamera(cameraRay,0.25,cameraOriginDistance)
     initRandomShapes()
     optEnv.addOpticalObject(new Plane(-7.5,5,2.5/*,new Color(0.6,0.6,0.6),new Color(0.2,0.1,0.2)*/))
-    optEnv.addOpticalObject(new SunnySky(sunVector))
+    if (isNightMode()) {
+        optEnv.addOpticalObject(new NightSky())
+    } else {
+        sunVector = randomSunDirection()
+        optEnv.addOpticalObject(new SunnySky(sunVector))
+    }
 }
 
 function initRandomShapes() {
@@ -253,15 +297,9 @@ function initRandomShapes() {
             case 'icos':
                 obj = new ReflectiveIcosahedron(shape.center,shape.radius,randomColor(0.5,0.6))
                 break;
-            // case 'sphm':
-            //     obj = new ReflectiveSphere(shape.center,shape.radius,randomColor(0.5,0.6))
-            //     break;
             case 'spht':
                 obj = new RefractiveSphere(shape.center,shape.radius,randomColor(),1.5)
                 break;
-            // case 'sphf':
-            //     obj = new Sphere(shape.center,shape.radius,randomColor(0.7,0.85),sunVector)
-            //     break;
             case 'cube':
                 obj = new ReflectiveCube(shape.center,shape.radius,
                     new Color(0.8,0.5,0.5))
