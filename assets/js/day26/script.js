@@ -8,11 +8,13 @@ import Plane from "../day22/plane.js"
 import RefractiveSphere from "../day22/refractive-sphere.js"
 import SunnySky from "../day25/sunny-sky.js"
 import NightSky from "../day25/night-sky.js"
-import ReflectiveTetrahedron from "../day25/refl-tetra.js"
-import ReflectiveCube from "../day25/refl-cube.js"
-import ReflectiveOctahedron from "../day25/refl-octa.js"
-import ReflectiveIcosahedron from "../day25/refl-icos.js"
-import ReflectiveDodecahedron from "../day25/refl-dodeca.js"
+// import ReflectiveTetrahedron from "../day25/refl-tetra.js"
+// import ReflectiveCube from "../day25/refl-cube.js"
+// import ReflectiveOctahedron from "../day25/refl-octa.js"
+// import ReflectiveDodecahedron from "../day25/refl-dodeca.js"
+
+import Matrix3D from "./Matrix3D.js"
+import ReflectiveIcosahedron from "./refl-icos.js"
 
 
 const IMG_PARA_ID = 'imgpara'
@@ -26,11 +28,11 @@ const MODE_SELECT_ID = 'daymodeselect'
 const IMG_CANVAS_ID = 'renderedcanvas'
 
 // Platonic solids colors in HTML hex values
-const TETRA_HEX_COLOR = "#c299cc"
-const CUBE_HEX_COLOR = "#cc9999"
-const OCTA_HEX_COLOR = "#c2cc99"
+// const TETRA_HEX_COLOR = "#c299cc"
+// const CUBE_HEX_COLOR = "#cc9999"
+// const OCTA_HEX_COLOR = "#c2cc99"
 const ICOSA_HEX_COLOR = "#99ccad"
-const DODECA_HEX_COLOR = "#99adcc"
+// const DODECA_HEX_COLOR = "#99adcc"
 
 const STATUS_CONTAINER_CLASS = 'progress-container'
 
@@ -268,8 +270,8 @@ function initRandomShapes() {
     const TARGET_SHAPE_COUNT = 25
     let rejectCount = 0
     const shapeTempArray = []
-    const MIN_SPACE = 0.2
-    const SHAPE_NAMES = 'icos;spht;spht;cube;tetr;dode;octa'.split(';')
+    const MIN_SPACE = 0.7
+    const SHAPE_NAMES = 'icos;icos;icos;spht'/*;spht;cube;tetr;dode;octa'*/.split(';')
     while (shapeTempArray.length < TARGET_SHAPE_COUNT) {
         let candidateObject = {
             center: randomCenter()
@@ -297,28 +299,29 @@ function initRandomShapes() {
         let obj = null
         switch (type) {
             case 'icos':
+                const rotorMatrix = Matrix3D.rotorOnZ(Math.random()*1).mult(Matrix3D.rotorOnX(Math.random()*1.6))
                 obj = new ReflectiveIcosahedron(shape.center,shape.radius,
-                    Color.colorFromHex(ICOSA_HEX_COLOR))
+                    Color.colorFromHex(ICOSA_HEX_COLOR),rotorMatrix)
                 break;
             case 'spht':
                 obj = new RefractiveSphere(shape.center,shape.radius,randomColor(),1.5)
                 break;
-            case 'cube':
-                obj = new ReflectiveCube(shape.center,shape.radius,
-                    Color.colorFromHex(CUBE_HEX_COLOR))
-                break;
-            case 'tetr':
-                obj = new ReflectiveTetrahedron(shape.center,shape.radius,
-                    Color.colorFromHex(TETRA_HEX_COLOR))
-                break;
-            case 'dode':
-                obj = new ReflectiveDodecahedron(shape.center,shape.radius,
-                    Color.colorFromHex(DODECA_HEX_COLOR))
-                break;
-            case 'octa':
-                obj = new ReflectiveOctahedron(shape.center,shape.radius,
-                    Color.colorFromHex(OCTA_HEX_COLOR))
-                break;
+            // case 'cube':
+            //     obj = new ReflectiveCube(shape.center,shape.radius,
+            //         Color.colorFromHex(CUBE_HEX_COLOR))
+            //     break;
+            // case 'tetr':
+            //     obj = new ReflectiveTetrahedron(shape.center,shape.radius,
+            //         Color.colorFromHex(TETRA_HEX_COLOR))
+            //     break;
+            // case 'dode':
+            //     obj = new ReflectiveDodecahedron(shape.center,shape.radius,
+            //         Color.colorFromHex(DODECA_HEX_COLOR))
+            //     break;
+            // case 'octa':
+            //     obj = new ReflectiveOctahedron(shape.center,shape.radius,
+            //         Color.colorFromHex(OCTA_HEX_COLOR))
+            //     break;
             default:
                 console.error('unexpected shape = ', type, ' - ignored')
                 // obj remains null
@@ -360,7 +363,7 @@ function randomSunDirection() {
 }
 
 function randomCameraPosition() {
-    const LO_DIST = 5
+    const LO_DIST = 12
     const HI_DIST = 15
     const LO_LAT = 3
     const HI_LAT = 40
