@@ -15,7 +15,7 @@ import ReflectiveCube from "./refl-cube.js"
 import ReflectiveOctahedron from "./refl-octa.js"
 import ReflectiveIcosahedron from "./refl-icos.js"
 import ReflectiveDodecahedron from "./refl-dodeca.js"
-
+import Compound12Sphere from "./compound-12-sphere.js"
 
 const IMG_PARA_ID = 'imgpara'
 const STATUS_BAR_ID = 'statbar'
@@ -33,6 +33,7 @@ const CUBE_HEX_COLOR = "#cc9999"
 const OCTA_HEX_COLOR = "#c2cc99"
 const ICOSA_HEX_COLOR = "#99ccad"
 const DODECA_HEX_COLOR = "#99adcc"
+const GOLD_HEX_COLOR = "#ccb070"
 
 const STATUS_CONTAINER_CLASS = 'progress-container'
 
@@ -52,7 +53,6 @@ let dayModeSelect = null
 let saveImageButton = null
 let imgParagraph = null
 let durationElem = null
-
 
 onload = async () => {
     try {
@@ -251,14 +251,14 @@ function initEnvironment() {
     optEnv = new OpticalEnvironment()
     const cameraOrigin = new randomCameraPosition()
     const cameraDirection = cameraOrigin.scalarMult(-1)
-    const cameraOriginDistance = cameraOrigin.magn()
+    const cameraOriginDistance = Math.max(cameraOrigin.magn(),3)
     const cameraRay = new Ray(
         cameraOrigin,
         cameraDirection
     )
     optEnv.setCamera(cameraRay,0.25,cameraOriginDistance)
     initRandomShapes()
-    optEnv.addOpticalObject(new Plane(-7.5,5,2.5/*,new Color(0.6,0.6,0.6),new Color(0.2,0.1,0.2)*/))
+    optEnv.addOpticalObject(new Plane(-7.5,5,2.5))
     if (isNightMode()) {
         optEnv.addOpticalObject(new NightSky())
     } else {
@@ -272,7 +272,7 @@ function initRandomShapes() {
     let rejectCount = 0
     const shapeTempArray = []
     const MIN_SPACE = 0.2
-    const SHAPE_NAMES = 'icos;spht;spht;cube;tetr;dode;octa'.split(';')
+    const SHAPE_NAMES = 'comp;comp;icos;icos;spht;spht;cube;tetr;dode;octa'.split(';')
     while (shapeTempArray.length < TARGET_SHAPE_COUNT) {
         let candidateObject = {
             center: randomCenter()
@@ -299,6 +299,10 @@ function initRandomShapes() {
         const { type } = shape
         let obj = null
         switch (type) {
+            case 'comp':
+                obj = new Compound12Sphere(shape.center,shape.radius*0.45,shape.radius*0.55,
+                    Color.colorFromHex(GOLD_HEX_COLOR))
+                break;
             case 'icos':
                 obj = new ReflectiveIcosahedron(shape.center,shape.radius,
                     Color.colorFromHex(ICOSA_HEX_COLOR))
@@ -380,3 +384,4 @@ function randomCameraPosition() {
     const vec = new Vector3D(x,y,z)
     return vec
 }
+
