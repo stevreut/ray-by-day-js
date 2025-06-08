@@ -28,6 +28,12 @@ const SAVE_IMAGE_BUTTON_ID = 'savebtn'
 const MODE_SELECT_ID = 'daymodeselect'
 const IMG_CANVAS_ID = 'renderedcanvas'
 
+// Platonic solids colors in HTML hex values
+const TETRA_HEX_COLOR = "#808c80"
+const CUBE_HEX_COLOR = "#cc8080"
+const OCTA_HEX_COLOR = "#ac6f8c"
+const ICOSA_HEX_COLOR = "#"  // TBD
+const DODECA_HEX_COLOR = "#a6b3cc"
 
 const STATUS_CONTAINER_CLASS = 'progress-container'
 
@@ -302,19 +308,19 @@ function initRandomShapes() {
                 break;
             case 'cube':
                 obj = new ReflectiveCube(shape.center,shape.radius,
-                    new Color(0.8,0.5,0.5))
+                    Color.colorFromHex(CUBE_HEX_COLOR))
                 break;
             case 'tetr':
                 obj = new ReflectiveTetrahedron(shape.center,shape.radius,
-                    new Color(0.5,0.55,0.5))
+                    Color.colorFromHex(TETRA_HEX_COLOR))
                 break;
             case 'dode':
                 obj = new ReflectiveDodecahedron(shape.center,shape.radius,
-                    new Color(0.65,0.7,0.8))
+                    Color.colorFromHex(DODECA_HEX_COLOR))
                 break;
             case 'octa':
                 obj = new ReflectiveOctahedron(shape.center,shape.radius,
-                    new Color(0.675,0.435,0.55))
+                    Color.colorFromHex(OCTA_HEX_COLOR))
                 break;
             default:
                 console.error('unexpected shape = ', type, ' - ignored')
