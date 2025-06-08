@@ -384,4 +384,3 @@ function randomCameraPosition() {
     const vec = new Vector3D(x,y,z)
     return vec
 }
-

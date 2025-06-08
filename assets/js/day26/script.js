@@ -51,7 +51,6 @@ let saveImageButton = null
 let imgParagraph = null
 let durationElem = null
 
-
 onload = async () => {
     try {
         imgParagraph = linkElement(IMG_PARA_ID)
@@ -249,14 +248,14 @@ function initEnvironment() {
     optEnv = new OpticalEnvironment()
     const cameraOrigin = new randomCameraPosition()
     const cameraDirection = cameraOrigin.scalarMult(-1)
-    const cameraOriginDistance = cameraOrigin.magn()
+    const cameraOriginDistance = Math.max(cameraOrigin.magn(),3)
     const cameraRay = new Ray(
         cameraOrigin,
         cameraDirection
     )
     optEnv.setCamera(cameraRay,0.25,cameraOriginDistance)
     initRandomShapes()
-    optEnv.addOpticalObject(new Plane(-7.5,5,2.5/*,new Color(0.6,0.6,0.6),new Color(0.2,0.1,0.2)*/))
+    optEnv.addOpticalObject(new Plane(-7.5,5,2.5))
     if (isNightMode()) {
         optEnv.addOpticalObject(new NightSky())
     } else {
