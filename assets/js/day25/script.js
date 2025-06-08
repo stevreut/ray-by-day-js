@@ -7,15 +7,14 @@ import OpticalEnvironment from "../day22/optical-env.js"
 import Plane from "../day22/plane.js"
 import RefractiveSphere from "../day22/refractive-sphere.js"
 
-import ReflectiveIcosahedron from "./refl-icos.js"
-
 import SunnySky from "./sunny-sky.js"
 import NightSky from "./night-sky.js"
 
-import ReflectiveCube from "./refl-cube.js"
 import ReflectiveTetrahedron from "./refl-tetra.js"
-import ReflectiveDodecahedron from "./refl-dodeca.js"
+import ReflectiveCube from "./refl-cube.js"
 import ReflectiveOctahedron from "./refl-octa.js"
+import ReflectiveIcosahedron from "./refl-icos.js"
+import ReflectiveDodecahedron from "./refl-dodeca.js"
 
 
 const IMG_PARA_ID = 'imgpara'
@@ -29,11 +28,11 @@ const MODE_SELECT_ID = 'daymodeselect'
 const IMG_CANVAS_ID = 'renderedcanvas'
 
 // Platonic solids colors in HTML hex values
-const TETRA_HEX_COLOR = "#808c80"
-const CUBE_HEX_COLOR = "#cc8080"
-const OCTA_HEX_COLOR = "#ac6f8c"
-const ICOSA_HEX_COLOR = "#"  // TBD
-const DODECA_HEX_COLOR = "#a6b3cc"
+const TETRA_HEX_COLOR = "#c299cc"
+const CUBE_HEX_COLOR = "#cc9999"
+const OCTA_HEX_COLOR = "#c2cc99"
+const ICOSA_HEX_COLOR = "#99ccad"
+const DODECA_HEX_COLOR = "#99adcc"
 
 const STATUS_CONTAINER_CLASS = 'progress-container'
 
@@ -301,7 +300,8 @@ function initRandomShapes() {
         let obj = null
         switch (type) {
             case 'icos':
-                obj = new ReflectiveIcosahedron(shape.center,shape.radius,randomColor(0.5,0.6))
+                obj = new ReflectiveIcosahedron(shape.center,shape.radius,
+                    Color.colorFromHex(ICOSA_HEX_COLOR))
                 break;
             case 'spht':
                 obj = new RefractiveSphere(shape.center,shape.radius,randomColor(),1.5)

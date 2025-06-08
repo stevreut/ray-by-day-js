@@ -6,13 +6,13 @@ import BiVariantGrapher from "../day22/bivargrapher.js"
 import OpticalEnvironment from "../day22/optical-env.js"
 import Plane from "../day22/plane.js"
 import RefractiveSphere from "../day22/refractive-sphere.js"
-import ReflectiveIcosahedron from "../day25/refl-icos.js"
 import SunnySky from "../day25/sunny-sky.js"
 import NightSky from "../day25/night-sky.js"
-import ReflectiveCube from "../day25/refl-cube.js"
 import ReflectiveTetrahedron from "../day25/refl-tetra.js"
-import ReflectiveDodecahedron from "../day25/refl-dodeca.js"
+import ReflectiveCube from "../day25/refl-cube.js"
 import ReflectiveOctahedron from "../day25/refl-octa.js"
+import ReflectiveIcosahedron from "../day25/refl-icos.js"
+import ReflectiveDodecahedron from "../day25/refl-dodeca.js"
 
 
 const IMG_PARA_ID = 'imgpara'
@@ -25,6 +25,12 @@ const SAVE_IMAGE_BUTTON_ID = 'savebtn'
 const MODE_SELECT_ID = 'daymodeselect'
 const IMG_CANVAS_ID = 'renderedcanvas'
 
+// Platonic solids colors in HTML hex values
+const TETRA_HEX_COLOR = "#c299cc"
+const CUBE_HEX_COLOR = "#cc9999"
+const OCTA_HEX_COLOR = "#c2cc99"
+const ICOSA_HEX_COLOR = "#99ccad"
+const DODECA_HEX_COLOR = "#99adcc"
 
 const STATUS_CONTAINER_CLASS = 'progress-container'
 
@@ -292,26 +298,27 @@ function initRandomShapes() {
         let obj = null
         switch (type) {
             case 'icos':
-                obj = new ReflectiveIcosahedron(shape.center,shape.radius,randomColor(0.5,0.6))
+                obj = new ReflectiveIcosahedron(shape.center,shape.radius,
+                    Color.colorFromHex(ICOSA_HEX_COLOR))
                 break;
             case 'spht':
                 obj = new RefractiveSphere(shape.center,shape.radius,randomColor(),1.5)
                 break;
             case 'cube':
                 obj = new ReflectiveCube(shape.center,shape.radius,
-                    new Color(0.8,0.5,0.5))
+                    Color.colorFromHex(CUBE_HEX_COLOR))
                 break;
             case 'tetr':
                 obj = new ReflectiveTetrahedron(shape.center,shape.radius,
-                    new Color(0.5,0.55,0.5))
+                    Color.colorFromHex(TETRA_HEX_COLOR))
                 break;
             case 'dode':
                 obj = new ReflectiveDodecahedron(shape.center,shape.radius,
-                    new Color(0.65,0.7,0.8))
+                    Color.colorFromHex(DODECA_HEX_COLOR))
                 break;
             case 'octa':
                 obj = new ReflectiveOctahedron(shape.center,shape.radius,
-                    new Color(0.675,0.435,0.55))
+                    Color.colorFromHex(OCTA_HEX_COLOR))
                 break;
             default:
                 console.error('unexpected shape = ', type, ' - ignored')
