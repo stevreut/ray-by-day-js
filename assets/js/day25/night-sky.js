@@ -2,8 +2,8 @@ import OpticalObject from "../day20/optical-object.js";
 import Color from "../day20/color.js"
 
 class NightSky extends OpticalObject {
-    static DARK_SKY_COLOR = new Color(0.059, 0.071, 0.075)
-    static HORIZ_GLOW = new Color (0.25, 0.24, 0.225)
+    static DARK_SKY_COLOR = Color.colorFromHex("#0f1213")
+    static HORIZ_GLOW = Color.colorFromHex("#403d39")
     colorOfDirection(dir) {
         const z = dir.normalized().getZ()
         const zMod = z**0.15

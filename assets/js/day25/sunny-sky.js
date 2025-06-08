@@ -3,7 +3,7 @@ import Sky from "../day22/sky.js"
 import Color from "../day20/color.js"
 
 class SunnySky extends Sky {
-    static SUN_YELLOW_BASE = new Color(1,0.98046875,0.6875)
+    static SUN_YELLOW_BASE = Color.colorFromHex("#fffaaf")
     static SUN_MULTIPLIER = 4
     static AURA_MULTIPLIER = 0.5
     static SUN_YELLOW = SunnySky.SUN_YELLOW_BASE.scalarMult(this.SUN_MULTIPLIER)

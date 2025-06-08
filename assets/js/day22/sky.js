@@ -2,9 +2,9 @@ import OpticalObject from "../day20/optical-object.js";
 import Color from "../day20/color.js"
 
 class Sky extends OpticalObject {
-    static SKY_BLUE = new Color(0.53125,0.8125,0.90625)
-    static HORIZ_DUSK = new Color(1,253/256,207/256)
-    static WHITE = new Color(1,1,1)
+    static SKY_BLUE = Color.colorFromHex("#85a4e6")
+    static HORIZ_DUSK = Color.colorFromHex("#f2efd3")
+    static WHITE = new Color()
     interceptDistance() {
         return Number.POSITIVE_INFINITY
     }

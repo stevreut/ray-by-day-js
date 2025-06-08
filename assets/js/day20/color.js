@@ -114,6 +114,22 @@ class Color {
         }
         return Color.sum(colors).scalarMult(1/colors.length)
     }
+    static colorFromHex(hexString) {
+        if (typeof hexString !== 'string' || hexString.length !== 7 ||
+            hexString[0] !== '#') {
+                throw 'invalid hexString'
+        }
+        let primaryValues = []
+        for (let i=1;i<7;i+=2) {
+            let primStr = hexString.substring(i,i+2)
+            let primIntVal = parseInt(primStr,16)
+            if (primIntVal < 0 || primIntVal > 255) {
+                throw 'invalid integer value substring ' + primStr + ' within hexString'
+            }
+            primaryValues.push(primIntVal/255)
+        }
+        return new Color(primaryValues)
+    }
 }
 
 export default Color

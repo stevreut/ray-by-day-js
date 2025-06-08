@@ -17,7 +17,7 @@ class Plane extends OpticalObject {
         if (lightColor instanceof Color) {
             this.lightColor = lightColor
         } else {
-            this.lightColor = new Color(0.83,0.83,0.83)
+            this.lightColor = Color.colorFromHex("#d4d4d4")
         }
         if (darkColor instanceof Color) {
             this.darkColor = darkColor
