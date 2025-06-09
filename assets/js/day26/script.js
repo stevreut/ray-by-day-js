@@ -5,13 +5,9 @@ import CanvasGridder from "../day20/canvas-gridder.js"
 import BiVariantGrapher from "../day22/bivargrapher.js"
 import OpticalEnvironment from "../day22/optical-env.js"
 import Plane from "../day22/plane.js"
-import RefractiveSphere from "../day22/refractive-sphere.js"
+import ReflectiveSphere from "../day20/reflective-sphere.js"
 import SunnySky from "../day25/sunny-sky.js"
 import NightSky from "../day25/night-sky.js"
-// import ReflectiveTetrahedron from "../day25/refl-tetra.js"
-// import ReflectiveCube from "../day25/refl-cube.js"
-// import ReflectiveOctahedron from "../day25/refl-octa.js"
-// import ReflectiveDodecahedron from "../day25/refl-dodeca.js"
 
 import Matrix3D from "./Matrix3D.js"
 import ReflectiveIcosahedron from "./refl-icos.js"
@@ -27,16 +23,9 @@ const SAVE_IMAGE_BUTTON_ID = 'savebtn'
 const MODE_SELECT_ID = 'daymodeselect'
 const IMG_CANVAS_ID = 'renderedcanvas'
 
-// Platonic solids colors in HTML hex values
-// const TETRA_HEX_COLOR = "#c299cc"
-// const CUBE_HEX_COLOR = "#cc9999"
-// const OCTA_HEX_COLOR = "#c2cc99"
-const ICOSA_HEX_COLOR = "#99ccad"
-// const DODECA_HEX_COLOR = "#99adcc"
-
 const STATUS_CONTAINER_CLASS = 'progress-container'
 
-const DEFAULT_IMAGE_WIDTH = 1024
+const DEFAULT_IMAGE_WIDTH = 900
 let targetImageWidth = null
 let targetImageHeight = null
 let pixelSize = null
@@ -133,9 +122,9 @@ function setImageDimensions(isHiQuality) {
                 targetImageWidth = DEFAULT_IMAGE_WIDTH
         }
     }
-    targetImageHeight = Math.round(targetImageWidth*0.75)
+    targetImageHeight = targetImageWidth  // Math.round(targetImageWidth*0.75)
     pixelSize = (isHiQuality?1:(targetImageWidth<=512?1:3))
-    antiAlias = (isHiQuality?5:3)
+    antiAlias = 3  // (isHiQuality?5:3)
 }
 
 async function processImage(imgParagraph,durationElem) {
@@ -256,8 +245,9 @@ function initEnvironment() {
         cameraDirection
     )
     optEnv.setCamera(cameraRay,0.25,cameraOriginDistance)
-    initRandomShapes()
-    optEnv.addOpticalObject(new Plane(-7.5,5,2.5))
+    initShapeMatrix(6)
+    optEnv.addOpticalObject(new ReflectiveSphere(new Vector3D(0,-32,0),30,Color.colorFromHex("#998877")))
+    optEnv.addOpticalObject(new Plane(-10,10,6,Color.colorFromHex("#666a6f")))
     if (isNightMode()) {
         optEnv.addOpticalObject(new NightSky())
     } else {
@@ -266,87 +256,24 @@ function initEnvironment() {
     }
 }
 
-function initRandomShapes() {
-    const TARGET_SHAPE_COUNT = 25
-    let rejectCount = 0
-    const shapeTempArray = []
-    const MIN_SPACE = 0.7
-    const SHAPE_NAMES = 'icos;icos;icos;spht'/*;spht;cube;tetr;dode;octa'*/.split(';')
-    while (shapeTempArray.length < TARGET_SHAPE_COUNT) {
-        let candidateObject = {
-            center: randomCenter()
-        }
-        let rando = Math.floor(Math.random()*SHAPE_NAMES.length)
-        candidateObject.type = SHAPE_NAMES[rando]
-        candidateObject.radius = 1
-        let hasIntersect = false
-        shapeTempArray.forEach(otherShape=>{
-            if (!hasIntersect) {
-                if (otherShape.center.subt(candidateObject.center).magn() <= 
-                        otherShape.radius+candidateObject.radius+MIN_SPACE) {
-                    hasIntersect = true
-                }
-            }
-        })
-        if (hasIntersect) {
-            rejectCount++
-        } else {
-            shapeTempArray.push(candidateObject)
-        }
-    }
-    shapeTempArray.forEach(shape=>{
-        const { type } = shape
-        let obj = null
-        switch (type) {
-            case 'icos':
-                const rotorMatrix = Matrix3D.rotorOnZ(Math.random()*1).mult(Matrix3D.rotorOnX(Math.random()*1.6))
-                obj = new ReflectiveIcosahedron(shape.center,shape.radius,
-                    Color.colorFromHex(ICOSA_HEX_COLOR),rotorMatrix)
-                break;
-            case 'spht':
-                obj = new RefractiveSphere(shape.center,shape.radius,randomColor(),1.5)
-                break;
-            // case 'cube':
-            //     obj = new ReflectiveCube(shape.center,shape.radius,
-            //         Color.colorFromHex(CUBE_HEX_COLOR))
-            //     break;
-            // case 'tetr':
-            //     obj = new ReflectiveTetrahedron(shape.center,shape.radius,
-            //         Color.colorFromHex(TETRA_HEX_COLOR))
-            //     break;
-            // case 'dode':
-            //     obj = new ReflectiveDodecahedron(shape.center,shape.radius,
-            //         Color.colorFromHex(DODECA_HEX_COLOR))
-            //     break;
-            // case 'octa':
-            //     obj = new ReflectiveOctahedron(shape.center,shape.radius,
-            //         Color.colorFromHex(OCTA_HEX_COLOR))
-            //     break;
-            default:
-                console.error('unexpected shape = ', type, ' - ignored')
-                // obj remains null
-        }
-        if (obj) {
+function initShapeMatrix(size) {
+    const totalSide = 3
+    const distanceIncrement = totalSide/(size-1)
+    const rotationIncrement = Math.PI*2/5/size
+    const radius = distanceIncrement*0.4
+    for (let j=0;j<size;j++) {
+        const ctrZ = totalSide/2 - j*distanceIncrement
+        const yAngle = rotationIncrement*j
+        for (let i=0;i<size;i++) {
+            const ctrX = -totalSide/2 + i*distanceIncrement
+            const centerVector = new Vector3D(ctrX,0,ctrZ)
+            const color = new Color(0.4+0.4*i/size,0.5,0.4+0.4*j/size)
+            const zAngle = rotationIncrement*i
+            const rotator = Matrix3D.rotorOnZ(zAngle).mult(Matrix3D.rotorOnY(yAngle))
+            const obj = new ReflectiveIcosahedron(centerVector,radius,color,rotator)
             optEnv.addOpticalObject(obj)
         }
-    })
-}
-
-function randomCenter() {
-    let arr = []
-    for (let i=0;i<3;i++) {
-        arr.push((Math.random()-0.5)*10)
     }
-    let ctr = new Vector3D(arr)
-    return ctr
-}
-
-function randomColor(lo=0.47,hi=0.94) {
-    let arr = []
-    for (let i=0;i<3;i++) {
-        arr.push(Math.random()*(hi-lo)+lo)
-    }
-    return new Color(arr)
 }
 
 function randomSunDirection() {
@@ -363,16 +290,19 @@ function randomSunDirection() {
 }
 
 function randomCameraPosition() {
-    const LO_DIST = 12
-    const HI_DIST = 15
-    const LO_LAT = 3
-    const HI_LAT = 40
-    const longitude = (Math.random()-0.5)*2*Math.PI
+    const LO_DIST = 5
+    const HI_DIST = 8
+    const LO_LAT = -10
+    const HI_LAT = 30
+    const LO_LON = 70
+    const HI_LON = 110
+    let longitude = Math.random()*(HI_LON-LO_LON)+LO_LON
+    longitude *= Math.PI/180
     let latitude = Math.random()**2 // **2 skews towards lower values
     latitude = latitude*(HI_LAT-LO_LAT)+LO_LAT  // camera elevation angle - between LO_LAT and HI_LAT degrees
     latitude *= Math.PI/180 // converted to radians
     let distance = Math.sqrt(Math.random())  // sqrt skews towards higher values, still between 0 and 1
-    distance *= (HI_DIST-LO_DIST)+LO_DIST  // camera distance - between LO_DIST and HI_DIST
+    distance = distance*(HI_DIST-LO_DIST)+LO_DIST  // camera distance - between LO_DIST and HI_DIST
     const z = Math.sin(latitude)*distance 
     const cosDist = Math.cos(latitude)*distance
     const x = Math.cos(longitude)*cosDist
