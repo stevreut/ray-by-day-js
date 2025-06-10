@@ -116,25 +116,25 @@ class Matrix3D {
         const s = Math.sin(angle)
         return new Matrix3D(
             [1, 0, 0],
-            [0, c, s],
-            [0, -s, c]
+            [0, c, -s],
+            [0, s, c]
         )
     }
     static rotorOnY(angle) {
         const c = Math.cos(angle)
         const s = Math.sin(angle)
         return new Matrix3D(
-            [c, 0, s],
+            [c, 0, -s],
             [0, 1, 0],
-            [-s, 0, c]
+            [s, 0, c]
         )
     }
     static rotorOnZ(angle) {
         const c = Math.cos(angle)
         const s = Math.sin(angle)
         return new Matrix3D(
-            [c, -s, 0],
-            [s, c, 0],
+            [c, s, 0],
+            [-s, c, 0],
             [0, 0, 1]
         )
     }
