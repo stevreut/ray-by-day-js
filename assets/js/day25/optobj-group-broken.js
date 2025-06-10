@@ -1,13 +1,18 @@
+// Currently unused legacy version of class OpticalObjectGroup - maintained for 
+// purposes of discussing subtle flaw in early versions.
+
 import OpticalObject from "../day20/optical-object.js"
 import OpticalEnvironment from "../day20/optical-env.js"  // TODO - might not need
+import Color from "../day20/color.js"
+import Sphere from "../day20/sphere.js"
+import Vector3D from "../day20/vector3d.js"
 
 class OpticalObjectGroup extends OpticalObject {
-    #radiusSqr
     constructor(center,radius,objList) {
         super()
         this.center = center  // TODO - validation, must be Vector3D
         this.radius = radius  // TODO - validation, must be positive number
-        this.#radiusSqr = radius**2
+        this.envelopeSphere = new Sphere(this.center, this.radius, new Color(), new Vector3D(0,0,1))  
         if (!Array.isArray(objList)) {
             throw 'objList is not an array'
         }
@@ -23,7 +28,8 @@ class OpticalObjectGroup extends OpticalObject {
         this.env.addOpticalObject(obj)
     }
     interceptDistance(ray) {
-        if (!this.#withinEnvelope(ray)) {
+        const sphDist = this.envelopeSphere.interceptDistance(ray)
+        if (sphDist === null) {
             return null
         }
         const { leastDist } = this.env.getLeastDistanceObject(ray)
@@ -37,25 +43,6 @@ class OpticalObjectGroup extends OpticalObject {
         }
         return leastDistObj.handle(ray)
     }
-    #withinEnvelope(ray) {
-        // Note that this version varies slightly from Sphere.rayDistToSphere()
-        // which had originally been used, both in terms of return type and
-        // in terms of the specific case of when the ray originates from
-        // within the sphere.
-        const C = this.center.subt(ray.getOrigin())
-        const D = ray.getDirection()
-        const CD = C.dot(D)
-        const det = CD**2 - D.magnSqr()*(C.magnSqr()-this.#radiusSqr)
-        // Note that we have managed to get around calculating sqrt(det)
-        // (a resource-consuming operation) since we are only looking 
-        // for a boolean - which can be determined without the sqrt().
-        if (CD >= 0) {
-            return (det >= 0)
-        } else {
-            return (det >= -CD)
-        }
-    }
-
 
 }
 
