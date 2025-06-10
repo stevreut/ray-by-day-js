@@ -21,10 +21,9 @@ const REPEAT_BUTTON_ID = 'rptbtn'
 const HI_QUALITY_BUTTON_ID = 'highqbtn'
 const LO_QUALITY_BUTTON_ID = 'lowqbtn'
 const SAVE_IMAGE_BUTTON_ID = 'savebtn'
-const MODE_SELECT_ID = 'daymodeselect'
 const IMG_CANVAS_ID = 'renderedcanvas'
 
-const STATUS_CONTAINER_CLASS = 'progress-container'
+// const STATUS_CONTAINER_CLASS = 'progress-container'
 
 const DEFAULT_IMAGE_WIDTH = 900
 let targetImageWidth = null
@@ -38,7 +37,6 @@ let statBarElem = null
 let goAgainButton = null
 let highQualityButton = null
 let lowQualityButton = null
-let dayModeSelect = null
 let saveImageButton = null
 let imgParagraph = null
 let durationElem = null
@@ -49,18 +47,13 @@ onload = async () => {
         goAgainButton = linkElement(REPEAT_BUTTON_ID)
         highQualityButton = linkElement(HI_QUALITY_BUTTON_ID)
         lowQualityButton = linkElement(LO_QUALITY_BUTTON_ID)
-        dayModeSelect = linkElement(MODE_SELECT_ID)
         saveImageButton = linkElement(SAVE_IMAGE_BUTTON_ID)
         durationElem = linkElement(DURATION_TEXT_ID)
         statBarElem = linkElement(STATUS_BAR_ID)
         setImageDimensions(false)
         insertBlankCanvas()
-        handleDayNightModeChange()
         initEnvironment()
         await processImage(imgParagraph,durationElem)
-        dayModeSelect.addEventListener('change',()=>{
-            handleDayNightModeChange()
-        })
         goAgainButton.addEventListener('click',async ()=>{
             setImageDimensions(false)
             initEnvironment()
@@ -186,25 +179,6 @@ function insertBlankCanvas() {
     }
 }
 
-function handleDayNightModeChange() {
-    let isNight = isNightMode()
-    dayModeSelect.style.backgroundColor = (isNight?"#151547":"#ffffdd")
-    dayModeSelect.style.color = (isNight?"#bcc8f8":"inherit")
-    if (optEnv) {
-        if (isNight) {
-            optEnv.removeOpticalObjectsByClassName('SunnySky')
-            optEnv.addOpticalObject(new NightSky())
-        } else {
-            optEnv.removeOpticalObjectsByClassName('NightSky')
-            optEnv.addOpticalObject(new SunnySky(randomSunDirection()))
-        }
-    }
-}
-
-function isNightMode() {
-    return (dayModeSelect.value === 'night')
-}
-
 function statusReporterFunction(frac) {
     if (typeof frac !== 'number') {
         console.error('status is non-number')
@@ -249,12 +223,8 @@ function initEnvironment() {
     initShapeMatrix(6)
     optEnv.addOpticalObject(new ReflectiveSphere(new Vector3D(0,-32,0),30,Color.colorFromHex("#998877")))
     optEnv.addOpticalObject(new Plane(-10,10,6,Color.colorFromHex("#666a6f")))
-    if (isNightMode()) {
-        optEnv.addOpticalObject(new NightSky())
-    } else {
-        sunVector = randomSunDirection()
-        optEnv.addOpticalObject(new SunnySky(sunVector))
-    }
+    sunVector = randomSunDirection()
+    optEnv.addOpticalObject(new SunnySky(sunVector))
 }
 
 function initShapeMatrix(size) {
