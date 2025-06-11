@@ -15,14 +15,16 @@ const IMG_PARA_ID = 'imgpara'
 const STATUS_BAR_ID = 'statbar'
 const DURATION_TEXT_ID = 'dur'
 const REPEAT_BUTTON_ID = 'rptbtn'
+const F_STOP_INPUT_ID = 'fstopin'
+const DEFAULT_F_STOP = 8
 
 const STATUS_CONTAINER_CLASS = 'progress-container'
 
-const DEFAULT_IMAGE_WIDTH = 1024
+const DEFAULT_IMAGE_WIDTH = 800
 let targetImageWidth = null
 let targetImageHeight = null
 const PIXEL_SIZE = 1
-const ANTI_ALIAS = 4
+const ANTI_ALIAS = 3
 
 let buttonEnabled = false
 
@@ -32,6 +34,7 @@ let statBarElem  = null
 onload = () => {
     try {
         imgParagraph = document.getElementById(IMG_PARA_ID)
+        let fStopInput = document.getElementById(F_STOP_INPUT_ID)
         let goAgainButton = document.getElementById(REPEAT_BUTTON_ID)
         let durationElem = document.getElementById(DURATION_TEXT_ID)
         statBarElem = document.getElementById(STATUS_BAR_ID)
@@ -40,9 +43,14 @@ onload = () => {
         }
         setImageDimensions()
         insertBlankCanvas()
+        if (!fStopInput) {
+            throw 'no ' + F_STOP_INPUT_ID + ' id found on page'
+        }
         if (!goAgainButton) {
             throw 'no ' + REPEAT_BUTTON_ID + ' id found on page'
         }
+        initEnvironment()
+        setCameraFromFStop(fStopInput)
         setTimeout(()=>{
             processImage(imgParagraph,durationElem)
             goAgainButton.disabled = false
@@ -55,6 +63,7 @@ onload = () => {
                 goAgainButton.disabled = true
                 goAgainButton.classList.add('btndisabled')
                 setTimeout(()=>{
+                    setCameraFromFStop(fStopInput)
                     processImage(imgParagraph,durationElem)
                     goAgainButton.disabled = false
                     goAgainButton.classList.remove('btndisabled')
@@ -79,8 +88,45 @@ function setImageDimensions() {
     targetImageHeight = Math.round(targetImageWidth*0.75)
 }
 
+function setCameraFromFStop(fStopInput) {
+    const cameraRay = new Ray(
+        universalOrigin,
+        universalOrigin.scalarMult(-1)
+    )
+    const fStop = getFStop(fStopInput)
+    const focalDistance = universalOrigin.magn()
+    const apertureDiameter = focalDistance/fStop
+    const apertureRadius = apertureDiameter/2
+    optEnv.setCamera(cameraRay,apertureRadius,focalDistance)
+}
+
+function getFStop(fStopInput) {
+    if (!fStopInput) {
+        return DEFAULT_F_STOP
+    }
+    const inputValue = fStopInput.value
+    if (!inputValue) {
+        return DEFAULT_F_STOP
+    } 
+    try {
+        let numVal = parseFloat(inputValue)
+        if (typeof numVal !== 'number' || Number.isNaN(numVal)) {
+            console.error('invalid number from f-stop:')
+            console.error('type = ' + typeof numVal)
+            return DEFAULT_F_STOP
+        }
+        numVal = Math.abs(numVal)
+        numVal = Math.min(1000,Math.max(0.2,numVal))
+        fStopInput.value = numVal
+        return numVal
+    } catch (err) {
+        console.error ('error parsing f-stop:')
+        console.err(err)
+        return DEFAULT_F_STOP
+    }
+}
+
 async function processImage(imgParagraph,durationElem) {
-    initEnvironment()
     durationElem.textContent = ''
     const gridder = new CanvasGridder()
     const startTime = new Date()
@@ -140,11 +186,6 @@ let optEnv = null
 
 function initEnvironment() {
     optEnv = new OpticalEnvironment()
-    const cameraRay = new Ray(
-        universalOrigin,
-        universalOrigin.scalarMult(-1)
-    )
-    optEnv.setCamera(cameraRay,0.5,universalOrigin.magn())
     initRandomSpheres()
     optEnv.addOpticalObject(new Plane(-7.5,25,2))
     optEnv.addOpticalObject(new Sky())
