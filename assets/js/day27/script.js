@@ -7,20 +7,22 @@ import OpticalEnvironment from "../day22/optical-env.js"
 import Plane from "../day22/plane.js"
 import ReflectiveSphere from "../day20/reflective-sphere.js"
 import SunnySky from "../day25/sunny-sky.js"
-import Matrix3D from "../day26/matrix3d.js"
 
-import ReflectiveTetrahedron from "./refl-tetra.js"
 import SierpinskiTetrahedron from "./sierp-tetra.js"
 
 
 const IMG_PARA_ID = 'imgpara'
 const STATUS_BAR_ID = 'statbar'
 const DURATION_TEXT_ID = 'dur'
+const STATS_PARAGRAPH_ID = 'statsp'
 const REPEAT_BUTTON_ID = 'rptbtn'
 const HI_QUALITY_BUTTON_ID = 'highqbtn'
 const LO_QUALITY_BUTTON_ID = 'lowqbtn'
 const SAVE_IMAGE_BUTTON_ID = 'savebtn'
 const IMG_CANVAS_ID = 'renderedcanvas'
+const SELECT_RECURSION_ID = 'recurssel'
+
+const DEFAULT_RECURSION = 6
 
 const DEFAULT_IMAGE_WIDTH = 1024
 const ASPECT_RATIO = 1
@@ -32,21 +34,25 @@ let antiAlias = null
 let sunVector = null
 
 let statBarElem = null
+let selectRecursionElem = null
 let goAgainButton = null
 let highQualityButton = null
 let lowQualityButton = null
 let saveImageButton = null
 let imgParagraph = null
 let durationElem = null
+let statisticsParagraphElem = null
 
 onload = async () => {
     try {
         imgParagraph = linkElement(IMG_PARA_ID)
+        selectRecursionElem = linkElement(SELECT_RECURSION_ID)
         goAgainButton = linkElement(REPEAT_BUTTON_ID)
         highQualityButton = linkElement(HI_QUALITY_BUTTON_ID)
         lowQualityButton = linkElement(LO_QUALITY_BUTTON_ID)
         saveImageButton = linkElement(SAVE_IMAGE_BUTTON_ID)
         durationElem = linkElement(DURATION_TEXT_ID)
+        statisticsParagraphElem = linkElement(STATS_PARAGRAPH_ID)
         statBarElem = linkElement(STATUS_BAR_ID)
         setImageDimensions(false)
         insertBlankCanvas()
@@ -218,7 +224,8 @@ function initEnvironment() {
         cameraDirection
     )
     optEnv.setCamera(cameraRay,0.1,cameraOriginDistance)
-    const recursionLevel = 6
+    const recursionLevel = getRecursionLevelSelection()
+    updateRecursionStats(recursionLevel)
     optEnv.addOpticalObject(new SierpinskiTetrahedron(new Vector3D(),2,recursionLevel,Color.colorFromHex("#f8ddcc")))
     const mirroringSphereDistance = 4
     const mirroringSphereRadius = 50
@@ -264,4 +271,26 @@ function randomCameraPosition() {
     const y = Math.sin(longitude)*cosDist
     const vec = new Vector3D(x,y,z)
     return vec
+}
+
+function getRecursionLevelSelection() {
+    if (!selectRecursionElem) {
+        return DEFAULT_RECURSION
+    }
+    const strVal = selectRecursionElem.value
+    try {
+        const val = parseInt(strVal)
+        return Math.round(Math.max(0,Math.min(10,val)))
+    } catch (err) {
+        console.error('parse error from recursion selection', err)
+        return DEFAULT_RECURSION
+    }
+}
+
+function updateRecursionStats(level) {
+    const tetraCount = 4**level
+    const triangleCount = tetraCount*4
+    const statsString = 'tetahedrons rendered: ' + tetraCount + ', ' +
+        'triangles rendered: ' + triangleCount
+    statisticsParagraphElem.textContent = statsString
 }
