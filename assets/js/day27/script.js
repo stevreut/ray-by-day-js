@@ -7,10 +7,9 @@ import OpticalEnvironment from "../day22/optical-env.js"
 import Plane from "../day22/plane.js"
 import ReflectiveSphere from "../day20/reflective-sphere.js"
 import SunnySky from "../day25/sunny-sky.js"
+import Matrix3D from "../day26/matrix3d.js"
 
-import Matrix3D from "./matrix3d.js"
-import ReflectiveIcosahedron from "./refl-icos.js"
-import ReflectiveCube from "./refl-cube.js"
+import ReflectiveTetrahedron from "./refl-tetra.js"
 
 
 const IMG_PARA_ID = 'imgpara'
@@ -23,6 +22,7 @@ const SAVE_IMAGE_BUTTON_ID = 'savebtn'
 const IMG_CANVAS_ID = 'renderedcanvas'
 
 const DEFAULT_IMAGE_WIDTH = 900
+const ASPECT_RATIO = 4/3
 let targetImageWidth = null
 let targetImageHeight = null
 let pixelSize = null
@@ -113,7 +113,7 @@ function setImageDimensions(isHiQuality) {
                 targetImageWidth = DEFAULT_IMAGE_WIDTH
         }
     }
-    targetImageHeight = targetImageWidth
+    targetImageHeight = Math.round(targetImageWidth/ASPECT_RATIO)
     pixelSize = (isHiQuality?1:(targetImageWidth<=512?1:3))
     antiAlias = 3
 }
@@ -229,7 +229,6 @@ function initShapeMatrix(size) {
     const distanceIncrement = totalSide/(size-1)
     const rotationIncrement = Math.PI/2/(size-1)
     const radius = distanceIncrement*0.45
-    const useCube = (Math.random() > 0.35)
     for (let j=0;j<size;j++) {
         const ctrZ = totalSide/2 - j*distanceIncrement
         const yAngle = rotationIncrement*j
@@ -239,12 +238,7 @@ function initShapeMatrix(size) {
             const color = new Color(0.4+0.4*i/size,0.5,0.4+0.4*j/size)
             const zAngle = rotationIncrement*i
             const rotator = Matrix3D.rotorOnZ(zAngle).mult(Matrix3D.rotorOnY(yAngle))
-            let obj
-            if (useCube) {
-                obj = new ReflectiveCube(centerVector,radius,color,rotator)
-            } else {
-                obj = new ReflectiveIcosahedron(centerVector,radius,color,rotator)
-            }
+            let obj = new ReflectiveTetrahedron(centerVector,radius,color,rotator)
             optEnv.addOpticalObject(obj)
         }
     }
