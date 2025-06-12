@@ -10,6 +10,7 @@ import SunnySky from "../day25/sunny-sky.js"
 import Matrix3D from "../day26/matrix3d.js"
 
 import ReflectiveTetrahedron from "./refl-tetra.js"
+import SierpinskiTetrahedron from "./sierp-tetra.js"
 
 
 const IMG_PARA_ID = 'imgpara'
@@ -217,32 +218,33 @@ function initEnvironment() {
         cameraDirection
     )
     optEnv.setCamera(cameraRay,0.25,cameraOriginDistance)
-    initShapeMatrix(6)
+    // initShapeMatrix(6)
+    optEnv.addOpticalObject(new SierpinskiTetrahedron(new Vector3D(),2,5,Color.colorFromHex("#f8ddcc")))
     optEnv.addOpticalObject(new ReflectiveSphere(new Vector3D(0,-32,0),30,Color.colorFromHex("#998877")))
     optEnv.addOpticalObject(new Plane(-10,10,6,Color.colorFromHex("#666a6f")))
     sunVector = randomSunDirection()
     optEnv.addOpticalObject(new SunnySky(sunVector))
 }
 
-function initShapeMatrix(size) {
-    const totalSide = 3
-    const distanceIncrement = totalSide/(size-1)
-    const rotationIncrement = Math.PI/2/(size-1)
-    const radius = distanceIncrement*0.45
-    for (let j=0;j<size;j++) {
-        const ctrZ = totalSide/2 - j*distanceIncrement
-        const yAngle = rotationIncrement*j
-        for (let i=0;i<size;i++) {
-            const ctrX = -totalSide/2 + i*distanceIncrement
-            const centerVector = new Vector3D(ctrX,0,ctrZ)
-            const color = new Color(0.4+0.4*i/size,0.5,0.4+0.4*j/size)
-            const zAngle = rotationIncrement*i
-            const rotator = Matrix3D.rotorOnZ(zAngle).mult(Matrix3D.rotorOnY(yAngle))
-            let obj = new ReflectiveTetrahedron(centerVector,radius,color,rotator)
-            optEnv.addOpticalObject(obj)
-        }
-    }
-}
+// function initShapeMatrix(size) {
+//     const totalSide = 3
+//     const distanceIncrement = totalSide/(size-1)
+//     const rotationIncrement = Math.PI/2/(size-1)
+//     const radius = distanceIncrement*0.45
+//     for (let j=0;j<size;j++) {
+//         const ctrZ = totalSide/2 - j*distanceIncrement
+//         const yAngle = rotationIncrement*j
+//         for (let i=0;i<size;i++) {
+//             const ctrX = -totalSide/2 + i*distanceIncrement
+//             const centerVector = new Vector3D(ctrX,0,ctrZ)
+//             const color = new Color(0.4+0.4*i/size,0.5,0.4+0.4*j/size)
+//             const zAngle = rotationIncrement*i
+//             const rotator = Matrix3D.rotorOnZ(zAngle).mult(Matrix3D.rotorOnY(yAngle))
+//             let obj = new ReflectiveTetrahedron(centerVector,radius,color,rotator)
+//             optEnv.addOpticalObject(obj)
+//         }
+//     }
+// }
 
 function randomSunDirection() {
     while (true) {
