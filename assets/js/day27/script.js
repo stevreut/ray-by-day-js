@@ -22,8 +22,8 @@ const LO_QUALITY_BUTTON_ID = 'lowqbtn'
 const SAVE_IMAGE_BUTTON_ID = 'savebtn'
 const IMG_CANVAS_ID = 'renderedcanvas'
 
-const DEFAULT_IMAGE_WIDTH = 900
-const ASPECT_RATIO = 4/3
+const DEFAULT_IMAGE_WIDTH = 1024
+const ASPECT_RATIO = 1
 let targetImageWidth = null
 let targetImageHeight = null
 let pixelSize = null
@@ -217,34 +217,18 @@ function initEnvironment() {
         cameraOrigin,
         cameraDirection
     )
-    optEnv.setCamera(cameraRay,0.25,cameraOriginDistance)
-    // initShapeMatrix(6)
-    optEnv.addOpticalObject(new SierpinskiTetrahedron(new Vector3D(),2,5,Color.colorFromHex("#f8ddcc")))
-    optEnv.addOpticalObject(new ReflectiveSphere(new Vector3D(0,-32,0),30,Color.colorFromHex("#998877")))
+    optEnv.setCamera(cameraRay,0.1,cameraOriginDistance)
+    const recursionLevel = 6
+    optEnv.addOpticalObject(new SierpinskiTetrahedron(new Vector3D(),2,recursionLevel,Color.colorFromHex("#f8ddcc")))
+    const mirroringSphereDistance = 4
+    const mirroringSphereRadius = 50
+    const mirroringSphereOffset = mirroringSphereRadius+mirroringSphereDistance
+    const sphereCenter = new Vector3D(0,-mirroringSphereOffset,0)
+    optEnv.addOpticalObject(new ReflectiveSphere(sphereCenter,mirroringSphereRadius,Color.colorFromHex("#998877")))
     optEnv.addOpticalObject(new Plane(-10,10,6,Color.colorFromHex("#666a6f")))
     sunVector = randomSunDirection()
     optEnv.addOpticalObject(new SunnySky(sunVector))
 }
-
-// function initShapeMatrix(size) {
-//     const totalSide = 3
-//     const distanceIncrement = totalSide/(size-1)
-//     const rotationIncrement = Math.PI/2/(size-1)
-//     const radius = distanceIncrement*0.45
-//     for (let j=0;j<size;j++) {
-//         const ctrZ = totalSide/2 - j*distanceIncrement
-//         const yAngle = rotationIncrement*j
-//         for (let i=0;i<size;i++) {
-//             const ctrX = -totalSide/2 + i*distanceIncrement
-//             const centerVector = new Vector3D(ctrX,0,ctrZ)
-//             const color = new Color(0.4+0.4*i/size,0.5,0.4+0.4*j/size)
-//             const zAngle = rotationIncrement*i
-//             const rotator = Matrix3D.rotorOnZ(zAngle).mult(Matrix3D.rotorOnY(yAngle))
-//             let obj = new ReflectiveTetrahedron(centerVector,radius,color,rotator)
-//             optEnv.addOpticalObject(obj)
-//         }
-//     }
-// }
 
 function randomSunDirection() {
     while (true) {
@@ -261,7 +245,7 @@ function randomSunDirection() {
 }
 
 function randomCameraPosition() {
-    const LO_DIST = 5
+    const LO_DIST = 8
     const HI_DIST = 8
     const LO_LAT = -10
     const HI_LAT = 20
