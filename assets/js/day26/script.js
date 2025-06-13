@@ -51,31 +51,36 @@ onload = async () => {
         insertBlankCanvas()
         initEnvironment()
         await processImage(imgParagraph,durationElem)
+        enableButton(lowQualityButton,false)
         goAgainButton.addEventListener('click',async ()=>{
             setImageDimensions(false)
             initEnvironment()
             await processImage(imgParagraph,durationElem)
+            enableButton(highQualityButton,true)
+            enableButton(lowQualityButton,false)
         })
         highQualityButton.addEventListener('click',async ()=>{
             setImageDimensions(true)
             await processImage(imgParagraph,durationElem)
-            enableButton(highQualityButton,true)
+            enableButton(highQualityButton,false)
             enableButton(lowQualityButton,true)
         })
         lowQualityButton.addEventListener('click',async ()=>{
             setImageDimensions(false)
             await processImage(imgParagraph,durationElem)
             enableButton(highQualityButton,true)
-            enableButton(lowQualityButton,true)
+            enableButton(lowQualityButton,false)
         })
         saveImageButton.addEventListener('click',async ()=>{
             enableButton(goAgainButton,false)
+            const hiIsEnabled = !highQualityButton.disabled
+            const loIsEnabled = !lowQualityButton.disabled
             enableButton(highQualityButton,false)
             enableButton(lowQualityButton,false)
             await saveImageAsDownload()
             enableButton(goAgainButton,true)
-            enableButton(highQualityButton,true)
-            enableButton(lowQualityButton,true)
+            enableButton(highQualityButton,hiIsEnabled)
+            enableButton(lowQualityButton,loIsEnabled)
         })
     } catch (err) {
         console.error('err = ', err)

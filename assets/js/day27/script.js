@@ -87,10 +87,14 @@ onload = async () => {
         })
         saveImageButton.addEventListener('click',async ()=>{
             enableButton(goAgainButton,false)
+            const hiIsEnabled = !highQualityButton.disabled
+            const loIsEnabled = !lowQualityButton.disabled
             enableButton(highQualityButton,false)
             enableButton(lowQualityButton,false)
             await saveImageAsDownload()
             enableButton(goAgainButton,true)
+            enableButton(highQualityButton,hiIsEnabled)
+            enableButton(lowQualityButton,loIsEnabled)
         })
     } catch (err) {
         console.error('err = ', err)
