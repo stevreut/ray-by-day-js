@@ -22,7 +22,11 @@ const SAVE_IMAGE_BUTTON_ID = 'savebtn'
 const IMG_CANVAS_ID = 'renderedcanvas'
 const SELECT_RECURSION_ID = 'recurssel'
 
-const DEFAULT_RECURSION = 6
+const DEFAULT_RECURSION = 3
+
+const TETRAHEDRON_HEX_COLOR = "#ded4ce"
+const BACKDROP_HEX_COLOR = "#998877"
+const PLANE_LIGHT_SQR_COLOR = "#666a6f"
 
 const DEFAULT_IMAGE_WIDTH = 1024
 const ASPECT_RATIO = 1
@@ -202,7 +206,7 @@ async function saveImageAsDownload() {
             const link = document.createElement("a")
             if (link) {
                 link.href = url
-                const fname = 'ray-trace-rotation-' +
+                const fname = 'ray-trace-fractal-' +
                     (new Date()).getTime() + '.png'
                 link.download = fname
                 link.click()
@@ -226,13 +230,13 @@ function initEnvironment() {
     optEnv.setCamera(cameraRay,0.1,cameraOriginDistance)
     const recursionLevel = getRecursionLevelSelection()
     updateRecursionStats(recursionLevel)
-    optEnv.addOpticalObject(new SierpinskiTetrahedron(new Vector3D(),2,recursionLevel,Color.colorFromHex("#f8ddcc")))
+    optEnv.addOpticalObject(new SierpinskiTetrahedron(new Vector3D(),2,recursionLevel,Color.colorFromHex(TETRAHEDRON_HEX_COLOR)))
     const mirroringSphereDistance = 4
     const mirroringSphereRadius = 50
     const mirroringSphereOffset = mirroringSphereRadius+mirroringSphereDistance
     const sphereCenter = new Vector3D(0,-mirroringSphereOffset,0)
-    optEnv.addOpticalObject(new ReflectiveSphere(sphereCenter,mirroringSphereRadius,Color.colorFromHex("#998877")))
-    optEnv.addOpticalObject(new Plane(-10,10,6,Color.colorFromHex("#666a6f")))
+    optEnv.addOpticalObject(new ReflectiveSphere(sphereCenter,mirroringSphereRadius,Color.colorFromHex(BACKDROP_HEX_COLOR)))
+    optEnv.addOpticalObject(new Plane(-10,10,6,Color.colorFromHex(PLANE_LIGHT_SQR_COLOR)))
     sunVector = randomSunDirection()
     optEnv.addOpticalObject(new SunnySky(sunVector))
 }
@@ -280,7 +284,7 @@ function getRecursionLevelSelection() {
     const strVal = selectRecursionElem.value
     try {
         const val = parseInt(strVal)
-        return Math.round(Math.max(0,Math.min(10,val)))
+        return Math.round(Math.max(0,Math.min(9,val)))
     } catch (err) {
         console.error('parse error from recursion selection', err)
         return DEFAULT_RECURSION
