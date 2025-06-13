@@ -21,6 +21,7 @@ const LO_QUALITY_BUTTON_ID = 'lowqbtn'
 const SAVE_IMAGE_BUTTON_ID = 'savebtn'
 const IMG_CANVAS_ID = 'renderedcanvas'
 const SELECT_RECURSION_ID = 'recurssel'
+const SELECT_MODE_ID = 'decoratesel'
 
 const DEFAULT_RECURSION = 3
 
@@ -39,6 +40,7 @@ let sunVector = null
 
 let statBarElem = null
 let selectRecursionElem = null
+let selectModeElem = null
 let goAgainButton = null
 let highQualityButton = null
 let lowQualityButton = null
@@ -51,6 +53,7 @@ onload = async () => {
     try {
         imgParagraph = linkElement(IMG_PARA_ID)
         selectRecursionElem = linkElement(SELECT_RECURSION_ID)
+        selectModeElem = linkElement(SELECT_MODE_ID)
         goAgainButton = linkElement(REPEAT_BUTTON_ID)
         highQualityButton = linkElement(HI_QUALITY_BUTTON_ID)
         lowQualityButton = linkElement(LO_QUALITY_BUTTON_ID)
@@ -62,22 +65,25 @@ onload = async () => {
         insertBlankCanvas()
         initEnvironment()
         await processImage(imgParagraph,durationElem)
+        enableButton(lowQualityButton,false)
         goAgainButton.addEventListener('click',async ()=>{
             setImageDimensions(false)
             initEnvironment()
             await processImage(imgParagraph,durationElem)
+            enableButton(highQualityButton,true)
+            enableButton(lowQualityButton,false)
         })
         highQualityButton.addEventListener('click',async ()=>{
             setImageDimensions(true)
             await processImage(imgParagraph,durationElem)
-            enableButton(highQualityButton,true)
+            enableButton(highQualityButton,false)
             enableButton(lowQualityButton,true)
         })
         lowQualityButton.addEventListener('click',async ()=>{
             setImageDimensions(false)
             await processImage(imgParagraph,durationElem)
             enableButton(highQualityButton,true)
-            enableButton(lowQualityButton,true)
+            enableButton(lowQualityButton,false)
         })
         saveImageButton.addEventListener('click',async ()=>{
             enableButton(goAgainButton,false)
@@ -85,8 +91,6 @@ onload = async () => {
             enableButton(lowQualityButton,false)
             await saveImageAsDownload()
             enableButton(goAgainButton,true)
-            enableButton(highQualityButton,true)
-            enableButton(lowQualityButton,true)
         })
     } catch (err) {
         console.error('err = ', err)
@@ -230,7 +234,10 @@ function initEnvironment() {
     optEnv.setCamera(cameraRay,0.1,cameraOriginDistance)
     const recursionLevel = getRecursionLevelSelection()
     updateRecursionStats(recursionLevel)
-    optEnv.addOpticalObject(new SierpinskiTetrahedron(new Vector3D(),2,recursionLevel,Color.colorFromHex(TETRAHEDRON_HEX_COLOR)))
+    const modeString = selectModeElem.value
+    optEnv.addOpticalObject(new SierpinskiTetrahedron(new Vector3D(),2,recursionLevel,
+        Color.colorFromHex(TETRAHEDRON_HEX_COLOR),
+        modeString,Color.colorFromHex("#ffddcc")))
     const mirroringSphereDistance = 4
     const mirroringSphereRadius = 50
     const mirroringSphereOffset = mirroringSphereRadius+mirroringSphereDistance

@@ -19,7 +19,7 @@
         </div>
         <p id="statsp"></p>
         <p id="dur"></p>
-        <p>
+        <div>
             <label for="recurssel">Recursion level </label>
             <select id="recurssel">
                 <option>0</option>
@@ -33,7 +33,16 @@
                 <option>8</option>
                 <option>9</option>
             </select>
-        </p>
+        </div>
+        <div>
+            <label for="decoratesel">Add to recurring elements </label>
+            <select id="decoratesel">
+                <option selected value="none">Nothing</option>
+                <option value="sphm">Mirrored Spheres</option>
+                <option value="spht">Transparent Spheres</option>
+                <option value="both">Both Mirrored and Transparent Spheres</option>
+            </select>
+        </div>
         <p>
             <button id="rptbtn" class="btndisabled" disabled>Compose and Render Low-Quality Image</button>
             <button id="lowqbtn" class="btndisabled" disabled>Render LOW-Quality</button>

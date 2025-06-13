@@ -2,6 +2,8 @@ import OpticalObject from "../day20/optical-object.js";
 import OpticalObjectGroup from "../day25/optobj-group.js";
 import Vector3D from "../day20/vector3d.js";
 import ReflectiveTetrahedron from "./refl-tetra.js";
+import ReflectiveSphere from "../day20/reflective-sphere.js";
+import RefractiveSphere from "../day22/refractive-sphere.js";
 
 class SierpinskiTetrahedron extends OpticalObject {
     static DIHEDRAL_ANGLE = Math.acos(-1/3)
@@ -24,12 +26,14 @@ class SierpinskiTetrahedron extends OpticalObject {
             )
         ]
     }
-    constructor(center,radius,level,color) {
+    constructor(center,radius,level,color,option,optionColor) {
         if (!Number.isInteger(level) || level < 0 || level > 10) {
             throw 'invalid level parameter in new SierpinskiTetrahedron'
         }
         super()
         this.level = level
+        this.option = option
+        this.optionColor = optionColor
         if (level <= 0) {
             this.innerObject = new ReflectiveTetrahedron(center,radius,color,null/*TODO*/)
         } else {
@@ -38,8 +42,14 @@ class SierpinskiTetrahedron extends OpticalObject {
             const objList = []
             SierpinskiTetrahedron.FOUR_CORNERS.forEach(corner=>{
                 // Note RECURSION in populating objList
-                objList.push(new SierpinskiTetrahedron(center.add(corner.scalarMult(subRadius)),subRadius,subLevel,color))
+                objList.push(new SierpinskiTetrahedron(center.add(corner.scalarMult(subRadius)),
+                    subRadius,subLevel,color,this.option,this.optionColor))
             })
+            if (option === 'sphm' || (option === 'both' && level%2 === 0)) {
+                objList.push(new ReflectiveSphere(center,subRadius*0.57,this.optionColor))
+            } else if (option == 'spht' || (option === 'both' && level%2 !== 0)) {
+                objList.push(new RefractiveSphere(center,subRadius*0.57,this.optionColor,1.5))
+            } // else just ignore
             this.innerObject = new OpticalObjectGroup(center,radius,objList)
         }
     }
