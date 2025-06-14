@@ -110,8 +110,8 @@ onload = async () => {
         })
         sphereColorPickerElem.addEventListener('change',() => {
             const color = sphereColorPickerElem.value
-            sphereColorHexElem.value = color
-            sphereColorHexElem.style.color = color.toUpperCase()
+            sphereColorHexElem.textContent = color.toUpperCase()
+            sphereColorHexElem.style.color = color
             const isPale = (parseInt(color.slice(3,5),16) > 128)
             sphereColorHexElem.style.backgroundColor = (isPale?"#444":"#fff")
         })
@@ -326,7 +326,7 @@ function getRecursionLevelSelection() {
 function updateRecursionStats(level) {
     const tetraCount = 4**level
     const triangleCount = tetraCount*4
-    const statsString = 'tetahedrons rendered: ' + tetraCount + ', ' +
-        'triangles rendered: ' + triangleCount
+    const statsString = 'Tetahedrons rendered: ' + tetraCount + ', ' +
+        'Triangles rendered: ' + triangleCount
     statisticsParagraphElem.textContent = statsString
 }
