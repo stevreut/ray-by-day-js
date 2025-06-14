@@ -10,6 +10,15 @@
             padding: 1mm;
             border-radius: 1mm;
         }
+        .selectdiv {
+            border: solid 1px #aaaacc;
+            border-radius: 1.5mm;
+            padding: 1.5mm;
+            margin-top: 3mm;
+        }
+        .selectdiv, .selectdiv p, .selectdiv label {
+            background-color: #f8f8ff;
+        }
     </style>
     <link rel="icon" type="image/icon" href="../assets/images/icon/ray-trace-icon.ico">
 </head>
@@ -40,8 +49,8 @@
                 <option>9</option>
             </select>
         </div>
-        <div>
-            <label for="decoratesel">Add to recurring elements </label>
+        <div class="selectdiv">
+            <label for="decoratesel">Select object type(s) to be inserted in the middle of each tetrahedron </label>
             <select id="decoratesel">
                 <option selected value="none">Nothing</option>
                 <option value="sphm">Mirrored Spheres</option>
@@ -49,8 +58,8 @@
                 <option value="both">Both Mirrored and Transparent Spheres</option>
             </select>
         </div>
-        <div style="visibility:hidden">
-            <label for="sphcolorinput">Color of embedded spheres (if any) </label>
+        <div  class="selectdiv" style="visibility:hidden">
+            <label for="sphcolorinput">Choose color of embedded spheres</label>
             <input type="color" id="sphcolorinput" disabled value="#ffddcc"><span style="color:#ffddcc;background-color: #444;" id="sphcolorhex">#FFDDCC</span>
         </div>
         <p>

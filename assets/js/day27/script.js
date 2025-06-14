@@ -288,12 +288,12 @@ function randomSunDirection() {
 }
 
 function randomCameraPosition() {
-    const LO_DIST = 8
+    const LO_DIST = 5
     const HI_DIST = 8
     const LO_LAT = -10
-    const HI_LAT = 20
-    const LO_LON = 75
-    const HI_LON = 105
+    const HI_LAT = 45
+    const LO_LON = 65
+    const HI_LON = 115
     let longitude = Math.random()*(HI_LON-LO_LON)+LO_LON
     longitude *= Math.PI/180
     let latitude = Math.random()**2 // **2 skews towards lower values
