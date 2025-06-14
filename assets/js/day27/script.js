@@ -22,6 +22,8 @@ const SAVE_IMAGE_BUTTON_ID = 'savebtn'
 const IMG_CANVAS_ID = 'renderedcanvas'
 const SELECT_RECURSION_ID = 'recurssel'
 const SELECT_MODE_ID = 'decoratesel'
+const SPHERE_COLOR_PICKER_ID = 'sphcolorinput'
+const SPHERE_COLOR_HEX_TXT = 'sphcolorhex'
 
 const DEFAULT_RECURSION = 3
 
@@ -41,6 +43,8 @@ let sunVector = null
 let statBarElem = null
 let selectRecursionElem = null
 let selectModeElem = null
+let sphereColorPickerElem = null
+let sphereColorHexElem = null
 let goAgainButton = null
 let highQualityButton = null
 let lowQualityButton = null
@@ -54,6 +58,8 @@ onload = async () => {
         imgParagraph = linkElement(IMG_PARA_ID)
         selectRecursionElem = linkElement(SELECT_RECURSION_ID)
         selectModeElem = linkElement(SELECT_MODE_ID)
+        sphereColorPickerElem = linkElement(SPHERE_COLOR_PICKER_ID)
+        sphereColorHexElem = linkElement(SPHERE_COLOR_HEX_TXT)
         goAgainButton = linkElement(REPEAT_BUTTON_ID)
         highQualityButton = linkElement(HI_QUALITY_BUTTON_ID)
         lowQualityButton = linkElement(LO_QUALITY_BUTTON_ID)
@@ -95,6 +101,19 @@ onload = async () => {
             enableButton(goAgainButton,true)
             enableButton(highQualityButton,hiIsEnabled)
             enableButton(lowQualityButton,loIsEnabled)
+        })
+        selectModeElem.addEventListener('change',()=>{
+            const selectedMode = selectModeElem.value
+            const makeVisible = (selectedMode && (selectedMode !== 'none'))
+            sphereColorPickerElem.disabled = !makeVisible
+            sphereColorPickerElem.parentElement.style.visibility = (makeVisible?"visible":"hidden")
+        })
+        sphereColorPickerElem.addEventListener('change',() => {
+            const color = sphereColorPickerElem.value
+            sphereColorHexElem.value = color
+            sphereColorHexElem.style.color = color.toUpperCase()
+            const isPale = (parseInt(color.slice(3,5),16) > 128)
+            sphereColorHexElem.style.backgroundColor = (isPale?"#444":"#fff")
         })
     } catch (err) {
         console.error('err = ', err)
@@ -239,9 +258,11 @@ function initEnvironment() {
     const recursionLevel = getRecursionLevelSelection()
     updateRecursionStats(recursionLevel)
     const modeString = selectModeElem.value
+    const sphereColor = Color.colorFromHex(sphereColorPickerElem.value)
+    console.log('the value of color is ', sphereColor, ' type = ', typeof sphereColor, ' at ', new Date())
     optEnv.addOpticalObject(new SierpinskiTetrahedron(new Vector3D(),2,recursionLevel,
         Color.colorFromHex(TETRAHEDRON_HEX_COLOR),
-        modeString,Color.colorFromHex("#ffddcc")))
+        modeString,sphereColor))
     const mirroringSphereDistance = 4
     const mirroringSphereRadius = 50
     const mirroringSphereOffset = mirroringSphereRadius+mirroringSphereDistance

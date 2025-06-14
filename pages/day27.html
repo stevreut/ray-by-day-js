@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ray by Day JS - Fractals and Recursion</title>
     <link rel="stylesheet" href="../assets/css/style.css">
+    <style>
+        #sphcolorhex {
+            padding: 1mm;
+            border-radius: 1mm;
+        }
+    </style>
     <link rel="icon" type="image/icon" href="../assets/images/icon/ray-trace-icon.ico">
 </head>
 <body>
@@ -42,6 +48,10 @@
                 <option value="spht">Transparent Spheres</option>
                 <option value="both">Both Mirrored and Transparent Spheres</option>
             </select>
+        </div>
+        <div style="visibility:hidden">
+            <label for="sphcolorinput">Color of embedded spheres (if any) </label>
+            <input type="color" id="sphcolorinput" disabled value="#ffddcc"><span style="color:#ffddcc;background-color: #444;" id="sphcolorhex">#FFDDCC</span>
         </div>
         <p>
             <button id="rptbtn" class="btndisabled" disabled>Compose and Render Low-Quality Image</button>

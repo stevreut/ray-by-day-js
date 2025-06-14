@@ -130,6 +130,11 @@ input, select {
 input:read-only {
     border: none;
 }
+input[type=color] {
+    height: 10mm;
+    border: none;
+    margin: 5mm;
+}
 .imgdiv {
     border: solid 1px #ddd;
     padding: 2cm;
