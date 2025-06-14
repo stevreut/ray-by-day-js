@@ -133,7 +133,7 @@ function setImageDimensions(isHiQuality) {
         targetImageWidth = DEFAULT_IMAGE_WIDTH
     } else {
         if (containerWidth && Number.isInteger(containerWidth) && containerWidth > 10) {
-            targetImageWidth = containerWidth
+            targetImageWidth = Math.min(containerWidth,DEFAULT_IMAGE_WIDTH)
         } else {
             targetImageWidth = DEFAULT_IMAGE_WIDTH
         }

@@ -1,16 +1,16 @@
 class NumberInputReplacer {
     constructor(id) {
-        if (typeof id === 'string') { // assume is id
+        if (typeof id === 'string') {
             const elem = document.getElementById(id)
             if (!elem) {
                 throw 'no "' + id + '" id found for new NumberInputReplacer'
             }
-            this.#init(elem)
+            this.#init(elem,id)
         } else {
             throw 'invalid parameter for new NumberInputReplacer, must be id string'
         }
     }
-    #init(elem) {
+    #init(elem,id) {
         this.intRequired = (elem.getAttribute("intrequired") !== null)
         this.min = this.#getValueFromAttribute(elem,"min")
         this.max = this.#getValueFromAttribute(elem,"max")
@@ -29,13 +29,12 @@ class NumberInputReplacer {
         this.val = Math.min(this.max,this.val)
         this.div = document.createElement("div")
         const labelElem = document.createElement("label")
-        labelElem.setAttribute("for",elem.getAttribute("id")) // TODO
+        labelElem.setAttribute("for",id)
         labelElem.textContent = this.label + " "
-        // labelElem.style.width = "30em"
         this.div.appendChild(labelElem)
         this.inputElem = document.createElement("input")
+        this.inputElem.id = id
         this.inputElem.setAttribute("type","number")
-        this.inputElem.setAttribute("id",elem.getAttribute("id")) // TODO
         this.inputElem.setAttribute("min",this.min)
         this.inputElem.setAttribute("max",this.max)
         this.inputElem.setAttribute("value",this.val)
