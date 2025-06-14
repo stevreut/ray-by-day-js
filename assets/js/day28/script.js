@@ -5,34 +5,38 @@ import CanvasGridder from "../day20/canvas-gridder.js"
 import BiVariantGrapher from "../day22/bivargrapher.js"
 import OpticalEnvironment from "../day22/optical-env.js"
 import Plane from "../day22/plane.js"
-import ReflectiveSphere from "../day20/reflective-sphere.js"
+import RefractiveSphere from "../day22/refractive-sphere.js"
+
 import SunnySky from "../day25/sunny-sky.js"
+// import NightSky from "../day25/night-sky.js"
 
-import SierpinskiTetrahedron from "./sierp-tetra.js"
+import ReflectiveTetrahedron from "../day25/refl-tetra.js"
+import ReflectiveCube from "../day25/refl-cube.js"
+import ReflectiveOctahedron from "../day25/refl-octa.js"
+import ReflectiveIcosahedron from "../day25/refl-icos.js"
+import ReflectiveDodecahedron from "../day25/refl-dodeca.js"
+import Compound12Sphere from "../day25/compound-12-sphere.js"
 
+import { NumberInputReplacer } from "../utils/input-formatters.js"
 
 const IMG_PARA_ID = 'imgpara'
 const STATUS_BAR_ID = 'statbar'
 const DURATION_TEXT_ID = 'dur'
-const STATS_PARAGRAPH_ID = 'statsp'
 const REPEAT_BUTTON_ID = 'rptbtn'
 const HI_QUALITY_BUTTON_ID = 'highqbtn'
 const LO_QUALITY_BUTTON_ID = 'lowqbtn'
 const SAVE_IMAGE_BUTTON_ID = 'savebtn'
 const IMG_CANVAS_ID = 'renderedcanvas'
-const SELECT_RECURSION_ID = 'recurssel'
-const SELECT_MODE_ID = 'decoratesel'
-const SPHERE_COLOR_PICKER_ID = 'sphcolorinput'
-const SPHERE_COLOR_HEX_TXT = 'sphcolorhex'
 
-const DEFAULT_RECURSION = 3
-
-const TETRAHEDRON_HEX_COLOR = "#ded4ce"
-const BACKDROP_HEX_COLOR = "#998877"
-const PLANE_LIGHT_SQR_COLOR = "#666a6f"
+// Platonic solids colors in HTML hex values
+const TETRA_HEX_COLOR = "#c299cc"
+const CUBE_HEX_COLOR = "#cc9999"
+const OCTA_HEX_COLOR = "#c2cc99"
+const ICOSA_HEX_COLOR = "#99ccad"
+const DODECA_HEX_COLOR = "#99adcc"
+const GOLD_HEX_COLOR = "#ccb070"
 
 const DEFAULT_IMAGE_WIDTH = 1024
-const ASPECT_RATIO = 1
 let targetImageWidth = null
 let targetImageHeight = null
 let pixelSize = null
@@ -41,34 +45,31 @@ let antiAlias = null
 let sunVector = null
 
 let statBarElem = null
-let selectRecursionElem = null
-let selectModeElem = null
-let sphereColorPickerElem = null
-let sphereColorHexElem = null
 let goAgainButton = null
 let highQualityButton = null
 let lowQualityButton = null
 let saveImageButton = null
 let imgParagraph = null
 let durationElem = null
-let statisticsParagraphElem = null
+
+let frame1FocalLength = null
+let frame1ApertureDiameter = null
+let frame1LenseDistance = null
+let frame1LenseRadius = null
+let frame1LenseIndex = null
 
 onload = async () => {
     try {
         imgParagraph = linkElement(IMG_PARA_ID)
-        selectRecursionElem = linkElement(SELECT_RECURSION_ID)
-        selectModeElem = linkElement(SELECT_MODE_ID)
-        sphereColorPickerElem = linkElement(SPHERE_COLOR_PICKER_ID)
-        sphereColorHexElem = linkElement(SPHERE_COLOR_HEX_TXT)
         goAgainButton = linkElement(REPEAT_BUTTON_ID)
         highQualityButton = linkElement(HI_QUALITY_BUTTON_ID)
         lowQualityButton = linkElement(LO_QUALITY_BUTTON_ID)
         saveImageButton = linkElement(SAVE_IMAGE_BUTTON_ID)
         durationElem = linkElement(DURATION_TEXT_ID)
-        statisticsParagraphElem = linkElement(STATS_PARAGRAPH_ID)
         statBarElem = linkElement(STATUS_BAR_ID)
         setImageDimensions(false)
         insertBlankCanvas()
+        formatInputs()
         initEnvironment()
         await processImage(imgParagraph,durationElem)
         enableButton(lowQualityButton,false)
@@ -102,19 +103,6 @@ onload = async () => {
             enableButton(highQualityButton,hiIsEnabled)
             enableButton(lowQualityButton,loIsEnabled)
         })
-        selectModeElem.addEventListener('change',()=>{
-            const selectedMode = selectModeElem.value
-            const makeVisible = (selectedMode && (selectedMode !== 'none'))
-            sphereColorPickerElem.disabled = !makeVisible
-            sphereColorPickerElem.parentElement.style.visibility = (makeVisible?"visible":"hidden")
-        })
-        sphereColorPickerElem.addEventListener('change',() => {
-            const color = sphereColorPickerElem.value
-            sphereColorHexElem.textContent = color.toUpperCase()
-            sphereColorHexElem.style.color = color
-            const isPale = (parseInt(color.slice(3,5),16) > 128)
-            sphereColorHexElem.style.backgroundColor = (isPale?"#444":"#fff")
-        })
     } catch (err) {
         console.error('err = ', err)
         alert ('error = ' + err.toString())
@@ -144,16 +132,15 @@ function setImageDimensions(isHiQuality) {
     if (isHiQuality) {
         targetImageWidth = DEFAULT_IMAGE_WIDTH
     } else {
-        if (containerWidth && Number.isInteger(containerWidth) && containerWidth > 10
-            && containerWidth <= 600) {
-                targetImageWidth = containerWidth
+        if (containerWidth && Number.isInteger(containerWidth) && containerWidth > 10) {
+            targetImageWidth = containerWidth
         } else {
-                targetImageWidth = DEFAULT_IMAGE_WIDTH
+            targetImageWidth = DEFAULT_IMAGE_WIDTH
         }
     }
-    targetImageHeight = Math.round(targetImageWidth/ASPECT_RATIO)
-    pixelSize = (isHiQuality?1:(targetImageWidth<=512?1:3))
-    antiAlias = 3
+    targetImageHeight = Math.round(targetImageWidth*0.75)
+    pixelSize = (isHiQuality?1:(targetImageWidth<=100?1:3))
+    antiAlias = (isHiQuality?4:2)
 }
 
 async function processImage(imgParagraph,durationElem) {
@@ -233,7 +220,7 @@ async function saveImageAsDownload() {
             const link = document.createElement("a")
             if (link) {
                 link.href = url
-                const fname = 'ray-trace-fractal-' +
+                const fname = 'ray-trace-lense-' +
                     (new Date()).getTime() + '.png'
                 link.download = fname
                 link.click()
@@ -254,22 +241,115 @@ function initEnvironment() {
         cameraOrigin,
         cameraDirection
     )
-    optEnv.setCamera(cameraRay,0.1,cameraOriginDistance)
-    const recursionLevel = getRecursionLevelSelection()
-    updateRecursionStats(recursionLevel)
-    const modeString = selectModeElem.value
-    const sphereColor = Color.colorFromHex(sphereColorPickerElem.value)
-    optEnv.addOpticalObject(new SierpinskiTetrahedron(new Vector3D(),2,recursionLevel,
-        Color.colorFromHex(TETRAHEDRON_HEX_COLOR),
-        modeString,sphereColor))
-    const mirroringSphereDistance = 4
-    const mirroringSphereRadius = 50
-    const mirroringSphereOffset = mirroringSphereRadius+mirroringSphereDistance
-    const sphereCenter = new Vector3D(0,-mirroringSphereOffset,0)
-    optEnv.addOpticalObject(new ReflectiveSphere(sphereCenter,mirroringSphereRadius,Color.colorFromHex(BACKDROP_HEX_COLOR)))
-    optEnv.addOpticalObject(new Plane(-10,10,6,Color.colorFromHex(PLANE_LIGHT_SQR_COLOR)))
+    const apertRadius = frame1ApertureDiameter.value()/2
+    const focalDistance = frame1FocalLength.value()
+    optEnv.setCamera(cameraRay,apertRadius,focalDistance)
+    const bigLense = setBigLense(cameraRay)
+    initRandomShapes(cameraRay.getOrigin(),bigLense)
+    optEnv.addOpticalObject(new Plane(-7.5,5,2.5))
     sunVector = randomSunDirection()
     optEnv.addOpticalObject(new SunnySky(sunVector))
+}
+
+function setBigLense(cam) {
+    const lenseRadius = frame1LenseRadius.value()
+    const lenseCenterOffset = frame1LenseDistance.value()+lenseRadius
+    const lenseCenter = cam.getOrigin().add(cam.getDirection().normalized().scalarMult(lenseCenterOffset))
+    const lenseSphere = new RefractiveSphere(lenseCenter,lenseRadius,new Color(),frame1LenseIndex.value())
+    optEnv.addOpticalObject(lenseSphere)
+    return lenseSphere
+}
+
+function initRandomShapes(camOrigin,bigLense) {
+    if (!(camOrigin instanceof Vector3D) || !(bigLense instanceof RefractiveSphere)) {
+        throw 'unexpected parameter types'
+    }
+    const TARGET_SHAPE_COUNT = 25
+    let rejectCount = 0
+    const shapeTempArray = []
+    const MIN_SPACE = 0.2
+    const SHAPE_NAMES = 'comp;comp;icos;icos;spht;spht;cube;tetr;dode;octa'.split(';')
+    while (shapeTempArray.length < TARGET_SHAPE_COUNT) {
+        let candidateObject = {
+            center: randomCenter()
+        }
+        let rando = Math.floor(Math.random()*SHAPE_NAMES.length)
+        candidateObject.type = SHAPE_NAMES[rando]
+        candidateObject.radius = 1
+        let hasIntersect = false
+        shapeTempArray.forEach(otherShape=>{
+            if (!hasIntersect) {
+                if (otherShape.center.subt(candidateObject.center).magn() <= 
+                        otherShape.radius+candidateObject.radius+MIN_SPACE) {
+                    hasIntersect = true
+                }
+            }
+        })
+        if (!hasIntersect && candidateObject.center.subt(bigLense.center).magn() <= candidateObject.radius+bigLense.radius+MIN_SPACE) {
+            hasIntersect = true
+        }
+        if (hasIntersect) {
+            rejectCount++
+        } else {
+            shapeTempArray.push(candidateObject)
+        }
+    }
+    shapeTempArray.forEach(shape=>{
+        const { type } = shape
+        let obj = null
+        switch (type) {
+            case 'comp':
+                obj = new Compound12Sphere(shape.center,shape.radius*0.45,shape.radius*0.55,
+                    Color.colorFromHex(GOLD_HEX_COLOR))
+                break;
+            case 'icos':
+                obj = new ReflectiveIcosahedron(shape.center,shape.radius,
+                    Color.colorFromHex(ICOSA_HEX_COLOR))
+                break;
+            case 'spht':
+                obj = new RefractiveSphere(shape.center,shape.radius,randomColor(),1.5)
+                break;
+            case 'cube':
+                obj = new ReflectiveCube(shape.center,shape.radius,
+                    Color.colorFromHex(CUBE_HEX_COLOR))
+                break;
+            case 'tetr':
+                obj = new ReflectiveTetrahedron(shape.center,shape.radius,
+                    Color.colorFromHex(TETRA_HEX_COLOR))
+                break;
+            case 'dode':
+                obj = new ReflectiveDodecahedron(shape.center,shape.radius,
+                    Color.colorFromHex(DODECA_HEX_COLOR))
+                break;
+            case 'octa':
+                obj = new ReflectiveOctahedron(shape.center,shape.radius,
+                    Color.colorFromHex(OCTA_HEX_COLOR))
+                break;
+            default:
+                console.error('unexpected shape = ', type, ' - ignored')
+                // obj remains null
+        }
+        if (obj) {
+            optEnv.addOpticalObject(obj)
+        }
+    })
+}
+
+function randomCenter() {
+    let arr = []
+    for (let i=0;i<3;i++) {
+        arr.push((Math.random()-0.5)*10)
+    }
+    let ctr = new Vector3D(arr)
+    return ctr
+}
+
+function randomColor(lo=0.47,hi=0.94) {
+    let arr = []
+    for (let i=0;i<3;i++) {
+        arr.push(Math.random()*(hi-lo)+lo)
+    }
+    return new Color(arr)
 }
 
 function randomSunDirection() {
@@ -278,7 +358,6 @@ function randomSunDirection() {
         const y = Math.random()*2-1
         const z = Math.random()*2-1
         if (z >= 0 &&
-            y > 0.6 &&
             x*x + y*y + z*z <= 1 &&
             (x != 0 || y != 0 || z != 0)) {
                 return new Vector3D(x,y,z)
@@ -288,18 +367,15 @@ function randomSunDirection() {
 
 function randomCameraPosition() {
     const LO_DIST = 5
-    const HI_DIST = 8
-    const LO_LAT = -10
-    const HI_LAT = 45
-    const LO_LON = 65
-    const HI_LON = 115
-    let longitude = Math.random()*(HI_LON-LO_LON)+LO_LON
-    longitude *= Math.PI/180
+    const HI_DIST = 15
+    const LO_LAT = 3
+    const HI_LAT = 40
+    const longitude = (Math.random()-0.5)*2*Math.PI
     let latitude = Math.random()**2 // **2 skews towards lower values
     latitude = latitude*(HI_LAT-LO_LAT)+LO_LAT  // camera elevation angle - between LO_LAT and HI_LAT degrees
     latitude *= Math.PI/180 // converted to radians
     let distance = Math.sqrt(Math.random())  // sqrt skews towards higher values, still between 0 and 1
-    distance = distance*(HI_DIST-LO_DIST)+LO_DIST  // camera distance - between LO_DIST and HI_DIST
+    distance *= (HI_DIST-LO_DIST)+LO_DIST  // camera distance - between LO_DIST and HI_DIST
     const z = Math.sin(latitude)*distance 
     const cosDist = Math.cos(latitude)*distance
     const x = Math.cos(longitude)*cosDist
@@ -308,24 +384,14 @@ function randomCameraPosition() {
     return vec
 }
 
-function getRecursionLevelSelection() {
-    if (!selectRecursionElem) {
-        return DEFAULT_RECURSION
-    }
-    const strVal = selectRecursionElem.value
-    try {
-        const val = parseInt(strVal)
-        return Math.round(Math.max(0,Math.min(9,val)))
-    } catch (err) {
-        console.error('parse error from recursion selection', err)
-        return DEFAULT_RECURSION
-    }
+function formatInputs() {
+    formatFrame1Inputs()
 }
 
-function updateRecursionStats(level) {
-    const tetraCount = 4**level
-    const triangleCount = tetraCount*4
-    const statsString = 'Tetahedrons rendered: ' + tetraCount + ', ' +
-        'Triangles rendered: ' + triangleCount
-    statisticsParagraphElem.textContent = statsString
+function formatFrame1Inputs() {
+    frame1FocalLength = new NumberInputReplacer("fr1focus")
+    frame1ApertureDiameter = new NumberInputReplacer("fr1apertdiam")
+    frame1LenseDistance = new NumberInputReplacer("fr1lensedist")
+    frame1LenseRadius = new NumberInputReplacer("fr1lenserad")
+    frame1LenseIndex = new NumberInputReplacer("fr1lenseidx")
 }

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ray by Day JS - Lenses and Filters</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="icon" type="image/icon" href="../assets/images/icon/ray-trace-icon.ico">
+</head>
+<body>
+    <h1 class="subduedh1">Ray by Day JS</h1>
+    <h2><span class="dayh2">Day 28</span> - Lenses and Filters</h2>
+    <div class="imgdiv">
+        <p id="imgpara">Image creation in progress...</p>
+        <div class="progress-container">
+            <div class="progress-bar" id="statbar">
+                <p id="statbarpara">Status: Pending</p>
+            </div>
+        </div>
+        <p id="statsp"></p>
+        <p id="dur"></p>
+        <div class="fr1inputs">
+            <input id="fr1focus" type="number" min="0.1" max="1e10" value="25"lbl="Focal Distance"/>
+            <input id="fr1apertdiam" type="number" min="0" max="5" value="0.5" size="10" lbl="Aperture"/>
+            <input id="fr1lensedist" type="number" min="0.001" max="5" value="1" lbl="Distance to Lense"/>
+            <input id="fr1lenserad" type="number" min="1.5" max="20" value="5" lbl="Spherical Lense Radius"/>
+            <input id="fr1lenseidx" type="number" min="1.01" max="25" value="1.5" lbl="Spherical Lense Index of Refraction"/>
+        </div>
+        <p>
+            <button id="rptbtn" class="btndisabled" disabled>Compose and Render Low-Quality Image</button>
+            <button id="lowqbtn" class="btndisabled" disabled>Render LOW-Quality</button>
+            <button id="highqbtn" class="btndisabled" disabled>Render HIGH-Quality</button>
+            <button id="savebtn" class="btndisabled" disabled>Save Image</button>
+        </p>
+    </div>
+    <div class="hopdiv">
+        <a href="./day26.html">Prev</a>
+        <a href="../index.html">Home</a>
+        <a href="./day28.html">Next</a>
+    </div>
+    <script src="../assets/js/day28/script.js" type="module"></script>
+</body>
+</html>
