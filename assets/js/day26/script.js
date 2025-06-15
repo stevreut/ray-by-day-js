@@ -119,7 +119,7 @@ function setImageDimensions(isHiQuality) {
         }
     }
     targetImageHeight = targetImageWidth
-    pixelSize = (isHiQuality?1:(targetImageWidth<=512?1:3))
+    pixelSize = (isHiQuality?1:(targetImageWidth<=300?1:3))
     antiAlias = 3
 }
 
@@ -222,8 +222,8 @@ function initEnvironment() {
         cameraDirection
     )
     optEnv.setCamera(cameraRay,0.25,cameraOriginDistance)
-    initShapeMatrix(6)
-    optEnv.addOpticalObject(new ReflectiveSphere(new Vector3D(0,-32,0),30,Color.colorFromHex("#998877")))
+    initShapeMatrix(4)
+    optEnv.addOpticalObject(new ReflectiveSphere(new Vector3D(0,-52,0),50,Color.colorFromHex("#998877")))
     optEnv.addOpticalObject(new Plane(-10,10,6,Color.colorFromHex("#666a6f")))
     sunVector = randomSunDirection()
     optEnv.addOpticalObject(new SunnySky(sunVector))
@@ -272,14 +272,13 @@ function randomSunDirection() {
 function randomCameraPosition() {
     const LO_DIST = 5
     const HI_DIST = 8
-    const LO_LAT = -10
-    const HI_LAT = 20
+    const LO_LAT = -33
+    const HI_LAT = 0
     const LO_LON = 75
     const HI_LON = 105
     let longitude = Math.random()*(HI_LON-LO_LON)+LO_LON
     longitude *= Math.PI/180
-    let latitude = Math.random()**2 // **2 skews towards lower values
-    latitude = latitude*(HI_LAT-LO_LAT)+LO_LAT  // camera elevation angle - between LO_LAT and HI_LAT degrees
+    let latitude = Math.random()*(HI_LAT-LO_LAT)+LO_LAT  // camera elevation angle - between LO_LAT and HI_LAT degrees
     latitude *= Math.PI/180 // converted to radians
     let distance = Math.sqrt(Math.random())  // sqrt skews towards higher values, still between 0 and 1
     distance = distance*(HI_DIST-LO_DIST)+LO_DIST  // camera distance - between LO_DIST and HI_DIST

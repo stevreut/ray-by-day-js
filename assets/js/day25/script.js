@@ -273,7 +273,7 @@ function initEnvironment() {
 }
 
 function initRandomShapes() {
-    const TARGET_SHAPE_COUNT = 25
+    const TARGET_SHAPE_COUNT = 15
     let rejectCount = 0
     const shapeTempArray = []
     const MIN_SPACE = 0.2

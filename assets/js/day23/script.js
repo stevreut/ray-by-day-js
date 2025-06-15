@@ -3,7 +3,6 @@ import Ray from "../day20/ray.js"
 import Color from "../day20/color.js"
 import ReflectiveSphere from "../day20/reflective-sphere.js"
 import CanvasGridder from "../day20/canvas-gridder.js"
-import Sphere from "../day20/sphere.js"
 import BiVariantGrapher from "../day22/bivargrapher.js"
 import Sky from "../day22/sky.js"
 import OpticalEnvironment from "../day22/optical-env.js"
@@ -18,15 +17,13 @@ const STATUS_BAR_ID = 'statbar'
 const DURATION_TEXT_ID = 'dur'
 const REPEAT_BUTTON_ID = 'rptbtn'
 
-const STATUS_CONTAINER_CLASS = 'progress-container'
-
 const DEFAULT_IMAGE_WIDTH = 1024
 let targetImageWidth = null
 let targetImageHeight = null
 let PIXEL_SIZE = 2
 const ANTI_ALIAS = 5
 
-const universalOrigin = new Vector3D(-17,5,7.5)
+const universalOrigin = new Vector3D(-13.6,4,6)
 
 let statBarElem = null
 let goAgainButton = null
@@ -156,7 +153,7 @@ function initEnvironment() {
         universalOrigin,
         universalOrigin.scalarMult(-1)
     )
-    optEnv.setCamera(cameraRay,0.5,universalOrigin.magn())
+    optEnv.setCamera(cameraRay,0.3,universalOrigin.magn())
     initRandomShapes()
     optEnv.addOpticalObject(new Plane(-7.5,12,2))
     optEnv.addOpticalObject(new Sky())
@@ -171,7 +168,7 @@ function f(x,y) {
 }
 
 function initRandomShapes() {
-    const TARGET_SHAPE_COUNT = 25
+    const TARGET_SHAPE_COUNT = 12
     const lightV = new Vector3D(0,0,1)
     let rejectCount = 0
     const shapeTempArray = []
@@ -181,17 +178,15 @@ function initRandomShapes() {
             center: randomCenter()
         }
         let rando = Math.random();
-        if (rando < 0.3) {
+        if (rando < 0.6) {
             candidateObject.type = 'icos'
-        } else if (rando < 0.7) {
+        } else if (rando < 0.85) {
             candidateObject.type = 'spht'
-        } else if (rando < 0.9) {
-            candidateObject.type = 'sphm'
         } else {
-            candidateObject.type = 'sphf'
+            candidateObject.type = 'sphm'
         }
         if (candidateObject.type === 'icos') {
-            candidateObject.radius = Math.random()*1.4+1
+            candidateObject.radius = Math.random()*0.8+0.7
         } else {
             candidateObject.radius = 1
         }
@@ -216,16 +211,13 @@ function initRandomShapes() {
         let obj = null
         switch (type) {
             case 'icos':
-                obj = new ReflectiveIcosahedron(shape.center,shape.radius,randomColor(0.5,0.6))
+                obj = new ReflectiveIcosahedron(shape.center,shape.radius,randomColor(0.6,0.8))
                 break;
             case 'sphm':
                 obj = new ReflectiveSphere(shape.center,shape.radius,randomColor(0.5,0.6))
                 break;
             case 'spht':
                 obj = new RefractiveSphere(shape.center,shape.radius,randomColor(),1.5)
-                break;
-            case 'sphf':
-                obj = new Sphere(shape.center,shape.radius,randomColor(0.7,0.85),straightUp)
                 break;
             default:
                 console.error('unexpected shape = ', type, ' - ignored')
