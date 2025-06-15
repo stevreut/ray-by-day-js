@@ -264,14 +264,14 @@ function initRandomShapes(camOrigin,bigLense) {
     if (!(camOrigin instanceof Vector3D) || !(bigLense instanceof RefractiveSphere)) {
         throw 'unexpected parameter types'
     }
-    const TARGET_SHAPE_COUNT = 25
+    const TARGET_SHAPE_COUNT = 8
     let rejectCount = 0
     const shapeTempArray = []
     const MIN_SPACE = 0.2
-    const SHAPE_NAMES = 'comp;comp;icos;icos;spht;spht;cube;tetr;dode;octa'.split(';')
+    const SHAPE_NAMES = 'comp;comp;icos;icos;spht;spht;dode;cube'.split(';')
     while (shapeTempArray.length < TARGET_SHAPE_COUNT) {
         let candidateObject = {
-            center: randomCenter()
+            center: randomCenter(camOrigin,bigLense)
         }
         let rando = Math.floor(Math.random()*SHAPE_NAMES.length)
         candidateObject.type = SHAPE_NAMES[rando]
@@ -335,12 +335,15 @@ function initRandomShapes(camOrigin,bigLense) {
     })
 }
 
-function randomCenter() {
+function randomCenter(camOrigin,lense) {
+    const camToLenseDir = lense.center.subt(camOrigin).normalized()
+    const rangeCenter = lense.center.add(camToLenseDir.scalarMult(lense.radius+5))
     let arr = []
     for (let i=0;i<3;i++) {
-        arr.push((Math.random()-0.5)*10)
+        arr.push((Math.random()-0.5)*7)
     }
     let ctr = new Vector3D(arr)
+    ctr = ctr.add(rangeCenter)
     return ctr
 }
 
