@@ -10,7 +10,7 @@ import Plane from "../day22/plane.js"
 import RefractiveSphere from "../day22/refractive-sphere.js"
 import BiVariantGrapher from "../day22/bivargrapher.js"
 
-
+import SettingsInputBox from "../utils/settings-input-box.js"
 
 const IMG_PARA_ID = 'imgpara'
 const GENERATION_BUTTON_ID = 'genbtn'
@@ -22,8 +22,6 @@ const RANDOM_ENV_BUTTON_ID = 'randbtn'
 
 const FRAME_STATUS_ID = 'framestat'
 const SETTINGS_ID = 'settings'
-
-const SETTINGS_PREFIX = 'settx'
 
 let ACTUAL_WIDTH = 600
 let ACTUAL_HEIGHT = 450
@@ -50,6 +48,8 @@ let canvasArray = []
 
 let timer = null 
 let currentFrame = 0
+
+let settingsInputBox = null
 
 onload = () => {
     try {
@@ -367,101 +367,68 @@ function randomColor(lo=0.47,hi=0.94) {
 }
 
 function renderSettingsInputsOnPage() {
-    const REQ_INT_LIT = 'requireint'
-    if (!settingsDiv) {
-        throw 'settings div has not been created'
-    }
-    const tbl = document.createElement("table")
-    const thead = document.createElement("thead")
-    const thRow = document.createElement("tr")
-    "Setting;Allowed Range;Value".split(";").forEach(str=>{
-        const th = document.createElement("th")
-        th.textContent = str
-        thRow.appendChild(th)
-    })
-    thead.appendChild(thRow)
-    tbl.appendChild(thead)
-    const tbody = document.createElement("tbody")
-    //
-    addInputRow('Width (pixels)','imgwid',10,1024,ACTUAL_WIDTH)
-    addInputRow('Height (pixels)','imghgt',10,768,ACTUAL_HEIGHT)
-    addInputRow('Virtual pixel size','virtpix',1,300,PIXEL_SIZE)
-    addInputRow('Anti-alias factor','aalias',1,5,ANTI_ALIAS)
-    addInputRow('Frame count','framecount',5,1000,FRAME_COUNT)
-    addInputRow('Frame duration (seconds)','framedur',0.01,10,FRAME_INTERVAL)
-    //
-    settingsDiv.appendChild(tbl)
-    function addInputRow(lbl,id,lo,hi,val) {
-        const tr = document.createElement("tr")
-        const td1 = document.createElement("td")
-        td1.textContent = lbl
-        tr.appendChild(td1)
-        const td2 = document.createElement("td")
-        td2.textContent = lo + " to " + hi
-        tr.appendChild(td2)
-        const td3 = document.createElement("td")
-        const inp = document.createElement("input")
-        inp.value = val
-        inp.setAttribute("id",SETTINGS_PREFIX+id)
-        inp.setAttribute("type","number")
-        inp.setAttribute("min",lo)
-        inp.setAttribute("max",hi)
-        const isInt = Number.isInteger(lo) && Number.isInteger(hi)
-        inp.setAttribute(REQ_INT_LIT,(isInt))
-        td3.appendChild(inp)
-        tr.appendChild(td3)
-        tbody.appendChild(tr)
-
-    }
-    tbl.appendChild(tbody)
-
-    tbody.addEventListener('change',(event)=>{
-        const targ = event.target
-        if (targ.id && targ.id.startsWith(SETTINGS_PREFIX)) {
-            const sansPrefixId = targ.id.slice(SETTINGS_PREFIX.length)
-            const mustBeInt = (targ.getAttribute(REQ_INT_LIT) == 'true')
-            let value = 0
-            if (mustBeInt) {
-                try {
-                    value = Math.round(parseInt(targ.value))
-                } catch (err) {
-                    console.error(err)
-                    value = parseInt(targ.getAttribute("min"))
-                }
-            } else {
-                try {
-                    value = parseFloat(targ.value)
-                } catch (err) {
-                    console.error(err)
-                    value = parseInt(targ.getAttribute("min"))
-                }
-            }
-            targ.value = value
-            switch (sansPrefixId) {
-                case 'imgwid':
-                    ACTUAL_WIDTH = value
-                    break;
-                case 'imghgt':
-                    ACTUAL_HEIGHT = value
-                    break;
-                case 'virtpix':
-                    PIXEL_SIZE = value
-                    break;
-                case 'aalias':
-                    ANTI_ALIAS = value
-                    break;
-                case 'framecount':
-                    FRAME_COUNT = value
-                    break;
-                case 'framedur':
-                    FRAME_INTERVAL = value
-                    break;
-                default:
-                    console.error ('unexpected id ignored: ', sansPrefixId)
-            }
-        } else {
-            console.error('trapped targ does not start with ' + SETTINGS_PREFIX + ':', targ)
+    const inputList = [
+        {
+            id: 'imgwid',
+            label: 'Width (pixels)',
+            min: 10, max: 1024,
+            value: ACTUAL_WIDTH,
+            intreq: true
+        },
+        {
+            id: 'imghgt',
+            label: 'Height (pixels)',
+            min: 10, max: 768,
+            value: ACTUAL_HEIGHT,
+            intreq: true
+        },
+        { 
+            id: 'virtpix',
+            label: 'Virtual pixel size',
+            min: 1, max: 300,
+            value: PIXEL_SIZE,
+            intreq: true
+        },
+        {
+            id: 'aalias',
+            label: 'Anti-alias factor',
+            min: 1, max: 5,
+            value: ANTI_ALIAS,
+            intreq: true
+        },
+        {
+            id: 'framecount',
+            label: 'Frame count',
+            min: 5, max: 1000,
+            value: FRAME_COUNT,
+            intreq: true
+        },
+        {
+            id: 'framedur',
+            label: 'Frame duration (seconds)',
+            min: 0.01, max: 10,
+            value: FRAME_INTERVAL
         }
-
+    ]
+    settingsInputBox = new SettingsInputBox(
+        SETTINGS_ID,inputList,true
+    )
+    settingsDiv.appendChild(settingsInputBox.getTable())
+    settingsDiv.addEventListener("change",(event)=>{
+        if (event.target.id && event.target.id.startsWith(SETTINGS_ID)) {
+            const shortID = event.target.id.slice(SETTINGS_ID.length)
+            const value = settingsInputBox.get(shortID)
+            switch (shortID) {
+                case 'imgwid' : ACTUAL_WIDTH = value; break;
+                case 'imghgt' : ACTUAL_HEIGHT = value; break;
+                case 'virtpix' : PIXEL_SIZE = value; break;
+                case 'aalias' : ANTI_ALIAS = value; break;
+                case 'framecount': FRAME_COUNT = value; break;
+                case 'framedur' : FRAME_INTERVAL = value; break;
+                default:
+                    console.error('unexpected ID ignoroed ', shortId)
+            }
+        }
     })
 }
+
