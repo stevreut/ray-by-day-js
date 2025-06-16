@@ -1,7 +1,7 @@
 import CodeExtractor from "./code-extractor.js"
 
 class CodeFormatter {
-    formatTitledExcerptElement(title,contentStr,doShiftLeft=true) {
+    formatTitledExcerptElement(title,contentStr,doShiftLeft=true,codeType) {
         const outerDiv = document.createElement("div")
         outerDiv.className = "titled-code"
         const titleDiv = document.createElement("div")
@@ -15,6 +15,7 @@ class CodeFormatter {
         const preElem = document.createElement("pre")
         const codeElem = document.createElement("code")
         codeElem.textContent = ((doShiftLeft)?this.shiftLeft(contentStr):contentStr)
+        codeElem.innerHTML = this.formatComments(codeElem.innerHTML,codeType)
         preElem.appendChild(codeElem)
         contentDiv.appendChild(preElem)
         outerDiv.appendChild(contentDiv)
@@ -41,6 +42,38 @@ class CodeFormatter {
             strLines = strLines.slice(0,strLines.length-1)
         }
         return newStr
+    }
+    formatComments(htmlContent,codeType) {
+        // NOTE: Will not handle complex cases such as commenting embedded
+        // within a quoted string, etc.
+        if (typeof codeType === 'string') {
+            codeType = codeType.trim().toLowerCase()
+            if (codeType === '') {
+                codeType = 'js'
+            } else if (codeType === 'none') {
+                return htmlContent
+            }
+        } else {
+            codeType = 'js'
+        }
+        const replacementSpan = '<span class="comment">$&</span>'
+        switch (codeType) {
+            case 'js' :
+                const commentRegexJs = /((?<!:)\/\/.*)|(\/\*[\s\S]*?\*\/)/g;
+                const newContentJs = htmlContent.replace(commentRegexJs,replacementSpan)
+                return newContentJs
+            case 'css' :
+                const commentRegexCss = /(\/\*[\s\S]*?\*\/)/g;
+                const newContentCss = htmlContent.replace(commentRegexCss,replacementSpan)
+                return newContentCss
+            case 'html','xml','svg' :
+                const commentRegexXml = /&lt;!--([\s\S]*?)--&gt;/g
+                const newContentXml = htmlContent.replace(commentRegexXml,replacementSpan)
+                return newContentXml
+            default:
+                console.error('unexpected codeType "' + codeType + '" ignored')
+                return htmlContent
+        }
     }
 }
 

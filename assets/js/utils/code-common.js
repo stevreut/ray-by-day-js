@@ -12,9 +12,14 @@ class CommonCodeUtility {
     getCodeFormatter() {
         return this.formatter
     }
-    async insertTitledCodeAtPreexistingElement(elemOrId,codeFileName,firstLine,lastLine,title,doLeftShift) {
+    async insertTitledCodeAtPreexistingElement(elemOrId,codeFileName,firstLine,lastLine,title,doLeftShift,codeType) {
         let codex = this.extractor
         let codef = this.formatter
+        if (typeof codeType === 'string') {
+            codeType = codeType.trim().toLowerCase()
+        } else {
+            codeType = 'js'
+        }
         let element = null
         if (elemOrId instanceof HTMLElement) {
             element = elemOrId
@@ -33,7 +38,7 @@ class CommonCodeUtility {
             console.error('error retrieving code lines from ', codeFileName)
             return
         }
-        element.replaceWith(codef.formatTitledExcerptElement(title,codeLinesAsString,doLeftShift))
+        element.replaceWith(codef.formatTitledExcerptElement(title,codeLinesAsString,doLeftShift,codeType))
     }
 }
 

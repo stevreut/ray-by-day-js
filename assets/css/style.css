@@ -1,3 +1,6 @@
+:root {
+    --code-bg-color: #f8f9ff;
+}
 * {
     color: #444;
     background-color: #fff;
@@ -241,7 +244,7 @@ label {
 }
 code, pre {
     font-family: 'Courier New', Courier, monospace;
-    color: #6363cd;
+    color: #22d;
 }
 em {
     color: #0087ff;
@@ -275,24 +278,32 @@ em {
     margin: 5mm 0;
 }
 .titled-code-title {
-    color: #004;
+    /* color: #004; */
     background-color: #e5edff;
     margin: 0;
     padding: 1.5mm 3mm;
     border-bottom: solid 1px #94b5be;
 }
 .titled-code-title * {
+    color: #6060c6;
+    font-weight: bold;
     background-color: inherit;
 }
 .titled-code-exc {
-    color: #448;
-    background-color: #f8f9ff;
+    /* color: #f00 important; TODO #448; */
+    background-color: var(--code-bg-color);
     margin: 0;
     padding: 1.5mm 5mm;
     overflow-x: scroll;
 }
-.titled-code-exc * {
-    background-color: inherit;
+.titled-code-exc code, .titled-code-exc pre {
+    color: #1b6be2;
+    background-color: var(--code-bg-color);
+}
+.titled-code-exc .comment {
+    color: #8c8c8c;
+    background-color: var(--code-bg-color);
+    font: inherit;
 }
 .code-exc {
     border: solid 2px #9eadbd;
@@ -300,7 +311,7 @@ em {
     overflow: hidden;
     margin: 5mm 0;
     color: #448;
-    background-color: #f8f9ff;
+    background-color: var(--code-bg-color);
     margin: 0;
     padding: 1.5mm;
     overflow-x: scroll;
