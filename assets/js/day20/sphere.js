@@ -20,8 +20,8 @@ class Sphere extends OpticalObject {
         return this.rayDistToSphere(ray)
     }
 
-    handle(ray) {
-        const dist = this.rayDistToSphere(ray)  // TODO - how to eliminate duplicate calculation?
+    handle(ray, interceptDistance = null) {
+        const dist = interceptDistance ?? this.rayDistToSphere(ray)  // Use passed distance if available
         if (dist === null || dist <= 0) {
             return ray.color
         }

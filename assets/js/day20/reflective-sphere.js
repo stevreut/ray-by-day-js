@@ -7,8 +7,8 @@ class ReflectiveSphere extends Sphere {
         super(center,radius,color,new Vector3D(1,1,1))  // TODO - need to get lightV out of Sphere class
     }
     // interceptDistance() inherits from Sphere without alteration
-    handle(ray) {
-        let dist = this.rayDistToSphere(ray)  // TODO - how to eliminate duplicate calculation?
+    handle(ray, interceptDistance = null) {
+        const dist = interceptDistance ?? this.rayDistToSphere(ray)  // Use passed distance if available
         if (dist === null || dist <= 0) {
             return ray.color
         }

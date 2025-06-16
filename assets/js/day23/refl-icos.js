@@ -93,10 +93,10 @@ class ReflectiveIcosahedron extends OpticalObject {
         }
         return leastDist
     }
-    handle(ray) {
-        const dist = this.interceptDistance(ray)  // TODO - redundant, plus using only for side effect
+    handle(ray, interceptDistance = null) {
+        const dist = interceptDistance ?? this.interceptDistance(ray)  // Use passed distance if available
         if (this.leastDistIdx !== null && this.leastDistIdx >= 0 && this.leastDistIdx < this.triangles.length) {
-            return this.triangles[this.leastDistIdx].handle(ray)
+            return this.triangles[this.leastDistIdx].handle(ray, dist)
         } else {
             console.error('icos leastDistIdx not found')
             return ray // unaltered

@@ -53,7 +53,7 @@ class OpticalEnvironment {
                 if (count > 10) {
                     done = true
                 }
-                let result = leastDistObj.handle(ray)
+                let result = leastDistObj.handle(ray, leastDist)
                 if (result instanceof Ray) {
                     if (done) {
                         return result.color

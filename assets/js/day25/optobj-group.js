@@ -29,13 +29,13 @@ class OpticalObjectGroup extends OpticalObject {
         const { leastDist } = this.env.getLeastDistanceObject(ray)
         return leastDist
     }
-    handle (ray) {
-        const { leastDist, leastDistObj } = this.env.getLeastDistanceObject(ray)  // TODO - figure out how to remove this redundancy
+    handle(ray, interceptDistance = null) {
+        const { leastDist, leastDistObj } = this.env.getLeastDistanceObject(ray)
         if (leastDist === null || leastDistObj === null) {
-            console.error ('unexpected null least dist obj on handle - continuing')
+            console.error('unexpected null least dist obj on handle - continuing')
             return null
         }
-        return leastDistObj.handle(ray)
+        return leastDistObj.handle(ray, leastDist)
     }
     #withinEnvelope(ray) {
         // Note that this version varies slightly from Sphere.rayDistToSphere()

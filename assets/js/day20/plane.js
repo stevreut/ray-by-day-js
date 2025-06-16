@@ -30,7 +30,7 @@ class Plane extends OpticalObject {
         }
         return mult*dir.magn()
     }
-    handle(ray) {
+    handle(ray, interceptDistance = null) {
         if (!(ray instanceof Ray)) {
             throw 'attempt to handle() on non-Ray'
         }
@@ -41,7 +41,7 @@ class Plane extends OpticalObject {
         }
         const org = ray.getOrigin()
         const zOrg = org.getZ()
-        const mult = (this.level-zOrg)/zDir
+        const mult = interceptDistance !== null ? interceptDistance / dir.magn() : (this.level-zOrg)/zDir
         if (mult <= 0) {
             return ray.color
         }
