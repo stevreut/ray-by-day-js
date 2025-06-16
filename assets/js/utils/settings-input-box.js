@@ -50,9 +50,13 @@ class SettingsInputBox {
         lineItem.id = fullId
         if (typeof min !== 'undefined') {
             lineItem.min = this.#interpretNumeric(min)
+        } else {
+            lineItem.min = Number.NEGATIVE_INFINITY
         }
         if (typeof max !== 'undefined') {
             lineItem.max = this.#interpretNumeric(max)
+        } else {
+            lineItem.max = Number.POSITIVE_INFINITY
         }
         lineItem.val = this.#interpretNumeric(value)
         let stepNum = this.#interpretNumeric(step)

@@ -18,6 +18,8 @@ import ReflectiveDodecahedron from "../day25/refl-dodeca.js"
 import Compound12Sphere from "../day25/compound-12-sphere.js"
 
 import { NumberInputReplacer } from "../utils/input-formatters.js"
+// import SettingsImportBox from "../utils/settings-input-box.js"
+import SettingsInputBox from "../utils/settings-input-box.js"
 
 const IMG_PARA_ID = 'imgpara'
 const STATUS_BAR_ID = 'statbar'
@@ -27,6 +29,7 @@ const HI_QUALITY_BUTTON_ID = 'highqbtn'
 const LO_QUALITY_BUTTON_ID = 'lowqbtn'
 const SAVE_IMAGE_BUTTON_ID = 'savebtn'
 const IMG_CANVAS_ID = 'renderedcanvas'
+const SETTINGS_ID = 'fr1inputs'
 
 // Platonic solids colors in HTML hex values
 const TETRA_HEX_COLOR = "#c299cc"
@@ -52,11 +55,8 @@ let saveImageButton = null
 let imgParagraph = null
 let durationElem = null
 
-let frame1FocalLength = null
-let frame1ApertureDiameter = null
-let frame1LenseDistance = null
-let frame1LenseRadius = null
-let frame1LenseIndex = null
+let settingsInputBox1 = null
+let settingsDiv = null
 
 onload = async () => {
     try {
@@ -67,6 +67,7 @@ onload = async () => {
         saveImageButton = linkElement(SAVE_IMAGE_BUTTON_ID)
         durationElem = linkElement(DURATION_TEXT_ID)
         statBarElem = linkElement(STATUS_BAR_ID)
+        settingsDiv = linkElement(SETTINGS_ID)
         setImageDimensions(false)
         insertBlankCanvas()
         formatInputs()
@@ -241,8 +242,8 @@ function initEnvironment() {
         cameraOrigin,
         cameraDirection
     )
-    const apertRadius = frame1ApertureDiameter.value()/2
-    const focalDistance = frame1FocalLength.value()
+    const apertRadius = settingsInputBox1.get('apertdiam')/2
+    const focalDistance = settingsInputBox1.get('focus')
     optEnv.setCamera(cameraRay,apertRadius,focalDistance)
     const bigLense = setBigLense(cameraRay)
     initRandomShapes(cameraRay.getOrigin(),bigLense)
@@ -252,10 +253,10 @@ function initEnvironment() {
 }
 
 function setBigLense(cam) {
-    const lenseRadius = frame1LenseRadius.value()
-    const lenseCenterOffset = frame1LenseDistance.value()+lenseRadius
+    const lenseRadius = settingsInputBox1.get('lenserad')
+    const lenseCenterOffset = settingsInputBox1.get('lensedist')+lenseRadius
     const lenseCenter = cam.getOrigin().add(cam.getDirection().normalized().scalarMult(lenseCenterOffset))
-    const lenseSphere = new RefractiveSphere(lenseCenter,lenseRadius,new Color(),frame1LenseIndex.value())
+    const lenseSphere = new RefractiveSphere(lenseCenter,lenseRadius,new Color(),settingsInputBox1.get('lenseidx'))
     optEnv.addOpticalObject(lenseSphere)
     return lenseSphere
 }
@@ -392,9 +393,40 @@ function formatInputs() {
 }
 
 function formatFrame1Inputs() {
-    frame1FocalLength = new NumberInputReplacer("fr1focus")
-    frame1ApertureDiameter = new NumberInputReplacer("fr1apertdiam")
-    frame1LenseDistance = new NumberInputReplacer("fr1lensedist")
-    frame1LenseRadius = new NumberInputReplacer("fr1lenserad")
-    frame1LenseIndex = new NumberInputReplacer("fr1lenseidx")
+    settingsInputBox1 = new SettingsInputBox("fr1",[
+        {
+            id: 'focus',
+            label: 'Focal Distance',
+            min: 0.1,
+            value: 30
+        },
+        {
+            id: 'apertdiam',
+            label: 'Aperture',
+            min: 0, max: 5,
+            value: 0.5
+        },
+        {
+            id: 'lensedist',
+            label: 'Distance to Lense',
+            min: 1e-5, max: 5, value: 1
+        },
+        {
+            id: 'lenserad',
+            label: 'Spherical Lense Radius',
+            min: 1.5, max: 20, value: 5
+        },
+        {   
+            id: 'lenseidx',
+            label: 'Lense Index of Refraction',
+            min: 1.001, max: 25, value: 1.5
+        }
+    ],true)
+    settingsDiv.appendChild(settingsInputBox1.getTable())
+    
+    // frame1FocalLength = new NumberInputReplacer("fr1focus")
+    // frame1ApertureDiameter = new NumberInputReplacer("fr1apertdiam")
+    // frame1LenseDistance = new NumberInputReplacer("fr1lensedist")
+    // frame1LenseRadius = new NumberInputReplacer("fr1lenserad")
+    // frame1LenseIndex = new NumberInputReplacer("fr1lenseidx")
 }

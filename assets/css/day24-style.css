@@ -1,12 +1,12 @@
-#settings {
+.settings {
     border: solid 1px #ccc;
     display: inline-block;
     padding: 1cm;
 }
-#settings, #settings * {
+.settings, .settings * {
     background-color: #eee;
 }
-#settings input {
+.settings input {
     background-color: #f7ffff;
     color: #8bcdff;
     border: solid 2px #6cf;
@@ -15,32 +15,32 @@
     width: 8em;
     font-weight: bold;
 }
-#settings input:focus {
+.settings input:focus {
     color: #d106ff;
 }
-#settings input[requireint="false"] {  /* for floating point input */
+.settings input[requireint="false"] {  /* for floating point input */
     background-color: #f7f6ff;
     border: solid 2px #c266ff;
 
 }
-#settings th {
+.settings th {
     background-color: #fafafa;
     padding: 3mm;
     font-weight: bold;
     text-align: left;
 }
-#settings th:nth-child(3) {
+.settings th:nth-child(3) {
     text-align: right;
 }
-#settings td { 
+.settings td { 
     background-color: #fafafa;
     padding: 3mm;
 }
-#settings td:nth-child(2) {
+.settings td:nth-child(2) {
     color: #888;
     text-align: center;
 }
-#settings td:nth-child(3) {
+.settings td:nth-child(3) {
     padding: 0.5mm;
 }
 .settingsbox {
@@ -75,19 +75,19 @@ em {
 }
 
 @media screen and (max-width: 480px) {
-    #settings {
+    .settings {
         padding: 1.5mm;
     }
-    #settings input {
+    .settings input {
         border-width: 1px;
     }
-    #settings input[requireint="false"] {
+    .settings input[requireint="false"] {
         border-width: 1px;
     }
-    #settings th {
+    .settings th {
         padding: 1.5mm;
     }
-    #settings td { 
+    .settings td { 
         padding: 1mm;
     }
     .settingsbox {
