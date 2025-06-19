@@ -12,6 +12,7 @@ import Matrix3D from "./matrix3d.js"
 import ReflectiveIcosahedron from "./refl-icos.js"
 import ReflectiveCube from "./refl-cube.js"
 
+import GraphicStatusReportBar from "../utils/graph-status-bar.js"
 
 const IMG_PARA_ID = 'imgpara'
 const STATUS_BAR_ID = 'statbar'
@@ -30,13 +31,13 @@ let antiAlias = null
 
 let sunVector = null
 
-let statBarElem = null
 let goAgainButton = null
 let highQualityButton = null
 let lowQualityButton = null
 let saveImageButton = null
 let imgParagraph = null
 let durationElem = null
+let statusBar = null
 
 onload = async () => {
     try {
@@ -46,7 +47,7 @@ onload = async () => {
         lowQualityButton = linkElement(LO_QUALITY_BUTTON_ID)
         saveImageButton = linkElement(SAVE_IMAGE_BUTTON_ID)
         durationElem = linkElement(DURATION_TEXT_ID)
-        statBarElem = linkElement(STATUS_BAR_ID)
+        statusBar = new GraphicStatusReportBar(STATUS_BAR_ID);
         setImageDimensions(false)
         insertBlankCanvas()
         initEnvironment()
@@ -182,14 +183,7 @@ function insertBlankCanvas() {
 }
 
 function statusReporterFunction(frac) {
-    if (typeof frac !== 'number') {
-        console.error('status is non-number')
-    } else {
-        let p = Math.round(Math.max(0,Math.min(1,frac))*1000)/10
-        p = p.toFixed(1)
-        statBarElem.textContent = 'Status: ' + p + '% complete'
-        statBarElem.style.width = (p + '%')
-    }
+    statusBar.setProgress(frac);
 }
 
 async function saveImageAsDownload() {

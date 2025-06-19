@@ -8,6 +8,7 @@ import Sky from "../day22/sky.js"
 import OpticalEnvironment from "../day22/optical-env.js"
 import Plane from "../day22/plane.js"
 import RefractiveSphere from "../day22/refractive-sphere.js"
+import GraphicStatusReportBar from "../utils/graph-status-bar.js"
 
 import ReflectiveIcosahedron from "./refl-icos.js"
 
@@ -25,10 +26,10 @@ const ANTI_ALIAS = 5
 
 const universalOrigin = new Vector3D(-13.6,4,6)
 
-let statBarElem = null
 let goAgainButton = null
 let imgParagraph = null
 let durationElem = null
+let statusBar = null
 
 let buttonEnabled = true
 
@@ -38,7 +39,7 @@ onload = () => {
         imgParagraph = linkElement(IMG_PARA_ID)
         goAgainButton = linkElement(REPEAT_BUTTON_ID)
         durationElem = linkElement(DURATION_TEXT_ID)
-        statBarElem = linkElement(STATUS_BAR_ID)
+        statusBar = new GraphicStatusReportBar(STATUS_BAR_ID);
         setImageDimensions()
         insertBlankCanvas()
         makeImageIfEnabled()
@@ -135,14 +136,7 @@ function insertBlankCanvas() {
 }
 
 function statusReporterFunction(frac) {
-    if (typeof frac !== 'number') {
-        console.error('status is non-number')
-    } else {
-        let p = Math.round(Math.max(0,Math.min(1,frac))*1000)/10
-        p = p.toFixed(1)
-        statBarElem.textContent = 'Status: ' + p + '% complete'
-        statBarElem.style.width = (p + '%')
-    }
+    statusBar.setProgress(frac);
 }
 
 let optEnv = null

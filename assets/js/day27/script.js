@@ -7,7 +7,7 @@ import OpticalEnvironment from "../day22/optical-env.js"
 import Plane from "../day22/plane.js"
 import ReflectiveSphere from "../day20/reflective-sphere.js"
 import SunnySky from "../day25/sunny-sky.js"
-
+import GraphicStatusReportBar from "../utils/graph-status-bar.js"
 import SierpinskiTetrahedron from "./sierp-tetra.js"
 
 
@@ -40,9 +40,9 @@ let antiAlias = null
 
 let sunVector = null
 
-let statBarElem = null
 let selectRecursionElem = null
 let selectModeElem = null
+let statusBar
 let sphereColorPickerElem = null
 let sphereColorHexElem = null
 let goAgainButton = null
@@ -66,7 +66,7 @@ onload = async () => {
         saveImageButton = linkElement(SAVE_IMAGE_BUTTON_ID)
         durationElem = linkElement(DURATION_TEXT_ID)
         statisticsParagraphElem = linkElement(STATS_PARAGRAPH_ID)
-        statBarElem = linkElement(STATUS_BAR_ID)
+        statusBar = new GraphicStatusReportBar(STATUS_BAR_ID)
         setImageDimensions(false)
         insertBlankCanvas()
         initEnvironment()
@@ -215,14 +215,7 @@ function insertBlankCanvas() {
 }
 
 function statusReporterFunction(frac) {
-    if (typeof frac !== 'number') {
-        console.error('status is non-number')
-    } else {
-        let p = Math.round(Math.max(0,Math.min(1,frac))*1000)/10
-        p = p.toFixed(1)
-        statBarElem.textContent = 'Status: ' + p + '% complete'
-        statBarElem.style.width = (p + '%')
-    }
+    statusBar.setProgress(frac);
 }
 
 async function saveImageAsDownload() {

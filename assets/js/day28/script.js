@@ -8,7 +8,6 @@ import Plane from "../day22/plane.js"
 import RefractiveSphere from "../day22/refractive-sphere.js"
 
 import SunnySky from "../day25/sunny-sky.js"
-// import NightSky from "../day25/night-sky.js"
 
 import ReflectiveTetrahedron from "../day25/refl-tetra.js"
 import ReflectiveCube from "../day25/refl-cube.js"
@@ -17,9 +16,8 @@ import ReflectiveIcosahedron from "../day25/refl-icos.js"
 import ReflectiveDodecahedron from "../day25/refl-dodeca.js"
 import Compound12Sphere from "../day25/compound-12-sphere.js"
 
-import { NumberInputReplacer } from "../utils/input-formatters.js"
-// import SettingsImportBox from "../utils/settings-input-box.js"
 import SettingsInputBox from "../utils/settings-input-box.js"
+import GraphicStatusReportBar from "../utils/graph-status-bar.js"
 
 const IMG_PARA_ID = 'imgpara'
 const STATUS_BAR_ID = 'statbar'
@@ -57,6 +55,7 @@ let durationElem = null
 
 let settingsInputBox1 = null
 let settingsDiv = null
+let statusBar = null
 
 onload = async () => {
     try {
@@ -72,6 +71,7 @@ onload = async () => {
         insertBlankCanvas()
         formatInputs()
         initEnvironment()
+        statusBar = new GraphicStatusReportBar(statBarElem);
         await processImage(imgParagraph,durationElem)
         enableButton(lowQualityButton,false)
         goAgainButton.addEventListener('click',async ()=>{
@@ -203,14 +203,7 @@ function insertBlankCanvas() {
 }
 
 function statusReporterFunction(frac) {
-    if (typeof frac !== 'number') {
-        console.error('status is non-number')
-    } else {
-        let p = Math.round(Math.max(0,Math.min(1,frac))*1000)/10
-        p = p.toFixed(1)
-        statBarElem.textContent = 'Status: ' + p + '% complete'
-        statBarElem.style.width = (p + '%')
-    }
+    statusBar.setProgress(frac);
 }
 
 async function saveImageAsDownload() {

@@ -11,14 +11,14 @@ import OpticalEnvironment from "./optical-env.js"
 import Plane from "./plane.js"
 import RefractiveSphere from "./refractive-sphere.js"
 
+import GraphicStatusReportBar from "../utils/graph-status-bar.js"
+
 const IMG_PARA_ID = 'imgpara'
 const STATUS_BAR_ID = 'statbar'
 const DURATION_TEXT_ID = 'dur'
 const REPEAT_BUTTON_ID = 'rptbtn'
 const F_STOP_INPUT_ID = 'fstopin'
 const DEFAULT_F_STOP = 8
-
-const STATUS_CONTAINER_CLASS = 'progress-container'
 
 const DEFAULT_IMAGE_WIDTH = 800
 let targetImageWidth = null
@@ -29,7 +29,7 @@ const ANTI_ALIAS = 3
 let buttonEnabled = false
 
 let imgParagraph = null
-let statBarElem  = null
+let statusBar = null
 
 onload = () => {
     try {
@@ -37,7 +37,7 @@ onload = () => {
         let fStopInput = document.getElementById(F_STOP_INPUT_ID)
         let goAgainButton = document.getElementById(REPEAT_BUTTON_ID)
         let durationElem = document.getElementById(DURATION_TEXT_ID)
-        statBarElem = document.getElementById(STATUS_BAR_ID)
+        statusBar = new GraphicStatusReportBar(STATUS_BAR_ID);
         if (!imgParagraph) {
             throw 'no ' + IMG_PARA_ID + ' id found on page'
         }
@@ -170,14 +170,7 @@ function insertBlankCanvas() {
 }
 
 function statusReporterFunction(frac) {
-    if (typeof frac !== 'number') {
-        console.error('status is non-number')
-    } else {
-        let p = Math.round(Math.max(0,Math.min(1,frac))*1000)/10
-        p = p.toFixed(1)
-        statBarElem.textContent = 'Status: ' + p + '% complete'
-        statBarElem.style.width = (p + '%')
-    }
+    statusBar.setProgress(frac);
 }
 
 const universalOrigin = new Vector3D(10,-15,6)
