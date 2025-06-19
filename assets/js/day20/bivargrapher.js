@@ -2,7 +2,7 @@ import Gridder from "./gridder.js";
 import Color from "./color.js"
 
 class BiVariantGrapher {
-    constructor(gridder,width,height,pixelSize,pixelsPerUnit = 1,bvf,antiAlias = 1) {
+    constructor(gridder,width,height,pixelSize,pixelsPerUnit = 1,bvf,antiAlias = 1,statusReporter) {
         if (!(gridder instanceof Gridder)){
             throw 'not an instance of Gridder'
         }
@@ -34,6 +34,16 @@ class BiVariantGrapher {
             this.antiAliasOffset = (1-this.antiAlias)/2*this.antiAliasDelta
             this.antiAliasMultiplier = this.antiAlias**(-2)
         }
+        if (statusReporter) {
+            if (typeof statusReporter !== 'function') {
+                console.error('non-function for statusReporter, type = ', typeof statusReporter)
+                throw 'non-function for statusReporter'
+            }
+            this.usingReporter = true
+            this.statReporter = statusReporter
+        } else {
+            this.usingReporter = false
+        }
     }
     setFunction(bvf) {
         if (typeof bvf !== 'function') {
@@ -47,7 +57,7 @@ class BiVariantGrapher {
             throw 'function bvf did not return instance of Color on initial test'
         }
     }
-    drawGraph() {
+    async drawGraph() {
         if (!this.colorFunction) {
             throw 'function not defined'
         }
@@ -73,6 +83,13 @@ class BiVariantGrapher {
                 const pixelColor = avgColor.getPrimaryBytes()
                 this.gridder.putPixel(i,j,...pixelColor)
             }
+            if (this.usingReporter) {
+                this.statReporter(j/this.height)
+                await new Promise(resolve => requestAnimationFrame(resolve));
+            }
+        }
+        if (this.usingReporter) {
+            this.statReporter(1)  // 100% - i.e. complete
         }
         return this.gridder.getHTMLElement()
     }

@@ -8,8 +8,10 @@ import RefractiveSphere from "./refractive-sphere.js"
 import Plane from "./plane.js"
 import CanvasGridder from "./canvas-gridder.js"
 import Sphere from "./sphere.js"
+import GraphicStatusReportBar from "../utils/graph-status-bar.js"
 
 const IMG_PARA_ID = 'imgpara'
+const STATUS_BAR_ID = 'statbar'
 const DURATION_TEXT_ID = 'dur'
 const REPEAT_BUTTON_ID = 'rptbtn'
 
@@ -20,12 +22,14 @@ let targetImageHeight = null
 let buttonEnabled = false
 
 let imgParagraph = null
+let statusBar = null
 
 onload = () => {
     try {
         imgParagraph = document.getElementById(IMG_PARA_ID)
         let goAgainButton = document.getElementById(REPEAT_BUTTON_ID)
         let durationElem = document.getElementById(DURATION_TEXT_ID)
+        statusBar = new GraphicStatusReportBar(STATUS_BAR_ID);
         if (!imgParagraph) {
             throw 'no ' + IMG_PARA_ID + ' id found on page'
         }
@@ -33,8 +37,8 @@ onload = () => {
         if (!goAgainButton) {
             throw 'no ' + REPEAT_BUTTON_ID + ' id found on page'
         }
-        setTimeout(()=>{
-            processImage(imgParagraph,durationElem)
+        setTimeout(async ()=>{
+            await processImage(imgParagraph,durationElem)
             goAgainButton.disabled = false
             goAgainButton.classList.remove('btndisabled')
             buttonEnabled = true
@@ -44,8 +48,8 @@ onload = () => {
                 buttonEnabled = false
                 goAgainButton.disabled = true
                 goAgainButton.classList.add('btndisabled')
-                setTimeout(()=>{
-                    processImage(imgParagraph,durationElem)
+                setTimeout(async ()=>{
+                    await processImage(imgParagraph,durationElem)
                     goAgainButton.disabled = false
                     goAgainButton.classList.remove('btndisabled')
                     buttonEnabled = true
@@ -69,19 +73,23 @@ function setImageDimensions() {
     targetImageHeight = Math.round(targetImageWidth*0.75)
 }
 
-function processImage(imgParagraph,durationElem) {
+async function processImage(imgParagraph,durationElem) {
     initEnvironment()
     imgParagraph.innerHTML = ''
     const gridder = new CanvasGridder()
     const startTime = new Date()
     const grapher = new BiVariantGrapher(gridder,targetImageWidth,targetImageHeight,1,
-        Math.round(targetImageWidth*0.33),f,3) 
-    let canvasElem = grapher.drawGraph()
+        Math.round(targetImageWidth*0.33),f,3,statusReporterFunction) 
+    let canvasElem = await grapher.drawGraph()
     const finTime = new Date()
     const durationMs = finTime.getTime()-startTime.getTime()
     const durationSecs = durationMs/1000
     imgParagraph.appendChild(canvasElem)
     durationElem.textContent = 'Image generation duration: ' + durationSecs + ' seconds'
+}
+
+function statusReporterFunction(frac) {
+    statusBar.setProgress(frac);
 }
 
 const universalOrigin = new Vector3D(10,-15,15)

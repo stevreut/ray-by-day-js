@@ -8,7 +8,7 @@ import Sky from "../day22/sky.js"
 import OpticalEnvironment from "../day22/optical-env.js"
 import Plane from "../day22/plane.js"
 import RefractiveSphere from "../day22/refractive-sphere.js"
-import BiVariantGrapher from "../day22/bivargrapher.js"
+import BiVariantGrapher from "../day20/bivargrapher.js"
 
 import SettingsInputBox from "../utils/settings-input-box.js"
 

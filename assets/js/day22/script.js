@@ -5,7 +5,7 @@ import ReflectiveSphere from "../day20/reflective-sphere.js"
 import CanvasGridder from "../day20/canvas-gridder.js"
 import Sphere from "../day20/sphere.js"
 
-import BiVariantGrapher from "./bivargrapher.js"
+import BiVariantGrapher from "../day20/bivargrapher.js"
 import Sky from "./sky.js"
 import OpticalEnvironment from "./optical-env.js"
 import Plane from "./plane.js"
