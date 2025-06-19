@@ -26,14 +26,15 @@ class SierpinskiTetrahedron extends OpticalObject {
             )
         ]
     }
-    constructor(center,radius,level,color,option,optionColor) {
+    constructor(center,radius,level,color,option,mirroredColor,transparentColor) {
         if (!Number.isInteger(level) || level < 0 || level > 10) {
             throw 'invalid level parameter in new SierpinskiTetrahedron'
         }
         super()
         this.level = level
         this.option = option
-        this.optionColor = optionColor
+        this.mirroredColor = mirroredColor
+        this.transparentColor = transparentColor
         if (level <= 0) {
             this.innerObject = new ReflectiveTetrahedron(center,radius,color,null/*TODO*/)
         } else {
@@ -43,12 +44,12 @@ class SierpinskiTetrahedron extends OpticalObject {
             SierpinskiTetrahedron.FOUR_CORNERS.forEach(corner=>{
                 // Note RECURSION in populating objList
                 objList.push(new SierpinskiTetrahedron(center.add(corner.scalarMult(subRadius)),
-                    subRadius,subLevel,color,this.option,this.optionColor))
+                    subRadius,subLevel,color,this.option,this.mirroredColor,this.transparentColor))
             })
             if (option === 'sphm' || (option === 'both' && level%2 === 0)) {
-                objList.push(new ReflectiveSphere(center,subRadius*0.57,this.optionColor))
+                objList.push(new ReflectiveSphere(center,subRadius*0.57,this.mirroredColor))
             } else if (option == 'spht' || (option === 'both' && level%2 !== 0)) {
-                objList.push(new RefractiveSphere(center,subRadius*0.57,this.optionColor,1.5))
+                objList.push(new RefractiveSphere(center,subRadius*0.57,this.transparentColor,1.5))
             } // else just ignore
             this.innerObject = new OpticalObjectGroup(center,radius,objList)
         }

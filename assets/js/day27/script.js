@@ -22,14 +22,20 @@ const SAVE_IMAGE_BUTTON_ID = 'savebtn'
 const IMG_CANVAS_ID = 'renderedcanvas'
 const SELECT_RECURSION_ID = 'recurssel'
 const SELECT_MODE_ID = 'decoratesel'
-const SPHERE_COLOR_PICKER_ID = 'sphcolorinput'
-const SPHERE_COLOR_HEX_TXT = 'sphcolorhex'
+const MIRRORED_COLOR_PICKER_ID = 'mirrored-color-input'
+const MIRRORED_COLOR_HEX_TXT = 'mirrored-color-hex'
+const TRANSPARENT_COLOR_PICKER_ID = 'transparent-color-input'
+const TRANSPARENT_COLOR_HEX_TXT = 'transparent-color-hex'
+const MIRRORED_COLOR_DIV_ID = 'mirrored-color-div'
+const TRANSPARENT_COLOR_DIV_ID = 'transparent-color-div'
 
 const DEFAULT_RECURSION = 3
 
 const TETRAHEDRON_HEX_COLOR = "#ded4ce"
 const BACKDROP_HEX_COLOR = "#998877"
 const PLANE_LIGHT_SQR_COLOR = "#666a6f"
+const DEFAULT_MIRRORED_COLOR = "#ffddcc"
+const DEFAULT_TRANSPARENT_COLOR = "#ccddff"
 
 const DEFAULT_IMAGE_WIDTH = 1024
 const ASPECT_RATIO = 1
@@ -43,8 +49,12 @@ let sunVector = null
 let selectRecursionElem = null
 let selectModeElem = null
 let statusBar
-let sphereColorPickerElem = null
-let sphereColorHexElem = null
+let mirroredColorPickerElem = null
+let mirroredColorHexElem = null
+let transparentColorPickerElem = null
+let transparentColorHexElem = null
+let mirroredColorDivElem = null
+let transparentColorDivElem = null
 let goAgainButton = null
 let highQualityButton = null
 let lowQualityButton = null
@@ -58,8 +68,12 @@ onload = async () => {
         imgParagraph = linkElement(IMG_PARA_ID)
         selectRecursionElem = linkElement(SELECT_RECURSION_ID)
         selectModeElem = linkElement(SELECT_MODE_ID)
-        sphereColorPickerElem = linkElement(SPHERE_COLOR_PICKER_ID)
-        sphereColorHexElem = linkElement(SPHERE_COLOR_HEX_TXT)
+        mirroredColorPickerElem = linkElement(MIRRORED_COLOR_PICKER_ID)
+        mirroredColorHexElem = linkElement(MIRRORED_COLOR_HEX_TXT)
+        transparentColorPickerElem = linkElement(TRANSPARENT_COLOR_PICKER_ID)
+        transparentColorHexElem = linkElement(TRANSPARENT_COLOR_HEX_TXT)
+        mirroredColorDivElem = linkElement(MIRRORED_COLOR_DIV_ID)
+        transparentColorDivElem = linkElement(TRANSPARENT_COLOR_DIV_ID)
         goAgainButton = linkElement(REPEAT_BUTTON_ID)
         highQualityButton = linkElement(HI_QUALITY_BUTTON_ID)
         lowQualityButton = linkElement(LO_QUALITY_BUTTON_ID)
@@ -104,16 +118,28 @@ onload = async () => {
         })
         selectModeElem.addEventListener('change',()=>{
             const selectedMode = selectModeElem.value
-            const makeVisible = (selectedMode && (selectedMode !== 'none'))
-            sphereColorPickerElem.disabled = !makeVisible
-            sphereColorPickerElem.parentElement.style.visibility = (makeVisible?"visible":"hidden")
+            const showMirrored = (selectedMode === 'sphm' || selectedMode === 'both')
+            const showTransparent = (selectedMode === 'spht' || selectedMode === 'both')
+            
+            mirroredColorPickerElem.disabled = !showMirrored
+            mirroredColorDivElem.style.visibility = (showMirrored ? "visible" : "hidden")
+            
+            transparentColorPickerElem.disabled = !showTransparent
+            transparentColorDivElem.style.visibility = (showTransparent ? "visible" : "hidden")
         })
-        sphereColorPickerElem.addEventListener('change',() => {
-            const color = sphereColorPickerElem.value
-            sphereColorHexElem.textContent = color.toUpperCase()
-            sphereColorHexElem.style.color = color
+        mirroredColorPickerElem.addEventListener('change',() => {
+            const color = mirroredColorPickerElem.value
+            mirroredColorHexElem.textContent = color.toUpperCase()
+            mirroredColorHexElem.style.color = color
             const isPale = (parseInt(color.slice(3,5),16) > 128)
-            sphereColorHexElem.style.backgroundColor = (isPale?"#444":"#fff")
+            mirroredColorHexElem.style.backgroundColor = (isPale?"#444":"#fff")
+        })
+        transparentColorPickerElem.addEventListener('change',() => {
+            const color = transparentColorPickerElem.value
+            transparentColorHexElem.textContent = color.toUpperCase()
+            transparentColorHexElem.style.color = color
+            const isPale = (parseInt(color.slice(3,5),16) > 128)
+            transparentColorHexElem.style.backgroundColor = (isPale?"#444":"#fff")
         })
     } catch (err) {
         console.error('err = ', err)
@@ -251,10 +277,11 @@ function initEnvironment() {
     const recursionLevel = getRecursionLevelSelection()
     updateRecursionStats(recursionLevel)
     const modeString = selectModeElem.value
-    const sphereColor = Color.colorFromHex(sphereColorPickerElem.value)
+    const mirroredColor = Color.colorFromHex(mirroredColorPickerElem.value)
+    const transparentColor = Color.colorFromHex(transparentColorPickerElem.value)
     optEnv.addOpticalObject(new SierpinskiTetrahedron(new Vector3D(),2,recursionLevel,
         Color.colorFromHex(TETRAHEDRON_HEX_COLOR),
-        modeString,sphereColor))
+        modeString,mirroredColor,transparentColor))
     const mirroringSphereDistance = 4
     const mirroringSphereRadius = 50
     const mirroringSphereOffset = mirroringSphereRadius+mirroringSphereDistance

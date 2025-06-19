@@ -54,9 +54,15 @@
                 <option value="both">Both Mirrored and Transparent Spheres</option>
             </select>
         </div>
-        <div  class="selectdiv" style="visibility:hidden">
-            <label for="sphcolorinput">Choose color of embedded spheres</label>
-            <input type="color" id="sphcolorinput" disabled value="#ffddcc"><span style="color:#ffddcc;background-color: #444;" id="sphcolorhex">#FFDDCC</span>
+        <div class="selectdiv" id="mirrored-color-div" style="visibility:hidden">
+            <label for="mirrored-color-input">Choose color of mirrored spheres</label>
+            <input type="color" id="mirrored-color-input" disabled value="#ffddcc">
+            <span style="color:#ffddcc;background-color: #444;" id="mirrored-color-hex">#FFDDCC</span>
+        </div>
+        <div class="selectdiv" id="transparent-color-div" style="visibility:hidden">
+            <label for="transparent-color-input">Choose color of transparent spheres</label>
+            <input type="color" id="transparent-color-input" disabled value="#ccddff">
+            <span style="color:#ccddff;background-color: #444;" id="transparent-color-hex">#CCDDFF</span>
         </div>
         <p>
             <button id="rptbtn" class="btndisabled" disabled>Compose and Render Low-Quality Image</button>
