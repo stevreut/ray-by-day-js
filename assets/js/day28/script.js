@@ -18,6 +18,7 @@ import Compound12Sphere from "../day25/compound-12-sphere.js"
 
 import SettingsInputBox from "../utils/settings-input-box.js"
 import GraphicStatusReportBar from "../utils/graph-status-bar.js"
+import { saveRayTraceImage, DAY_TYPES } from "../utils/image-saver.js"
 
 const IMG_PARA_ID = 'imgpara'
 const STATUS_BAR_ID = 'statbar'
@@ -99,7 +100,9 @@ onload = async () => {
             const loIsEnabled = !lowQualityButton.disabled
             enableButton(highQualityButton,false)
             enableButton(lowQualityButton,false)
-            await saveImageAsDownload()
+            await saveRayTraceImage(IMG_CANVAS_ID, DAY_TYPES.LENSE, () => {
+                enableButton(saveImageButton,false)
+            })
             enableButton(goAgainButton,true)
             enableButton(highQualityButton,hiIsEnabled)
             enableButton(lowQualityButton,loIsEnabled)
@@ -207,21 +210,9 @@ function statusReporterFunction(frac) {
 }
 
 async function saveImageAsDownload() {
-    const canv = document.getElementById(IMG_CANVAS_ID)
-    if (canv) {
-        const url = canv.toDataURL('image/png')
-        if (url && typeof url === 'string') {
-            const link = document.createElement("a")
-            if (link) {
-                link.href = url
-                const fname = 'ray-trace-lense-' +
-                    (new Date()).getTime() + '.png'
-                link.download = fname
-                link.click()
-                enableButton(saveImageButton,false)
-            }
-        }
-    }
+    await saveRayTraceImage(IMG_CANVAS_ID, DAY_TYPES.LENSE, () => {
+        enableButton(saveImageButton,false)
+    })
 }
 
 let optEnv = null
