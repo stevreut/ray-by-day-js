@@ -1,4 +1,4 @@
-import CommonCodeUtility from "../utils/code-common.js"
+import CommonCodeUtility from "../utils/code-ext/code-common.js"
 
 let commonUtilsObj = new CommonCodeUtility()
 

@@ -1,6 +1,6 @@
-// import CodeExtractor from "../utils/code-extractor.js"
-// import CodeFormatter from "../utils/code-formatter.js"
-import CommonCodeUtility from "../utils/code-common.js"
+// import CodeExtractor from "../utils/code-ext/code-extractor.js"
+// import CodeFormatter from "../utils/code-ext/code-formatter.js"
+import CommonCodeUtility from "../utils/code-ext/code-common.js"
 
 onload = async function() {
     let commonUtilObj = new CommonCodeUtility()

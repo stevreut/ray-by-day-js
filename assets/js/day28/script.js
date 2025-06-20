@@ -407,10 +407,4 @@ function formatFrame1Inputs() {
         }
     ],true)
     settingsDiv.appendChild(settingsInputBox1.getTable())
-    
-    // frame1FocalLength = new NumberInputReplacer("fr1focus")
-    // frame1ApertureDiameter = new NumberInputReplacer("fr1apertdiam")
-    // frame1LenseDistance = new NumberInputReplacer("fr1lensedist")
-    // frame1LenseRadius = new NumberInputReplacer("fr1lenserad")
-    // frame1LenseIndex = new NumberInputReplacer("fr1lenseidx")
 }
