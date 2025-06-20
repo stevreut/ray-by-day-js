@@ -5,21 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ray by Day JS - Fractals and Recursion</title>
     <link rel="stylesheet" href="../assets/css/style.css">
-    <style>
-        #sphcolorhex {
-            padding: 1mm;
-            border-radius: 1mm;
-        }
-        .selectdiv {
-            border: solid 1px #aaaacc;
-            border-radius: 1.5mm;
-            padding: 1.5mm;
-            margin-top: 3mm;
-        }
-        .selectdiv, .selectdiv p, .selectdiv label {
-            background-color: #f8f8ff;
-        }
-    </style>
+    <link rel="stylesheet" href="../assets/css/day27-style.css">
     <link rel="icon" type="image/icon" href="../assets/images/icon/ray-trace-icon.ico">
 </head>
 <body>
@@ -54,15 +40,33 @@
                 <option value="both">Both Mirrored and Transparent Spheres</option>
             </select>
         </div>
-        <div class="selectdiv" id="mirrored-color-div" style="visibility:hidden">
-            <label for="mirrored-color-input">Choose color of mirrored spheres</label>
-            <input type="color" id="mirrored-color-input" disabled value="#ffddcc">
-            <span style="color:#ffddcc;background-color: #444;" id="mirrored-color-hex">#FFDDCC</span>
+        <div class="selectdiv" id="mirrored-color-div" style="display:none">
+            <div class="color-chooser">
+                <label for="mirrored-color-input">Choose color of mirrored spheres</label>
+                <input type="color" id="mirrored-color-input" disabled value="#ffddcc">
+                <span id="mirrored-color-hex">#FFDDCC</span>
+            </div>
         </div>
-        <div class="selectdiv" id="transparent-color-div" style="visibility:hidden">
-            <label for="transparent-color-input">Choose color of transparent spheres</label>
-            <input type="color" id="transparent-color-input" disabled value="#ccddff">
-            <span style="color:#ccddff;background-color: #444;" id="transparent-color-hex">#CCDDFF</span>
+        <div class="selectdiv" id="transparent-color-div" style="display:none">
+            <div class="color-chooser">
+                <label for="transparent-color-input">Choose color of transparent spheres</label>
+                <input type="color" id="transparent-color-input" disabled value="#ccddff">
+                <span id="transparent-color-hex">#CCDDFF</span>
+            </div>
+        </div>
+        <div class="selectdiv" id="both-colors-div" style="display:none">
+            <div class="color-chooser-grid">
+                <div class="color-chooser">
+                    <label for="mirrored-color-input-grid">Choose color of mirrored spheres</label>
+                    <input type="color" id="mirrored-color-input-grid" disabled value="#ffddcc">
+                    <span id="mirrored-color-hex-grid">#FFDDCC</span>
+                </div>
+                <div class="color-chooser">
+                    <label for="transparent-color-input-grid">Choose color of transparent spheres</label>
+                    <input type="color" id="transparent-color-input-grid" disabled value="#ccddff">
+                    <span id="transparent-color-hex-grid">#CCDDFF</span>
+                </div>
+            </div>
         </div>
         <p>
             <button id="rptbtn" class="btndisabled" disabled>Compose and Render Low-Quality Image</button>

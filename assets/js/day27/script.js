@@ -28,6 +28,11 @@ const TRANSPARENT_COLOR_PICKER_ID = 'transparent-color-input'
 const TRANSPARENT_COLOR_HEX_TXT = 'transparent-color-hex'
 const MIRRORED_COLOR_DIV_ID = 'mirrored-color-div'
 const TRANSPARENT_COLOR_DIV_ID = 'transparent-color-div'
+const BOTH_COLORS_DIV_ID = 'both-colors-div'
+const MIRRORED_COLOR_PICKER_GRID_ID = 'mirrored-color-input-grid'
+const MIRRORED_COLOR_HEX_GRID_TXT = 'mirrored-color-hex-grid'
+const TRANSPARENT_COLOR_PICKER_GRID_ID = 'transparent-color-input-grid'
+const TRANSPARENT_COLOR_HEX_GRID_TXT = 'transparent-color-hex-grid'
 
 const DEFAULT_RECURSION = 3
 
@@ -55,6 +60,7 @@ let transparentColorPickerElem = null
 let transparentColorHexElem = null
 let mirroredColorDivElem = null
 let transparentColorDivElem = null
+let bothColorsDivElem = null
 let goAgainButton = null
 let highQualityButton = null
 let lowQualityButton = null
@@ -62,6 +68,10 @@ let saveImageButton = null
 let imgParagraph = null
 let durationElem = null
 let statisticsParagraphElem = null
+let mirroredColorPickerGridElem = null
+let mirroredColorHexGridElem = null
+let transparentColorPickerGridElem = null
+let transparentColorHexGridElem = null
 
 onload = async () => {
     try {
@@ -74,6 +84,11 @@ onload = async () => {
         transparentColorHexElem = linkElement(TRANSPARENT_COLOR_HEX_TXT)
         mirroredColorDivElem = linkElement(MIRRORED_COLOR_DIV_ID)
         transparentColorDivElem = linkElement(TRANSPARENT_COLOR_DIV_ID)
+        bothColorsDivElem = linkElement(BOTH_COLORS_DIV_ID)
+        mirroredColorPickerGridElem = linkElement(MIRRORED_COLOR_PICKER_GRID_ID)
+        mirroredColorHexGridElem = linkElement(MIRRORED_COLOR_HEX_GRID_TXT)
+        transparentColorPickerGridElem = linkElement(TRANSPARENT_COLOR_PICKER_GRID_ID)
+        transparentColorHexGridElem = linkElement(TRANSPARENT_COLOR_HEX_GRID_TXT)
         goAgainButton = linkElement(REPEAT_BUTTON_ID)
         highQualityButton = linkElement(HI_QUALITY_BUTTON_ID)
         lowQualityButton = linkElement(LO_QUALITY_BUTTON_ID)
@@ -118,29 +133,85 @@ onload = async () => {
         })
         selectModeElem.addEventListener('change',()=>{
             const selectedMode = selectModeElem.value
-            const showMirrored = (selectedMode === 'sphm' || selectedMode === 'both')
-            const showTransparent = (selectedMode === 'spht' || selectedMode === 'both')
             
-            mirroredColorPickerElem.disabled = !showMirrored
-            mirroredColorDivElem.style.visibility = (showMirrored ? "visible" : "hidden")
+            // Hide all color chooser containers first
+            mirroredColorDivElem.style.display = "none"
+            transparentColorDivElem.style.display = "none"
+            bothColorsDivElem.style.display = "none"
             
-            transparentColorPickerElem.disabled = !showTransparent
-            transparentColorDivElem.style.visibility = (showTransparent ? "visible" : "hidden")
+            // Show the appropriate container(s) and enable/disable correct elements
+            if (selectedMode === 'sphm') {
+                mirroredColorDivElem.style.display = "block"
+                mirroredColorPickerElem.disabled = false
+                transparentColorPickerElem.disabled = true
+                mirroredColorPickerGridElem.disabled = true
+                transparentColorPickerGridElem.disabled = true
+            } else if (selectedMode === 'spht') {
+                transparentColorDivElem.style.display = "block"
+                mirroredColorPickerElem.disabled = true
+                transparentColorPickerElem.disabled = false
+                mirroredColorPickerGridElem.disabled = true
+                transparentColorPickerGridElem.disabled = true
+            } else if (selectedMode === 'both') {
+                bothColorsDivElem.style.display = "block"
+                mirroredColorPickerElem.disabled = true
+                transparentColorPickerElem.disabled = true
+                mirroredColorPickerGridElem.disabled = false
+                transparentColorPickerGridElem.disabled = false
+            } else {
+                // 'none' mode - all disabled
+                mirroredColorPickerElem.disabled = true
+                transparentColorPickerElem.disabled = true
+                mirroredColorPickerGridElem.disabled = true
+                transparentColorPickerGridElem.disabled = true
+            }
         })
         mirroredColorPickerElem.addEventListener('change',() => {
             const color = mirroredColorPickerElem.value
             mirroredColorHexElem.textContent = color.toUpperCase()
             mirroredColorHexElem.style.color = color
             const isPale = (parseInt(color.slice(3,5),16) > 128)
-            mirroredColorHexElem.style.backgroundColor = (isPale?"#444":"#fff")
+            mirroredColorHexElem.style.backgroundColor = (isPale?"#444":"#e8e8e8")
         })
         transparentColorPickerElem.addEventListener('change',() => {
             const color = transparentColorPickerElem.value
             transparentColorHexElem.textContent = color.toUpperCase()
             transparentColorHexElem.style.color = color
             const isPale = (parseInt(color.slice(3,5),16) > 128)
-            transparentColorHexElem.style.backgroundColor = (isPale?"#444":"#fff")
+            transparentColorHexElem.style.backgroundColor = (isPale?"#444":"#e8e8e8")
         })
+        mirroredColorPickerGridElem.addEventListener('change',() => {
+            const color = mirroredColorPickerGridElem.value
+            mirroredColorHexGridElem.textContent = color.toUpperCase()
+            mirroredColorHexGridElem.style.color = color
+            const isPale = (parseInt(color.slice(3,5),16) > 128)
+            mirroredColorHexGridElem.style.backgroundColor = (isPale?"#444":"#e8e8e8")
+        })
+        transparentColorPickerGridElem.addEventListener('change',() => {
+            const color = transparentColorPickerGridElem.value
+            transparentColorHexGridElem.textContent = color.toUpperCase()
+            transparentColorHexGridElem.style.color = color
+            const isPale = (parseInt(color.slice(3,5),16) > 128)
+            transparentColorHexGridElem.style.backgroundColor = (isPale?"#444":"#e8e8e8")
+        })
+        
+        // Initialize hex displays with default colors
+        mirroredColorHexElem.style.color = DEFAULT_MIRRORED_COLOR
+        const mirroredIsPale = (parseInt(DEFAULT_MIRRORED_COLOR.slice(3,5),16) > 128)
+        mirroredColorHexElem.style.backgroundColor = (mirroredIsPale?"#444":"#e8e8e8")
+        
+        transparentColorHexElem.style.color = DEFAULT_TRANSPARENT_COLOR
+        const transparentIsPale = (parseInt(DEFAULT_TRANSPARENT_COLOR.slice(3,5),16) > 128)
+        transparentColorHexElem.style.backgroundColor = (transparentIsPale?"#444":"#e8e8e8")
+        
+        // Initialize grid hex displays with default colors
+        mirroredColorHexGridElem.style.color = DEFAULT_MIRRORED_COLOR
+        const mirroredGridIsPale = (parseInt(DEFAULT_MIRRORED_COLOR.slice(3,5),16) > 128)
+        mirroredColorHexGridElem.style.backgroundColor = (mirroredGridIsPale?"#444":"#e8e8e8")
+        
+        transparentColorHexGridElem.style.color = DEFAULT_TRANSPARENT_COLOR
+        const transparentGridIsPale = (parseInt(DEFAULT_TRANSPARENT_COLOR.slice(3,5),16) > 128)
+        transparentColorHexGridElem.style.backgroundColor = (transparentGridIsPale?"#444":"#e8e8e8")
     } catch (err) {
         console.error('err = ', err)
         alert ('error = ' + err.toString())
@@ -277,8 +348,16 @@ function initEnvironment() {
     const recursionLevel = getRecursionLevelSelection()
     updateRecursionStats(recursionLevel)
     const modeString = selectModeElem.value
-    const mirroredColor = Color.colorFromHex(mirroredColorPickerElem.value)
-    const transparentColor = Color.colorFromHex(transparentColorPickerElem.value)
+    let mirroredColor, transparentColor
+    
+    // Get colors from the appropriate pickers based on mode
+    if (modeString === 'both') {
+        mirroredColor = Color.colorFromHex(mirroredColorPickerGridElem.value)
+        transparentColor = Color.colorFromHex(transparentColorPickerGridElem.value)
+    } else {
+        mirroredColor = Color.colorFromHex(mirroredColorPickerElem.value)
+        transparentColor = Color.colorFromHex(transparentColorPickerElem.value)
+    }
     optEnv.addOpticalObject(new SierpinskiTetrahedron(new Vector3D(),2,recursionLevel,
         Color.colorFromHex(TETRAHEDRON_HEX_COLOR),
         modeString,mirroredColor,transparentColor))

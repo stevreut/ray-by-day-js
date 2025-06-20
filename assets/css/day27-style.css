@@ -1,0 +1,64 @@
+#mirrored-color-hex, #transparent-color-hex {
+    padding: 3mm 4mm;
+    border-radius: 2mm;
+    display: inline-block;
+    min-width: 60px;
+    text-align: center;
+    font-weight: bold;
+    background-color: #f8f8ff;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.selectdiv {
+    border: solid 1px #aaaacc;
+    border-radius: 1.5mm;
+    padding: 3mm;
+    margin-top: 1mm;
+}
+
+.selectdiv, .selectdiv p, .selectdiv label {
+    background-color: #f8f8ff;
+}
+
+.color-chooser-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.color-chooser {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.color-chooser-grid .color-chooser {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.color-chooser-grid .color-chooser label {
+    background-color: inherit;
+    padding-left: 2mm;
+}
+
+.color-chooser label {
+    min-width: 200px;
+    margin-right: 8px;
+    background-color: inherit;
+    padding-left: 2mm;
+}
+
+.color-chooser input[type="color"] {
+    width: 80px;
+    height: 50px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+} 
