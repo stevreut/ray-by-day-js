@@ -33,6 +33,19 @@
             <input type="text" id="dur" readonly>
         </p>
     </div>
+    <h3 class="resource-index-header">Resources used in this page</h3>
+    <div id="resource-index"></div>
+    <script type="module">
+        import CodeFormatter from "../assets/js/utils/code-ext/code-formatter.js";
+        const cf = new CodeFormatter();
+        cf.insertResourceIndex("resource-index", [
+            "./day6.html",
+            "../assets/js/day6/script.js",
+            "../assets/js/day6/bivargrapher.js",
+            "../assets/js/day4/gridgraph.js",
+            "../assets/js/day4/svgutils.js"
+        ]);
+    </script>
     <div class="hopdiv">
         <a href="./day5.html">Prev</a>
         <a href="../index.html">Home</a>

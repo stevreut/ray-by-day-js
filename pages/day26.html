@@ -21,6 +21,16 @@
             <button id="savebtn" class="btndisabled" disabled>Save Image</button>
         </p>
     </div>
+    <h3 class="resource-index-header">Resources used in this page</h3>
+    <div id="resource-index"></div>
+    <script type="module">
+      import CodeFormatter from "../assets/js/utils/code-ext/code-formatter.js";
+      const cf = new CodeFormatter();
+      cf.insertResourceIndex("resource-index", [
+        "./day26.html",
+        "../assets/js/day26/script.js"
+      ]);
+    </script>
     <div class="hopdiv">
         <a href="./day25.html">Prev</a>
         <a href="../index.html">Home</a>

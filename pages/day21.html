@@ -20,6 +20,16 @@
             <button id="rptbtn" class="btndisabled" disabled>Go Again</button>
         </p>
     </div>
+    <h3 class="resource-index-header">Resources used in this page</h3>
+    <div id="resource-index"></div>
+    <script type="module">
+      import CodeFormatter from "../assets/js/utils/code-ext/code-formatter.js";
+      const cf = new CodeFormatter();
+      cf.insertResourceIndex("resource-index", [
+        "./day21.html",
+        "../assets/js/day21/script.js"
+      ]);
+    </script>
     <div class="hopdiv">
         <a href="./day20.html">Prev</a>
         <a href="../index.html">Home</a>

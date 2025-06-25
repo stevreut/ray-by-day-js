@@ -27,6 +27,16 @@
         <div id="fr1inputs" class="settings">
         </div>
     </div>
+    <h3 class="resource-index-header">Resources used in this page</h3>
+    <div id="resource-index"></div>
+    <script type="module">
+      import CodeFormatter from "../assets/js/utils/code-ext/code-formatter.js";
+      const cf = new CodeFormatter();
+      cf.insertResourceIndex("resource-index", [
+        "./day28.html",
+        "../assets/js/day28/script.js"
+      ]);
+    </script>
     <div class="hopdiv">
         <a href="./day27.html">Prev</a>
         <a href="../index.html">Home</a>

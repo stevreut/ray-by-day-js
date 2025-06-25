@@ -25,6 +25,16 @@
             </select>
         </p>
     </div>
+    <h3 class="resource-index-header">Resources used in this page</h3>
+    <div id="resource-index"></div>
+    <script type="module">
+      import CodeFormatter from "../assets/js/utils/code-ext/code-formatter.js";
+      const cf = new CodeFormatter();
+      cf.insertResourceIndex("resource-index", [
+        "./day25.html",
+        "../assets/js/day25/script.js"
+      ]);
+    </script>
     <div class="hopdiv">
         <a href="./day24.html">Prev</a>
         <a href="../index.html">Home</a>

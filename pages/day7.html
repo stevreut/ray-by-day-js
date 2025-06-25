@@ -19,6 +19,21 @@
             <label for="gridtxt">Gridder extending class used: </label>
             <input type="text" id="gridtxt" readonly></p>
     </div>
+    <h3 class="resource-index-header">Resources used in this page</h3>
+    <div id="resource-index"></div>
+    <script type="module">
+        import CodeFormatter from "../assets/js/utils/code-ext/code-formatter.js";
+        const cf = new CodeFormatter();
+        cf.insertResourceIndex("resource-index", [
+            "./day7.html",
+            "../assets/js/day7/script.js",
+            "../assets/js/day7/bivargrapher.js",
+            "../assets/js/day7/gridder.js",
+            "../assets/js/day7/gridgraph.js",
+            "../assets/js/day7/tablegridgraph.js",
+            "../assets/js/day4/svgutils.js"
+        ]);
+    </script>
     <div class="hopdiv">
         <a href="./day6.html">Prev</a>
         <a href="../index.html">Home</a>

@@ -20,6 +20,16 @@
             <input type="text" value="cross-eyed" id="stereomode" readonly>
         </p>
     </div>
+    <h3 class="resource-index-header">Resources used in this page</h3>
+    <div id="resource-index"></div>
+    <script type="module">
+      import CodeFormatter from "../assets/js/utils/code-ext/code-formatter.js";
+      const cf = new CodeFormatter();
+      cf.insertResourceIndex("resource-index", [
+        "./day19.html",
+        "../assets/js/day19/script.js"
+      ]);
+    </script>
     <div class="hopdiv">
         <a href="./day18.html">Prev</a>
         <a href="../index.html">Home</a>
