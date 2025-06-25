@@ -1,5 +1,5 @@
 import Vector3D from "./vector3d.js"
-import GridGraph from "../day7/gridgraph.js"
+import SVGGridGrapher from "../day7/svg-grid-grapher.js"
 import BiVariantGrapher from "../day14/bivargrapher.js"
 import Ray from "./ray.js"
 import Color from "../day14/color.js"
@@ -52,7 +52,7 @@ function setImageDimensions() {
 function processImage(imgParagraph,durationElem) {
     initEnvironment()
     imgParagraph.innerHTML = ''
-    const gridder = new GridGraph()
+    const gridder = new SVGGridGrapher()
     const startTime = new Date()
     const grapher = new BiVariantGrapher(gridder,targetImageWidth,targetImageHeight,1,
         Math.round(targetImageWidth*0.33),f,3) 

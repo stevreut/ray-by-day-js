@@ -1,6 +1,6 @@
-import Gridder from './gridder.js'
+import GenericGridGrapher from './gen-grid-grapher.js'
 
-class TableGridGraph extends Gridder {
+class TableGridGraph extends GenericGridGrapher {
     constructor() {
         super()
     }

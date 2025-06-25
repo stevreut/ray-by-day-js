@@ -1,6 +1,6 @@
 import { makeSvgElem, makeSvgRectangle } from "./svgutils.js"
 
-class GridGraph {
+class SVGGridGrapher {
     constructor (width, height, pixelSize = 1, defaultColor = '#000000', pixelBorderColor = null) {
         const MAXDIM = 1024 // TODO
         if (!this.#validInt(width,1,MAXDIM)) {
@@ -109,4 +109,4 @@ class GridGraph {
     }
 }
 
-export default GridGraph
+export default SVGGridGrapher

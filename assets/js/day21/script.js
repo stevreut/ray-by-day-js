@@ -4,7 +4,7 @@ import Ray from "../day20/ray.js"
 import Color from "../day20/color.js"
 import ReflectiveSphere from "../day20/reflective-sphere.js"
 import Plane from "../day20/plane.js"
-import CanvasGridder from "../day20/canvas-gridder.js"
+import CanvasGridGrapher from "../day20/canvas-grid-grapher.js"
 import Sphere from "../day20/sphere.js"
 import GraphicStatusReportBar from "../utils/graph-status-bar.js"
 
@@ -80,7 +80,7 @@ function setImageDimensions() {
 async function processImage(imgParagraph,durationElem) {
     initEnvironment()
     imgParagraph.innerHTML = ''
-    const gridder = new CanvasGridder()
+    const gridder = new CanvasGridGrapher()
     const startTime = new Date()
     const grapher = new BiVariantGrapher(
         gridder,

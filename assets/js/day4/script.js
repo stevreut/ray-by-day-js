@@ -1,4 +1,4 @@
-import GridGraph from "./gridgraph.js"
+import SVGGridGrapher from "./svg-grid-grapher.js"
 import { innerPixelWidth } from "../utils/dom-utils.js"
 
 const svgAnchorID = "svghere"
@@ -27,10 +27,10 @@ function createSvgElemAt(anch) {
         const contentWidth = innerPixelWidth(container);
         
         // Calculate virtual pixel size based on content width
-        // Using 50 as the grid width (from GridGraph constructor)
+        // Using 50 as the grid width (from SVGGridGrapher constructor)
         virtualPixelSize = Math.max(virtualPixelSize, Math.floor(contentWidth / 50));
     }
-    let gridGraph = new GridGraph(50,37,virtualPixelSize,'#000000','#444444')
+    let gridGraph = new SVGGridGrapher(50,37,virtualPixelSize,'#000000','#444444')
     // Draw a magenta parabola
     for (let x=0;x<50;x++) {
         let y = x*x

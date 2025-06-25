@@ -1,7 +1,7 @@
-import Gridder from './gridder.js'
-import { makeSvgElem, makeSvgRectangle } from "../day4/svgutils.js"
+import GenericGridGrapher from './gen-grid-grapher.js'
+import { makeSvgElem, makeSvgRectangle } from "./svgutils.js"
 
-class GridGraph extends Gridder {
+class SVGGridGrapher extends GenericGridGrapher {
     constructor () {
         super()
         // this.init(width,height,pixelSize)
@@ -110,4 +110,4 @@ class GridGraph extends Gridder {
     }
 }
 
-export default GridGraph
+export default SVGGridGrapher

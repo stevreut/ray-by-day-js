@@ -1,6 +1,6 @@
-import Gridder from "./gridder.js"
+import GenericGridGrapher from "./gen-grid-grapher.js"
 
-class CanvasGridder extends Gridder {
+class CanvasGridGrapher extends GenericGridGrapher {
     constructor() {
         super()
     }
@@ -79,4 +79,4 @@ class CanvasGridder extends Gridder {
 
 }
 
-export default CanvasGridder
+export default CanvasGridGrapher

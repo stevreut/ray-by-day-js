@@ -1,24 +1,21 @@
 import Vector3D from "../day20/vector3d.js"
 import Ray from "../day20/ray.js"
 import Color from "../day20/color.js"
-import CanvasGridder from "../day20/canvas-gridder.js"
 import BiVariantGrapher from "../day20/bivargrapher.js"
 import OpticalEnvironment from "../day22/optical-env.js"
 import Plane from "../day22/plane.js"
 import RefractiveSphere from "../day22/refractive-sphere.js"
-
 import SunnySky from "./sunny-sky.js"
 import NightSky from "./night-sky.js"
-
 import ReflectiveTetrahedron from "./refl-tetra.js"
 import ReflectiveCube from "./refl-cube.js"
 import ReflectiveOctahedron from "./refl-octa.js"
 import ReflectiveIcosahedron from "./refl-icos.js"
 import ReflectiveDodecahedron from "./refl-dodeca.js"
 import Compound12Sphere from "./compound-12-sphere.js"
-
 import GraphicStatusReportBar from "../utils/graph-status-bar.js"
 import { saveRayTraceImage, DAY_TYPES } from "../utils/image-saver.js"
+import CanvasGridGrapher from "../day20/canvas-grid-grapher.js"
 
 const IMG_PARA_ID = 'imgpara'
 const STATUS_BAR_ID = 'statbar'
@@ -156,7 +153,7 @@ async function processImage(imgParagraph,durationElem) {
     enableButton(highQualityButton,false)
     enableButton(lowQualityButton,false)
     enableButton(saveImageButton,false)
-    const gridder = new CanvasGridder()
+    const gridder = new CanvasGridGrapher()
     const startTime = new Date()
     const grapher = new BiVariantGrapher(
         gridder,

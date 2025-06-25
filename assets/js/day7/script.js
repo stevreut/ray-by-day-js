@@ -1,6 +1,6 @@
-import BiVariantGrapher from "./bivargrapher.js"
-import GridGraph from "./gridgraph.js"
+import SVGGridGrapher from "./svg-grid-grapher.js"
 import TableGridGraph from "./tablegridgraph.js"
+import BiVariantGrapher from "./bivargrapher.js"
 
 const IMG_ID = 'svghere'
 const BTN_ID = 'togglebtn'
@@ -31,8 +31,8 @@ onload = () => {
 
 function setUpGraphOnPage(imgParent) {
     imgParent.innerHTML = ''
-    const gridder = (useTextGridder?new GridGraph():new TableGridGraph())
-    gridTypeInput.value = (useTextGridder?'GridGraph':'TableGridGraph')
+    const gridder = (useTextGridder?new SVGGridGrapher():new TableGridGraph())
+    gridTypeInput.value = (useTextGridder?'SVGGridGrapher':'TableGridGraph')
     document.getElementById('imgh3').textContent = (useTextGridder?'SVG':'Table') +
         ' dynamically created ...'
     const bvg = new BiVariantGrapher(gridder,30,30,20,4.5,f,3)

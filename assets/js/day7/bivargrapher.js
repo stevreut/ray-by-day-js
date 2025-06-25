@@ -1,10 +1,10 @@
-import Gridder from "./gridder.js";
-import GridGraph from "./gridgraph.js";
+import SVGGridGrapher from "./svg-grid-grapher.js";
+import GenericGridGrapher from "./gen-grid-grapher.js";
 
 class BiVariantGrapher {
     constructor(gridder,width,height,pixelSize,pixelsPerUnit = 1,bvf,antiAlias = 1) {
-        if (!(gridder instanceof Gridder)){
-            throw 'not an instance of Gridder'
+        if (!(gridder instanceof GenericGridGrapher)){
+            throw 'not an instance of GenericGridGrapher'
         }
         this.gridder = gridder
         if (typeof pixelsPerUnit !== 'number' ||

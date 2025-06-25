@@ -6,7 +6,7 @@ import OpticalEnvironment from "./optical-env.js"
 import ReflectiveSphere from "./reflective-sphere.js"
 import RefractiveSphere from "./refractive-sphere.js"
 import Plane from "./plane.js"
-import CanvasGridder from "./canvas-gridder.js"
+import CanvasGridGrapher from "./canvas-grid-grapher.js"
 import Sphere from "./sphere.js"
 import GraphicStatusReportBar from "../utils/graph-status-bar.js"
 
@@ -76,7 +76,7 @@ function setImageDimensions() {
 async function processImage(imgParagraph,durationElem) {
     initEnvironment()
     imgParagraph.innerHTML = ''
-    const gridder = new CanvasGridder()
+    const gridder = new CanvasGridGrapher()
     const startTime = new Date()
     const grapher = new BiVariantGrapher(gridder,targetImageWidth,targetImageHeight,1,
         Math.round(targetImageWidth*0.33),f,3,statusReporterFunction) 

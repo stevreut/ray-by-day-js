@@ -2,13 +2,13 @@ import Vector3D from "../day20/vector3d.js"
 import Ray from "../day20/ray.js"
 import Color from "../day20/color.js"
 import ReflectiveSphere from "../day20/reflective-sphere.js"
-import CanvasGridder from "../day20/canvas-gridder.js"
 import BiVariantGrapher from "../day20/bivargrapher.js"
 import Sky from "../day22/sky.js"
 import OpticalEnvironment from "../day22/optical-env.js"
 import Plane from "../day22/plane.js"
 import RefractiveSphere from "../day22/refractive-sphere.js"
 import GraphicStatusReportBar from "../utils/graph-status-bar.js"
+import CanvasGridGrapher from "../day20/canvas-grid-grapher.js"
 
 import ReflectiveIcosahedron from "./refl-icos.js"
 
@@ -94,7 +94,7 @@ function setImageDimensions() {
 async function processImage(imgParagraph,durationElem) {
     initEnvironment()
     durationElem.textContent = ''
-    const gridder = new CanvasGridder()
+    const gridder = new CanvasGridGrapher()
     const startTime = new Date()
     const grapher = new BiVariantGrapher(
         gridder,

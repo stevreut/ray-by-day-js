@@ -1,6 +1,6 @@
 // an 'abstract' class
 
-class Gridder {
+class GenericGridGrapher {
     constructor() {
         // TODO?
     }
@@ -12,4 +12,4 @@ class Gridder {
 
 }
 
-export default Gridder
+export default GenericGridGrapher

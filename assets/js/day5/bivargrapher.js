@@ -1,4 +1,4 @@
-import GridGraph from "../day4/gridgraph.js";
+import SVGGridGrapher from "../day4/svg-grid-grapher.js";
 
 class BiVariantGrapher {
     constructor(width,height,pixelSize,pixelsPerUnit = 1,bvf) {
@@ -17,7 +17,7 @@ class BiVariantGrapher {
                 this.colorFunction = bvf
             }
         }
-        this.grid = new GridGraph(width,height,pixelSize,'#ffffff' /*TODO*/)
+        this.grid = new SVGGridGrapher(width,height,pixelSize,'#ffffff' /*TODO*/)
         this.width = width
         this.height = height
     }

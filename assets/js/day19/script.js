@@ -1,11 +1,11 @@
 import Vector3D from "../day18/vector3d.js"
-import GridGraph from "../day7/gridgraph.js"
 import BiVariantGrapher from "../day14/bivargrapher.js"
 import Ray from "../day18/ray.js"
 import Color from "../day14/color.js"
 import OpticalEnvironment from "../day18/optical-env.js"
 import ReflectiveSphere from "../day18/reflective-sphere.js"
 import Plane from "../day17/plane.js"
+import SVGGridGrapher from "../day7/svg-grid-grapher.js"
 
 const IMG_PARA_ID = 'imgpara'
 const REPEAT_BUTTON_ID = 'rptbtn'
@@ -79,7 +79,7 @@ function processImage(imgParagraph,cameraOrigin) {
         cameraOrigin.scalarMult(-1)
     )
     optEnv.setCamera(cameraRay)
-    const gridder = new GridGraph()
+    const gridder = new SVGGridGrapher()
     const grapher = new BiVariantGrapher(gridder,
         targetImageSize,targetImageSize,1,Math.round(targetImageSize/4),f,
         (targetImageSize<DEFAULT_SINGLE_EYE_IMAGE_SIZE?3:2))

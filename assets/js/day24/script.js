@@ -2,13 +2,13 @@ import Vector3D from "../day20/vector3d.js"
 import Ray from "../day20/ray.js"
 import Color from "../day20/color.js"
 import ReflectiveSphere from "../day20/reflective-sphere.js"
-import CanvasGridder from "../day20/canvas-gridder.js"
 import Sphere from "../day20/sphere.js"
 import Sky from "../day22/sky.js"
 import OpticalEnvironment from "../day22/optical-env.js"
 import Plane from "../day22/plane.js"
 import RefractiveSphere from "../day22/refractive-sphere.js"
 import BiVariantGrapher from "../day20/bivargrapher.js"
+import CanvasGridGrapher from "../day20/canvas-grid-grapher.js"
 
 import SettingsInputBox from "../utils/settings-input-box.js"
 
@@ -190,7 +190,7 @@ function enableButton(doEnable,...button) {
 }
 
 async function processSingleFrame(imgParagraph) {
-    const gridder = new CanvasGridder()
+    const gridder = new CanvasGridGrapher()
     const grapher = new BiVariantGrapher(
         gridder,
         Math.floor(ACTUAL_WIDTH/PIXEL_SIZE),

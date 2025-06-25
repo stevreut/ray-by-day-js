@@ -2,7 +2,6 @@ import Vector3D from "../day20/vector3d.js"
 import Ray from "../day20/ray.js"
 import Color from "../day20/color.js"
 import ReflectiveSphere from "../day20/reflective-sphere.js"
-import CanvasGridder from "../day20/canvas-gridder.js"
 import Sphere from "../day20/sphere.js"
 
 import BiVariantGrapher from "../day20/bivargrapher.js"
@@ -12,6 +11,7 @@ import Plane from "./plane.js"
 import RefractiveSphere from "./refractive-sphere.js"
 
 import GraphicStatusReportBar from "../utils/graph-status-bar.js"
+import CanvasGridGrapher from "../day20/canvas-grid-grapher.js"
 
 const IMG_PARA_ID = 'imgpara'
 const STATUS_BAR_ID = 'statbar'
@@ -128,7 +128,7 @@ function getFStop(fStopInput) {
 
 async function processImage(imgParagraph,durationElem) {
     durationElem.textContent = ''
-    const gridder = new CanvasGridder()
+    const gridder = new CanvasGridGrapher()
     const startTime = new Date()
     const grapher = new BiVariantGrapher(
         gridder,
