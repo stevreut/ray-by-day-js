@@ -103,15 +103,41 @@ button:active {
     background-color: #44f;
 }
 select {
-    background-color: #999;
-    color: #fff;
-    padding: 1.5mm;
+    padding: 2mm 6mm;
     margin: 1mm 1mm 1mm 0;
-    border: solid 2px #bbb;
-    border-radius: 1.5mm;
+    border: 1px solid #9eadbd;
+    border-radius: 2mm;
     font-family: Arial, Helvetica, sans-serif;
-    font-weight: bold;
+    font-weight: 600;
+    font-size: 11pt;
     max-width: 100%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Default styling for selects that don't have custom colors */
+select:not([style*="background"]) {
+    background: linear-gradient(135deg, #f8f9ff 0%, #e5edff 100%);
+    color: #1b6be2;
+}
+
+select:hover {
+    background: linear-gradient(135deg, #e5edff 0%, #d4e3ff 100%);
+    border-color: #7ea0d5;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    transform: translateY(-1px);
+}
+
+select:focus {
+    outline: none;
+    border-color: #44f;
+    box-shadow: 0 0 0 2px rgba(68, 68, 255, 0.2);
+}
+
+select:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 textarea {
     width: 100%;

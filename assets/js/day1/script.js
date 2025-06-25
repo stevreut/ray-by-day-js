@@ -1,5 +1,3 @@
-// import CodeExtractor from "../utils/code-ext/code-extractor.js"
-// import CodeFormatter from "../utils/code-ext/code-formatter.js"
 import CommonCodeUtility from "../utils/code-ext/code-common.js"
 
 onload = async function() {
@@ -30,8 +28,8 @@ onload = async function() {
         svgCodeElem,svgUrl,1,SVG_LINES_TO_SHOW,
         'First ' + SVG_LINES_TO_SHOW + ' lines of day1-static.svg',true,'svg')
     commonUtilObj.insertTitledCodeAtPreexistingElement(
-        makeSvgCodeElem,scriptUrl,36,84,
-        'getSvgContent() from script.js',true,'js')
+        makeSvgCodeElem,scriptUrl,35,83,
+        'getSvgContent() from day1/script.js',true,'js')
 }
 
 function getSvgContent(width,height,pixelSize) {
