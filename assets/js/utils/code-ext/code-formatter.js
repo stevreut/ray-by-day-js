@@ -10,16 +10,40 @@ class CodeFormatter {
         titleCodeElem.textContent = title
         titleDiv.appendChild(titleCodeElem)
         outerDiv.appendChild(titleDiv)
+        const contentDiv = this._createContentStructure(contentStr, doShiftLeft, codeType, "titled-code-exc")
+        outerDiv.appendChild(contentDiv)
+        return outerDiv
+    }
+    formatUntitledExcerptElement(contentStr,doShiftLeft=true,codeType) {
+        const outerDiv = document.createElement("div")
+        outerDiv.className = "untitled-code"
+        const contentDiv = this._createContentStructure(contentStr, doShiftLeft, codeType, "untitled-code-exc")
+        outerDiv.appendChild(contentDiv)
+        
+        // Add extra blank line
+        const blankLine = document.createElement("div")
+        blankLine.innerHTML = "&nbsp;"
+        blankLine.style.height = "0.3em"
+        outerDiv.appendChild(blankLine)
+        
+        // Add scroll instruction
+        const scrollInstruction = document.createElement("div")
+        scrollInstruction.className = "scroll-instruction"
+        scrollInstruction.textContent = "(Scroll code horizontally if necessary.)"
+        outerDiv.appendChild(scrollInstruction)
+        
+        return outerDiv
+    }
+    _createContentStructure(contentStr, doShiftLeft, codeType, className) {
         const contentDiv = document.createElement("div")
-        contentDiv.className = "titled-code-exc"
+        contentDiv.className = className
         const preElem = document.createElement("pre")
         const codeElem = document.createElement("code")
         codeElem.textContent = ((doShiftLeft)?this.shiftLeft(contentStr):contentStr)
         codeElem.innerHTML = this.formatComments(codeElem.innerHTML,codeType)
         preElem.appendChild(codeElem)
         contentDiv.appendChild(preElem)
-        outerDiv.appendChild(contentDiv)
-        return outerDiv
+        return contentDiv
     }
     shiftLeft(strLines) {
         const inputLines = strLines.split('\n')

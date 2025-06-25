@@ -322,6 +322,36 @@ em {
     background-color: var(--code-bg-color);
     font: inherit;
 }
+.untitled-code {
+    border: none;
+    border-radius: 0;
+    overflow: visible;
+    margin: 5mm 0;
+    background-color: inherit;
+}
+.untitled-code-exc {
+    /* color: #f00 important; TODO #448; */
+    background-color: inherit;
+    margin: 0;
+    padding: 1.5mm 5mm;
+    overflow-x: scroll;
+}
+.untitled-code-exc code, .untitled-code-exc pre {
+    color: #1b6be2;
+    background-color: inherit;
+}
+.untitled-code-exc .comment {
+    color: #8c8c8c;
+    background-color: inherit;
+    font: inherit;
+}
+.scroll-instruction {
+    color: #8c8c8c;
+    font-size: 0.7em;
+    background-color: var(--code-bg-color);
+    margin-top: 0.2mm;
+    padding-left: 2mm;
+}
 .code-exc {
     border: solid 2px #9eadbd;
     border-radius: 2mm;
