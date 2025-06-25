@@ -6,7 +6,7 @@ class GridGraph extends Gridder {
         super()
         // this.init(width,height,pixelSize)
     }
-    init(width,height,pixelSize) { 
+    init(width,height,pixelSize,pixelBorderColor = null) { 
         const MAXDIM = 1024 // TODO
         if (!this.#validInt(width,1,MAXDIM)) {
             throw 'invalid width'
@@ -18,7 +18,12 @@ class GridGraph extends Gridder {
             // No exception - just use default
             pixelSize = 1
         }
+        if (pixelBorderColor !== null && !this.#validColor(pixelBorderColor)) {
+            // No exception - just default
+            pixelBorderColor = null
+        }
         this.defaultColor = '#000000'
+        this.pixelBorderColor = pixelBorderColor
         this.width = width
         this.height = height
         this.pixelSize = pixelSize
@@ -62,14 +67,15 @@ class GridGraph extends Gridder {
         for (let j=0;j<this.height;j++) {
             let row = []
             for (let i=0;i<this.width;i++) {
+                let attribs = { fill: this.defaultColor }
+                if (this.pixelBorderColor) {
+                    attribs.stroke = this.pixelBorderColor
+                    attribs.strokeWidth = this.pixelSize/16
+                }
                 let pixRect = makeSvgRectangle(
                     i*this.pixelSize,j*this.pixelSize,
                     this.pixelSize,this.pixelSize,
-                    {
-                        // stroke$width: this.pixelSize/16,
-                        // stroke: '#888888',
-                        fill: this.defaultColor
-                    },this.svg)
+                    attribs,this.svg)
                 row.push(pixRect)
             }
             this.rows.push(row)

@@ -1,7 +1,7 @@
 import { makeSvgElem, makeSvgRectangle } from "./svgutils.js"
 
 class GridGraph {
-    constructor (width, height, pixelSize = 1, defaultColor = '#000000') {
+    constructor (width, height, pixelSize = 1, defaultColor = '#000000', pixelBorderColor = null) {
         const MAXDIM = 1024 // TODO
         if (!this.#validInt(width,1,MAXDIM)) {
             throw 'invalid width'
@@ -17,10 +17,15 @@ class GridGraph {
             // No exception - just default
             defaultColor = '#000000'
         }
+        if (pixelBorderColor !== null && !this.#validColor(pixelBorderColor)) {
+            // No exception - just default
+            pixelBorderColor = null
+        }
         this.width = width
         this.height = height
         this.pixelSize = pixelSize
         this.defaultColor = defaultColor
+        this.pixelBorderColor = pixelBorderColor
         this.trueWidth = this.width * this.pixelSize
         this.trueHeight = this.height * this.pixelSize
         this.svg = makeSvgElem('svg',{
@@ -61,14 +66,15 @@ class GridGraph {
         for (let j=0;j<this.height;j++) {
             let row = []
             for (let i=0;i<this.width;i++) {
+                let attribs = { fill: this.defaultColor }
+                if (this.pixelBorderColor) {
+                    attribs.stroke = this.pixelBorderColor
+                    attribs.strokeWidth = this.pixelSize/16
+                }
                 let pixRect = makeSvgRectangle(
                     i*this.pixelSize,j*this.pixelSize,
                     this.pixelSize,this.pixelSize,
-                    {
-                        stroke$width: this.pixelSize/16,
-                        stroke: '#888888',
-                        fill: this.defaultColor
-                    },this.svg)
+                    attribs,this.svg)
                 row.push(pixRect)
             }
             this.rows.push(row)

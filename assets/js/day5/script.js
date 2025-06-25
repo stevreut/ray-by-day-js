@@ -1,12 +1,10 @@
-
-// import GridGraph from "../day4/gridgraph.js"
 import BiVariantGrapher from "./bivargrapher.js"
+import { innerPixelWidth } from "../utils/dom-utils.js"
 
 const svgAnchorID = "svghere"
 
-const PIXELS_WIDTH = 160
-const PIXELS_HEIGHT = 120
-const PIXEL_SIZE = 5  // One VIRTUAL pixel = 5 screen pixels
+const PIXELS_WIDTH = 96
+const PIXELS_HEIGHT = 72
 
 onload = () => {
     const svgAnchor = document.getElementById(svgAnchorID)
@@ -19,7 +17,15 @@ onload = () => {
 }
 
 function createSvgElemAt(anch) {
-    let graph = new BiVariantGrapher(200,150,4,60.2)
+    // Calculate pixel size based on container width
+    let virtualPixelSize = 4
+    if (anch.parentElement && anch.parentElement.clientWidth > 0) {
+        const container = anch.parentElement;
+        const contentWidth = innerPixelWidth(container);
+        virtualPixelSize = Math.max(4, Math.floor(contentWidth / PIXELS_WIDTH));
+    }
+    
+    let graph = new BiVariantGrapher(PIXELS_WIDTH, PIXELS_HEIGHT, virtualPixelSize, PIXELS_HEIGHT*0.4)
     graph.setFunction(localFunc2)
     let svgElem = graph.drawGraph()
     return svgElem
