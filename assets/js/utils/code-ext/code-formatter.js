@@ -99,6 +99,77 @@ class CodeFormatter {
                 return htmlContent
         }
     }
+    /**
+     * Inserts a horizontal resource index into the given container. Clicking a filename opens a popup with the file's contents, formatted.
+     * @param {HTMLElement|string} containerElemOrId - The container element or its ID.
+     * @param {string[]} fileListArray - Array of file paths (relative or absolute).
+     * @param {Object} options - Optional: { codeType: 'js'|'css'|'html'|... }
+     */
+    insertResourceIndex(containerElemOrId, fileListArray, options={}) {
+        const codeType = options.codeType || 'js';
+        let container = (typeof containerElemOrId === 'string') ? document.getElementById(containerElemOrId) : containerElemOrId;
+        if (!container) {
+            console.error('Resource index container not found:', containerElemOrId);
+            return;
+        }
+        container.classList.add('resource-index-bar');
+        // Clear previous content
+        container.innerHTML = '';
+        // Create the horizontal list
+        const listDiv = document.createElement('div');
+        listDiv.className = 'resource-index-list';
+        fileListArray.forEach(filePath => {
+            const baseName = filePath.split('/').pop();
+            const link = document.createElement('a');
+            link.href = '#';
+            link.className = 'resource-index-link';
+            link.textContent = baseName;
+            link.title = filePath;
+            link.addEventListener('click', async (e) => {
+                e.preventDefault();
+                // Show popup with file contents
+                try {
+                    const response = await fetch(filePath);
+                    if (!response.ok) throw new Error('Failed to fetch ' + filePath);
+                    const content = await response.text();
+                    const popup = this._createResourcePopup(baseName, content, codeType);
+                    document.body.appendChild(popup);
+                } catch (err) {
+                    alert('Could not load file: ' + filePath + '\n' + err);
+                }
+            });
+            listDiv.appendChild(link);
+        });
+        container.appendChild(listDiv);
+    }
+
+    _createResourcePopup(title, content, codeType) {
+        // Overlay
+        const overlay = document.createElement('div');
+        overlay.className = 'resource-popup-overlay';
+        overlay.tabIndex = -1;
+        // Popup box
+        const popupBox = document.createElement('div');
+        popupBox.className = 'resource-popup-box';
+        // Close button
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'resource-popup-close';
+        closeBtn.innerHTML = '&times;';
+        closeBtn.title = 'Close';
+        closeBtn.onclick = () => overlay.remove();
+        // Dismiss on overlay click (but not popup box)
+        overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
+        // Code content
+        const codeElem = this.formatTitledExcerptElement(title, content, true, codeType);
+        // Assemble
+        popupBox.appendChild(closeBtn);
+        popupBox.appendChild(codeElem);
+        overlay.appendChild(popupBox);
+        // Keyboard: ESC to close
+        overlay.addEventListener('keydown', (e) => { if (e.key === 'Escape') overlay.remove(); });
+        setTimeout(() => overlay.focus(), 0);
+        return overlay;
+    }
 }
 
 export default CodeFormatter

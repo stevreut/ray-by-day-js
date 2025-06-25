@@ -66,6 +66,17 @@
             <button id="savebtn" class="btndisabled" disabled>Save Image</button>
         </p>
     </div>
+    <h3 style="margin-top:2em; margin-bottom:0.5em; font-size:1.1em; color:#1b6be2;">Resources used in this page</h3>
+    <div id="resource-index"></div>
+    <script type="module">
+        import CodeFormatter from "../assets/js/utils/code-ext/code-formatter.js";
+        const cf = new CodeFormatter();
+        cf.insertResourceIndex("resource-index", [
+            "../assets/js/day27/script.js",
+            "../assets/js/day27/refl-tetra.js",
+            "../assets/js/day27/sierp-tetra.js"
+        ]);
+    </script>
     <div class="hopdiv">
         <a href="./day26.html">Prev</a>
         <a href="../index.html">Home</a>
