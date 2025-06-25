@@ -1,4 +1,3 @@
-
 import BiVariantGrapher from "./bivargrapher.js"
 
 const svgAnchorID = "svghere"
@@ -14,18 +13,37 @@ onload = () => {
     if (!svgAnchor) {
         throw 'no ' + svgAnchorID + 'id found on page'
     }
+    
+    // Initial render
+    renderGraph(svgAnchor)
+    
+    // Set up event listeners
+    setupEventListeners(svgAnchor)
+}
+
+function setupEventListeners(svgAnchor) {
+    // Toggle graphed function button
+    const changeButton = document.getElementById("chgbtn")
+    if (changeButton) {
+        changeButton.addEventListener('click', () => {
+            functionToGraph = 3 - functionToGraph
+            renderGraph(svgAnchor)
+        })
+    }
+    
+    // Anti-alias factor select
+    const aaSelect = document.getElementById("aasel")
+    if (aaSelect) {
+        aaSelect.addEventListener('change', () => {
+            renderGraph(svgAnchor)
+        })
+    }
+}
+
+function renderGraph(svgAnchor) {
     svgAnchor.innerHTML = ''
     let svgElem = createSvgElemAt(svgAnchor)
     svgAnchor.appendChild(svgElem)
-    const changeButton = document.getElementById("chgbtn")
-    if (changeButton) {
-        changeButton.addEventListener('click',()=>{
-            functionToGraph = 3-functionToGraph
-            svgAnchor.innerHTML = ''
-            let svgElem = createSvgElemAt(svgAnchor)
-            svgAnchor.appendChild(svgElem)
-        })
-    }
 }
 
 function createSvgElemAt(anch) {
