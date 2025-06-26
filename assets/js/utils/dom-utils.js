@@ -65,4 +65,58 @@ export function innerPixelHeight(element) {
         console.error('innerPixelHeight: Error calculating height:', error);
         return 0;
     }
+}
+
+/**
+ * Sets image dimensions based on container size and quality settings
+ * @param {HTMLElement} imgParagraph - The container element
+ * @param {boolean} isHiQuality - Whether to use high quality settings
+ * @param {number} defaultWidth - Default width when container logic fails
+ * @param {number} minWidth - Minimum acceptable width
+ * @param {number} maxWidth - Maximum width for responsive sizing
+ * @param {number} aspectRatio - Height/width ratio (default 0.75 for 4:3, 1.0 for square)
+ * @param {number} pixelSizeThreshold - Width threshold for pixel size adjustment
+ * @returns {Object} Object containing targetWidth, targetHeight, pixelSize, and antiAlias
+ */
+export function setImageDimensions(imgParagraph, isHiQuality = false, defaultWidth = 800, minWidth = 100, maxWidth = 600, aspectRatio = 0.75, pixelSizeThreshold = 512) {
+    if (!imgParagraph || !(imgParagraph instanceof HTMLElement)) {
+        console.error('setImageDimensions: Invalid imgParagraph element provided');
+        return {
+            targetWidth: defaultWidth,
+            targetHeight: Math.round(defaultWidth * aspectRatio),
+            pixelSize: 1,
+            antiAlias: 3
+        };
+    }
+    
+    let targetWidth, pixelSize, antiAlias;
+    
+    if (isHiQuality) {
+        // High quality mode: use default width
+        targetWidth = defaultWidth;
+        pixelSize = 1;
+        antiAlias = 5;
+    } else {
+        // Responsive mode: use container width with constraints
+        const containerWidth = innerPixelWidth(imgParagraph);
+        
+        if (containerWidth >= minWidth && containerWidth <= maxWidth) {
+            targetWidth = containerWidth;
+        } else {
+            targetWidth = defaultWidth;
+        }
+        
+        // Adjust pixel size based on target width and custom threshold
+        pixelSize = (targetWidth <= pixelSizeThreshold ? 1 : 3);
+        antiAlias = 3;
+    }
+    
+    const targetHeight = Math.round(targetWidth * aspectRatio);
+    
+    return {
+        targetWidth,
+        targetHeight,
+        pixelSize,
+        antiAlias
+    };
 } 

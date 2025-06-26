@@ -9,6 +9,7 @@ import Plane from "../day22/plane.js"
 import RefractiveSphere from "../day22/refractive-sphere.js"
 import GraphicStatusReportBar from "../utils/graph-status-bar.js"
 import CanvasGridGrapher from "../day20/canvas-grid-grapher.js"
+import { setImageDimensions } from "../utils/dom-utils.js"
 
 import ReflectiveIcosahedron from "./refl-icos.js"
 
@@ -40,7 +41,9 @@ onload = () => {
         goAgainButton = linkElement(REPEAT_BUTTON_ID)
         durationElem = linkElement(DURATION_TEXT_ID)
         statusBar = new GraphicStatusReportBar(STATUS_BAR_ID);
-        setImageDimensions()
+        const dimensions = setImageDimensions(imgParagraph, false, DEFAULT_IMAGE_WIDTH)
+        targetImageWidth = dimensions.targetWidth
+        targetImageHeight = dimensions.targetHeight
         insertBlankCanvas()
         makeImageIfEnabled()
         goAgainButton.addEventListener('click',()=>makeImageIfEnabled())
@@ -77,18 +80,6 @@ function enableButton(doEnable) {
         goAgainButton.disabled = true
         goAgainButton.classList.add('btndisabled')
     }
-}
-
-function setImageDimensions() {
-    const containerWidth = imgParagraph.clientWidth
-    if (containerWidth && Number.isInteger(containerWidth) && containerWidth > 10
-        && containerWidth <= 600) {
-            targetImageWidth = containerWidth
-    } else {
-            targetImageWidth = DEFAULT_IMAGE_WIDTH
-    }
-    targetImageHeight = Math.round(targetImageWidth*0.75)
-    PIXEL_SIZE = (targetImageWidth<=512?1:2)
 }
 
 async function processImage(imgParagraph,durationElem) {

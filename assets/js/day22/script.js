@@ -12,6 +12,7 @@ import RefractiveSphere from "./refractive-sphere.js"
 
 import GraphicStatusReportBar from "../utils/graph-status-bar.js"
 import CanvasGridGrapher from "../day20/canvas-grid-grapher.js"
+import { setImageDimensions } from "../utils/dom-utils.js"
 
 const IMG_PARA_ID = 'imgpara'
 const STATUS_BAR_ID = 'statbar'
@@ -33,15 +34,17 @@ let statusBar = null
 
 onload = () => {
     try {
-        imgParagraph = document.getElementById(IMG_PARA_ID)
-        let fStopInput = document.getElementById(F_STOP_INPUT_ID)
-        let goAgainButton = document.getElementById(REPEAT_BUTTON_ID)
-        let durationElem = document.getElementById(DURATION_TEXT_ID)
+        imgParagraph = linkElement(IMG_PARA_ID)
+        let fStopInput = linkElement(F_STOP_INPUT_ID)
+        let goAgainButton = linkElement(REPEAT_BUTTON_ID)
+        let durationElem = linkElement(DURATION_TEXT_ID)
         statusBar = new GraphicStatusReportBar(STATUS_BAR_ID);
         if (!imgParagraph) {
             throw 'no ' + IMG_PARA_ID + ' id found on page'
         }
-        setImageDimensions()
+        const dimensions = setImageDimensions(imgParagraph, false, DEFAULT_IMAGE_WIDTH)
+        targetImageWidth = dimensions.targetWidth
+        targetImageHeight = dimensions.targetHeight
         insertBlankCanvas()
         if (!fStopInput) {
             throw 'no ' + F_STOP_INPUT_ID + ' id found on page'
@@ -77,15 +80,12 @@ onload = () => {
     }
 }
 
-function setImageDimensions() {
-    const containerWidth = imgParagraph.clientWidth
-    if (containerWidth && Number.isInteger(containerWidth) && containerWidth > 10
-        && containerWidth <= 600) {
-            targetImageWidth = containerWidth
-    } else {
-            targetImageWidth = DEFAULT_IMAGE_WIDTH
+function linkElement(id) {
+    let elem = document.getElementById(id)
+    if (!elem) {
+        throw 'no ' + id + ' id found on page'
     }
-    targetImageHeight = Math.round(targetImageWidth*0.75)
+    return elem
 }
 
 function setCameraFromFStop(fStopInput) {

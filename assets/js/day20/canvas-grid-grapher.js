@@ -23,6 +23,8 @@ class CanvasGridGrapher extends GenericGridGrapher {
         }
         this.canvElem.width = this.width
         this.canvElem.height = this.height
+        this.canvElem.style.maxWidth = '100%'
+        this.canvElem.style.height = 'auto'
         this.ctx = this.canvElem.getContext('2d')  // ctx = context
         if (!this.ctx) {
             throw 'unable to obtain 2D context for canvas element'

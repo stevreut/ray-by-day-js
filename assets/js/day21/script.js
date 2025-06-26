@@ -7,6 +7,7 @@ import Plane from "../day20/plane.js"
 import CanvasGridGrapher from "../day20/canvas-grid-grapher.js"
 import Sphere from "../day20/sphere.js"
 import GraphicStatusReportBar from "../utils/graph-status-bar.js"
+import { setImageDimensions } from "../utils/dom-utils.js"
 
 import OpticalEnvironment from "./optical-env.js"
 import RefractiveSphere from "./refractive-sphere.js"
@@ -37,7 +38,9 @@ onload = () => {
         if (!imgParagraph) {
             throw 'no ' + IMG_PARA_ID + ' id found on page'
         }
-        setImageDimensions()        
+        const dimensions = setImageDimensions(imgParagraph, false, DEFAULT_IMAGE_WIDTH)
+        targetImageWidth = dimensions.targetWidth
+        targetImageHeight = dimensions.targetHeight
         if (!goAgainButton) {
             throw 'no ' + REPEAT_BUTTON_ID + ' id found on page'
         }
@@ -64,17 +67,6 @@ onload = () => {
         console.error('err = ', err)
         alert ('error = ' + err.toString())  // TODO
     }
-}
-
-function setImageDimensions() {
-    const containerWidth = imgParagraph.clientWidth
-    if (containerWidth && Number.isInteger(containerWidth) && containerWidth > 10
-        && containerWidth <= 600) {
-            targetImageWidth = containerWidth
-    } else {
-            targetImageWidth = DEFAULT_IMAGE_WIDTH
-    }
-    targetImageHeight = Math.round(targetImageWidth*0.75)
 }
 
 async function processImage(imgParagraph,durationElem) {

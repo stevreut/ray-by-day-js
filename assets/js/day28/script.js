@@ -16,6 +16,7 @@ import SettingsInputBox from "../utils/settings-input-box.js"
 import GraphicStatusReportBar from "../utils/graph-status-bar.js"
 import { saveRayTraceImage, DAY_TYPES } from "../utils/image-saver.js"
 import CanvasGridGrapher from "../day20/canvas-grid-grapher.js"
+import { setImageDimensions } from "../utils/dom-utils.js"
 
 const IMG_PARA_ID = 'imgpara'
 const STATUS_BAR_ID = 'statbar'
@@ -65,28 +66,44 @@ onload = async () => {
         durationElem = linkElement(DURATION_TEXT_ID)
         statBarElem = linkElement(STATUS_BAR_ID)
         settingsDiv = linkElement(SETTINGS_ID)
-        setImageDimensions(false)
+        statusBar = new GraphicStatusReportBar(STATUS_BAR_ID);
+        const dimensions = setImageDimensions(imgParagraph, false, DEFAULT_IMAGE_WIDTH)
+        targetImageWidth = dimensions.targetWidth
+        targetImageHeight = dimensions.targetHeight
+        pixelSize = dimensions.pixelSize
+        antiAlias = dimensions.antiAlias
         insertBlankCanvas()
         formatInputs()
         initEnvironment()
-        statusBar = new GraphicStatusReportBar(statBarElem);
         await processImage(imgParagraph,durationElem)
         enableButton(lowQualityButton,false)
         goAgainButton.addEventListener('click',async ()=>{
-            setImageDimensions(false)
+            const dimensions = setImageDimensions(imgParagraph, false, DEFAULT_IMAGE_WIDTH)
+            targetImageWidth = dimensions.targetWidth
+            targetImageHeight = dimensions.targetHeight
+            pixelSize = dimensions.pixelSize
+            antiAlias = dimensions.antiAlias
             initEnvironment()
             await processImage(imgParagraph,durationElem)
             enableButton(highQualityButton,true)
             enableButton(lowQualityButton,false)
         })
         highQualityButton.addEventListener('click',async ()=>{
-            setImageDimensions(true)
+            const dimensions = setImageDimensions(imgParagraph, true, DEFAULT_IMAGE_WIDTH)
+            targetImageWidth = dimensions.targetWidth
+            targetImageHeight = dimensions.targetHeight
+            pixelSize = dimensions.pixelSize
+            antiAlias = dimensions.antiAlias
             await processImage(imgParagraph,durationElem)
             enableButton(highQualityButton,false)
             enableButton(lowQualityButton,true)
         })
         lowQualityButton.addEventListener('click',async ()=>{
-            setImageDimensions(false)
+            const dimensions = setImageDimensions(imgParagraph, false, DEFAULT_IMAGE_WIDTH)
+            targetImageWidth = dimensions.targetWidth
+            targetImageHeight = dimensions.targetHeight
+            pixelSize = dimensions.pixelSize
+            antiAlias = dimensions.antiAlias
             await processImage(imgParagraph,durationElem)
             enableButton(highQualityButton,true)
             enableButton(lowQualityButton,false)
@@ -126,22 +143,6 @@ function enableButton(button,doEnable) {
         button.disabled = true
         button.classList.add('btndisabled')
     }
-}
-
-function setImageDimensions(isHiQuality) {
-    const containerWidth = imgParagraph.clientWidth
-    if (isHiQuality) {
-        targetImageWidth = DEFAULT_IMAGE_WIDTH
-    } else {
-        if (containerWidth && Number.isInteger(containerWidth) && containerWidth > 10) {
-            targetImageWidth = Math.min(containerWidth,DEFAULT_IMAGE_WIDTH)
-        } else {
-            targetImageWidth = DEFAULT_IMAGE_WIDTH
-        }
-    }
-    targetImageHeight = Math.round(targetImageWidth*0.75)
-    pixelSize = (isHiQuality?1:(targetImageWidth<=100?1:3))
-    antiAlias = (isHiQuality?4:2)
 }
 
 async function processImage(imgParagraph,durationElem) {
@@ -187,6 +188,8 @@ function insertBlankCanvas() {
         imgParagraph.innerHTML = ''
         canv.width = targetImageWidth
         canv.height = targetImageHeight
+        canv.style.maxWidth = '100%'
+        canv.style.height = 'auto'
         const localContext = canv.getContext('2d')
         if (localContext) {
             localContext.fillStyle = '#ddd';
