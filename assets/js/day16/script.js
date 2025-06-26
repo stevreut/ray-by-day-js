@@ -4,6 +4,7 @@ import BiVariantGrapher from "../day14/bivargrapher.js"
 import Ray from "../day14/ray.js"
 import Color from "../day14/color.js"
 import ShadowedSphere from "./shadowed-sphere.js"
+import { innerPixelWidth } from "../utils/dom-utils.js"
 
 const IMG_PARA_ID = 'imgpara'
 const DURATION_TEXT_ID = 'dur'
@@ -33,13 +34,8 @@ onload = () => {
 }
 
 function setImageDimensions() {
-    const containerWidth = imgParagraph.clientWidth
-        if (containerWidth && Number.isInteger(containerWidth) && containerWidth > 10
-        && containerWidth <= 600) {
-            targetImageWidth = containerWidth
-    } else {
-            targetImageWidth = DEFAULT_IMAGE_WIDTH
-    }
+    const containerWidth = innerPixelWidth(imgParagraph)
+    targetImageWidth = Math.max(100,Math.min(DEFAULT_IMAGE_WIDTH,containerWidth))
     targetImageHeight = Math.round(targetImageWidth*0.75)
 }
 
@@ -139,7 +135,7 @@ function orderlyCenter(n) {
 function randomColor() {
     let arr = []
     for (let i=0;i<3;i++) {
-        arr.push(Math.round(Math.random()*120+120)/255)
+        arr.push(Math.round(Math.random()*70+170)/255)
     }
     return new Color(arr)
 }
