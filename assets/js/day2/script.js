@@ -33,7 +33,7 @@ onload = async function() {
     }
     const pageUrl = './day2.html'
     const scriptUrl = '../assets/js/day2/script.js'
-    commonUtilsObj.insertTitledCodeAtPreexistingElement('svgcode',pageUrl,24,38,
+    commonUtilsObj.insertTitledCodeAtPreexistingElement('svgcode',pageUrl,45,59,
         "Beginning of embedded SVG content (plus header, etc.)",true)
     commonUtilsObj.insertTitledCodeAtPreexistingElement('randomchgcode',
         scriptUrl,10,20,"day2/script.js",true)

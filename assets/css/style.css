@@ -180,6 +180,16 @@ input[type=color] {
     border: solid 1px #ccc;
     border-radius: 1.5mm;
 }
+
+/* Consistent bullet point spacing for narrative content */
+.narrative-list {
+    margin-bottom: 1em;
+}
+
+.narrative-list li {
+    margin-bottom: 0.5em;
+}
+
 label {
     margin-right: 1em;
 }

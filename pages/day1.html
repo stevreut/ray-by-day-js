@@ -17,16 +17,61 @@
 <body>
     <h1 class="subduedh1">Ray by Day JS</h1>
     <h2><span class="dayh2">Day 1</span> - Static SVG File</h2>
+    
+    <div class="innerdiv">
+        <h3>Introduction: Simulating Raster Graphics with SVG</h3>
+        <p>
+            This series begins with a fundamental approach to graphics programming: simulating raster (pixel-based) images using SVG (Scalable Vector Graphics). 
+            While we'll eventually move to more sophisticated rendering techniques, starting with SVG provides a clear foundation for understanding how 
+            individual pixels can be manipulated to create images.
+        </p>
+        
+        <h3>Day 1: External SVG File Inclusion</h3>
+        <p>
+            Our first step demonstrates the simplest approach: including a pre-created SVG file as an external resource using the HTML <code>&lt;img&gt;</code> element. 
+            This approach treats the SVG file like any other image file (PNG, JPG, etc.), but with the advantage that the SVG content can be examined 
+            and understood as structured markup rather than binary data.
+        </p>
+        
+        <p>
+            The image below shows a 20×20 pixel grid where each "pixel" is actually a small SVG rectangle. This creates the illusion of a raster image 
+            while maintaining the benefits of vector graphics: scalability, inspectability, and programmatic manipulation potential.
+        </p>
+    </div>
+    
     <div class="imgdiv">
         <h3>Image file day1-static.svg</h3>
         <img src="../assets/images/day1-static.svg" width="400" />
     </div>
     <div class="innerdiv">
         <h3>HTML referencing file day1-static.svg</h3>
+        <p>
+            The HTML code below shows how we reference the external SVG file using a standard <code>&lt;img&gt;</code> element. This is the simplest way to include 
+            an SVG file in a web page, treating it just like any other image format. The browser loads the SVG file and renders it as part of the page content.
+        </p>
         <pre id="imgrefcode">Code extract failed</pre>
         <h3>Excerpt of contents of file day1-static.svg</h3>
+        <p>
+            Here we can see the actual SVG markup that creates our simulated raster image. Each <code>&lt;rect&gt;</code> element represents a single "pixel" in our 
+            20×20 grid. The SVG uses a coordinate system where each rectangle is positioned using x and y attributes, with colors specified by the fill attribute. 
+            This structured approach makes it easy to understand how the image is constructed.
+        </p>
         <pre id="svgcode">Code extract failed</pre>
         <h3>Code for generating SVG content as string</h3>
+        <p>
+            This is the JavaScript function that originally generated the static SVG file shown above. The function returns a complete SVG document as a string, 
+            which can then be saved to a file or used directly. When you click the "Generate SVG File Content" button below, this same code will execute and 
+            display the resulting SVG string in the textarea.
+        </p>
+        <p>
+            Key aspects of this SVG generation approach:
+        </p>
+        <ul class="narrative-list">
+            <li>The function creates a proper XML header to begin the SVG document</li>
+            <li>The SVG namespace declaration in the opening <code>&lt;svg&gt;</code> tag is required for proper rendering</li>
+            <li>Each virtual pixel is formatted as a <code>&lt;rect&gt;</code> (rectangle) element with specific x, y, width, and height attributes</li>
+            <li>The color of each pixel/rectangle is calculated from the row and column coordinates, creating an implicit function that returns a color based on position - this coordinate-to-color mapping is a fundamental concept we'll explore further in later contexts</li>
+        </ul>
         <pre id="makesvgcode">Code extract failed</pre>
     </div>
     <div>

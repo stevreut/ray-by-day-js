@@ -10,6 +10,54 @@
 <body>
     <h1 class="subduedh1">Ray by Day JS</h1>
     <h2><span class="dayh2">Day 4</span> - Dynamically Created SVG in DOM using JS Libraries</h2>
+    <div class="innerdiv">
+        <h3>Day 4: Abstraction with SVG Libraries</h3>
+        <p>
+            In the previous days, we built up from static SVG files to inline SVG and then to dynamic SVG generation using JavaScript. 
+            Today, we take a major step toward scalable, maintainable graphics code by introducing two key libraries: <code>svgutils.js</code> and <code>svg-grid-grapher.js</code>.
+        </p>
+        <h4>svgutils.js: Simplifying SVG Element Creation</h4>
+        <p>
+            The <code>svgutils.js</code> library frees the developer from the repetitive details of creating SVG elements and setting their attributes. 
+            Instead of manually constructing SVG markup or calling <code>document.createElementNS</code> for every shape, you can use simple utility functions to create and configure SVG elements programmatically.
+        </p>
+        <h4>svg-grid-grapher.js: Abstracting Raster Graphics</h4>
+        <p>
+            Building on <code>svgutils.js</code>, the <code>svg-grid-grapher.js</code> library provides a higher-level abstraction for simulating raster graphics. 
+            It encapsulates the details of SVG element creation and exposes a generic interface for specifying the width, height, and virtual pixel size of your grid, as well as the color of each pixel at integer coordinates.
+        </p>
+        <p>
+            A key architectural point is that <code>svg-grid-grapher.js</code> encapsulates <code>svgutils.js</code> using generic methods. 
+            This means that, in the future, we can swap out the underlying graphics implementation (for example, to use Canvas or WebGL) without changing the interface our code relies on.
+        </p>
+        <h4>Practical Details</h4>
+        <ul class="narrative-list">
+            <li>
+                You can specify the <b>width</b>, <b>height</b>, and <b>virtual pixel size</b> for your grid, making it easy to simulate different raster resolutions.
+            </li>
+            <li>
+                The <b>putPixel(column, row, rr, gg, bb)</b> method lets you set the color of any pixel using integer coordinates. The color is specified by three separate integer parameters for the red, green, and blue channels (each from 0 to 255), not by a single hex string.
+            </li>
+            <li>
+                (Internally, colors are converted to hex strings like <code style="color: #4caf50">#4caf50</code>, but you provide the color as three separate values.)
+            </li>
+            <li>
+                Note that the vertical coordinate system is <b>top-to-bottom</b> (row 0 is at the top).
+            </li>
+        </ul>
+        <h4>Virtual Pixels</h4>
+        <p>
+            A <b>virtual pixel</b> serves as a stand-in for a physical pixel, but is intentionally larger—often spanning several real screen pixels. This makes it much easier to see and experiment with the behavior of individual "pixels" in our simulated raster grid. As we continue, this approach will be especially handy for testing and visualizing our graphics algorithms before we move on to higher resolutions or more advanced rendering techniques.
+        </p>
+        <p>
+            The relationship is straightforward: the <b>physical dimensions</b> of the SVG image are just the grid width and height multiplied by the virtual pixel size. For example, a grid of 20×15 with a virtual pixel size of 7 yields an SVG that's 140×105 pixels. This scaling lets us easily observe and interact with each virtual pixel during development.
+        </p>
+        <p>
+            By using these libraries, we can focus on the logic of our graphics algorithms, rather than the mechanics of SVG element creation. 
+            This abstraction is a crucial step toward more advanced rendering techniques.
+        </p>
+    </div>
+    
     <div class="imgdiv">
         <h3>SVG dynamically created on this page by JavaScript making
             use of <code>svgutils.js</code> and <code>svg-grid-grapher.js</code>
