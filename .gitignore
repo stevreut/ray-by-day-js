@@ -13,10 +13,9 @@ lerna-debug.log*
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
-# Ray by Day JS resource discrepancy reports and tools
-ray-by-day-js-resource-discrepancy-report.csv
-ray-by-day-js-resource-discrepancy-report.json
+# Reports and tools
 tools/
+tools-outputs/
 
 # Runtime data
 pids
