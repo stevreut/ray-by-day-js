@@ -34,6 +34,8 @@ class SVGGridGrapher extends GenericGridGrapher {
             height: this.trueHeight,
             viewBox: '0 0 ' + this.trueWidth + ' ' + this.trueHeight
         })
+        this.svg.style.width = '100%'
+        this.svg.style.height = 'auto'
         this.#setDefaultGrid()
     }
     #validInt(n,low,high) {

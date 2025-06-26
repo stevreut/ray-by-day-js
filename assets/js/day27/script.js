@@ -92,7 +92,6 @@ onload = async () => {
         pixelSize = dimensions.pixelSize
         antiAlias = dimensions.antiAlias
         insertBlankCanvas()
-        formatInputs()
         initEnvironment()
         await processImage(imgParagraph,durationElem)
         enableButton(lowQualityButton,false)

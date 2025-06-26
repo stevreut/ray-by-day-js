@@ -24,20 +24,24 @@ class TableGridGraph extends GenericGridGrapher {
             for (let col=0;col<this.width;col++) {
                 const tdata = document.createElement('td')
                 const idx = row*this.width+col
-                tdata.textContent = 'X'
+                tdata.textContent = '\u00A0' // non-breaking space character
                 tdata.style.color = 'black'
+                tdata.style.border = '1px solid #333'
                 let bgColr = '#'
                 this.arr[idx].forEach(itm=>bgColr+=itm.toString(16).padStart(2,'0'))
                 tdata.style.backgroundColor = bgColr
                 tdata.style.margin = '0.5px'
-                tdata.style.width = this.tdDim + 'px'
-                tdata.style.height = this.tdDim + 'px'
+                tdata.style.width = 'auto'
+                tdata.style.height = 'auto'
                 trow.appendChild(tdata)
             }
             tbody.appendChild(trow)
         }
         tbl.appendChild(tbody)
         tbl.style.backgroundColor = '#888'
+        tbl.style.tableLayout = 'fixed'
+        tbl.style.borderSpacing = '0'
+        tbl.style.width = '100%'
         return tbl
     }
 

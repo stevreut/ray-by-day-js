@@ -8,15 +8,38 @@ onload = async function() {
     let svgImgRef = document.getElementById('imgrefcode')
     let svgCodeElem = document.getElementById('svgcode')
     let makeSvgCodeElem = this.document.getElementById('makesvgcode')
+    const selectAllButton = document.getElementById('selectallbtn')
     if (!(makeSvgButton && textAreaElem && clearButton && svgImgRef && 
         svgCodeElem && makeSvgCodeElem)) {
             throw 'missing expected id(s)'
     }
+    // Helper to check if textarea is non-empty (ignoring whitespace)
+    function updateSelectAllButtonVisibility() {
+        if (textAreaElem.value.trim().length > 0) {
+            selectAllButton.style.display = ''
+        } else {
+            selectAllButton.style.display = 'none'
+        }
+    }
+    // Show/hide button on input
+    textAreaElem.addEventListener('input', updateSelectAllButtonVisibility)
+    // Also update after Generate and Reset
     makeSvgButton.addEventListener('click',()=>{
         const svgStr = getSvgContent(30,30,5)  // 30 virtual pixels on each side -> 150x150 actual pixels
         textAreaElem.value = svgStr
+        updateSelectAllButtonVisibility()
     })
-    clearButton.addEventListener('click',()=>textAreaElem.value='')
+    clearButton.addEventListener('click',()=>{
+        textAreaElem.value=''
+        updateSelectAllButtonVisibility()
+    })
+    // Select all on button click
+    selectAllButton.addEventListener('click',()=>{
+        textAreaElem.focus()
+        textAreaElem.select()
+    })
+    // Initial state
+    updateSelectAllButtonVisibility()
     const scriptUrl = '../assets/js/day1/script.js'
     const svgUrl = '../assets/images/day1-static.svg'
     const pageUrl = './day1.html'
