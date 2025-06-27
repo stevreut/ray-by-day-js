@@ -10,6 +10,18 @@
 <body>
     <h1 class="subduedh1">Ray by Day JS</h1>
     <h2><span class="dayh2">Day 7</span> - Making Grid Libraries Interchangeable</h2>
+    <p><strong>On Day 7, we take a significant step in the design of our graphing tools by introducing the concept of <em>abstraction</em> through the creation of a new class: <code>GenericGridGrapher</code>.</strong></p>
+    <p><strong>Abstract Classes in JavaScript?</strong><br>
+    While JavaScript doesn't have true abstract classes like some other languages, <code>GenericGridGrapher</code> serves as an "abstract" base class in practice. It defines a common interface and shared logic for different types of grid graphers, but isn't meant to be used directly. Instead, specific implementations inherit from it and provide their own rendering logic.</p>
+    <p><strong>Polymorphism in Action</strong><br>
+    To demonstrate the power and flexibility of this abstraction, you can use the toggle below to switch between two different implementations:</p>
+    <ul class="narrative-list">
+      <li><strong>SVGGridGrapher:</strong> Renders the grid using SVG, as in previous days.</li>
+      <li><strong>TableGridGraph:</strong> Renders the same function using an HTML <code>&lt;table&gt;</code>. This is intentionally a "silly and pointless" implementation, included only to show how easy it is to swap out rendering methods when using an abstract base class.</li>
+    </ul>
+    <p><strong>Why does this matter?</strong><br>
+    This exercise highlights the benefits of object-oriented programming (OOP) principles like abstraction and polymorphism. By coding to an abstract interface, you can easily extend or modify your program's behavior without changing its core logic.</p>
+    <p>Try toggling between the two implementations and observe how the same function is rendered in completely different ways. Consider how this approach could be used to add new rendering methods in the future.</p>
     <div class="imgdiv">
         <h3 id="imgh3">SVG dynamically created ... 
         </h3>

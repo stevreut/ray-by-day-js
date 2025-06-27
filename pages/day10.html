@@ -10,7 +10,49 @@
 <body>
     <h1 class="subduedh1">Ray by Day JS</h1>
     <h2><span class="dayh2">Day 10</span> - Classical Optics - The Perception of Light</h2>
-    <p>[Page under construction]</p>
+    <p><em>This page is still under construction, but here's an overview of the key concepts introduced today:</em></p>
+    
+    <p><strong>Three Primary Colors: A Feature of Human Vision, Not Light Itself</strong></p>
+    <p>A common idea in art and science is that there are "three primary colors." However, this concept arises not from the fundamental nature of light, but from the biology of human vision. The typical human eye contains three types of color receptors (cones), each sensitive to a different range of wavelengths. This trichromatic system allows us to perceive a vast array of colors by mixing signals from these three types of cones.</p>
+    <ul class="narrative-list">
+        <li>The "primary colors" (red, green, and blue in the context of light) are simply the result of how our eyes and brains process incoming light.</li>
+        <li>Other animals may have a different number of color receptors, leading to a very different experience of color.</li>
+        <li>Some humans have color vision differences (color-blindness), where one or more types of cones are absent or function differently, further illustrating that the three-primary-color model is a feature of perception, not of light itself.</li>
+    </ul>
+    
+    <p><strong>Three-Dimensional Color Space: A Product of Our Biology</strong></p>
+    <p>Because the human retina contains three types of cone receptors, our perception of color can be described as a three-dimensional "color space." Each color we see is the result of a unique combination of stimulation from these three types of cones. This is why systems like RGB (red, green, blue) are so effective for representing color in digital displays and computer graphics—they mirror the way our eyes encode color information.</p>
+    <ul class="narrative-list">
+        <li>The three axes of this color space correspond to the sensitivities of the three cone types.</li>
+        <li>Any color we perceive can be represented as a point within this three-dimensional space.</li>
+        <li>This model is a direct consequence of our biology; if we had more or fewer types of cones, our color space would have a different number of dimensions.</li>
+    </ul>
+    
+    <p><strong>Overlapping Sensitivity Ranges: From Wavelengths to Color Signals</strong></p>
+    <p>Each of the three cone types is sensitive to a broad range of wavelengths, and these ranges overlap significantly. For example, a single wavelength of light might stimulate both the "red" and "green" cones to some degree. However, the brain receives and processes these signals as three distinct quantities—effectively, amounts of red, green, and blue.</p>
+    <ul class="narrative-list">
+        <li>The cone sensitivity curves show that a given wavelength can activate multiple cone types.</li>
+        <li>The brain combines these overlapping signals to create our perception of a specific color.</li>
+        <li>This is why the same perceived color can be created by different combinations of wavelengths (a phenomenon known as metamerism).</li>
+        <li>The three signals sent to the brain are what we think of as the "red," "green," and "blue" components of color, even though they don't correspond to single, pure wavelengths.</li>
+    </ul>
+    
+    <p><strong>An Example: The Perception of Orange</strong></p>
+    <p>Consider the color orange. There is a specific wavelength of light (around 600 nanometers) that is perceived as orange. When this wavelength reaches the eye, it stimulates the red cones most intensely, the green cones to a moderate degree, and the blue cones very little. The brain receives these three signals and interprets them as the color orange.</p>
+    <p>However, the same perception of orange can be created by a completely different physical stimulus. A light source could emit a mixture of two distinct wavelengths—perhaps a bright red light (around 700 nm) combined with a dimmer green light (around 550 nm). Even though these are two separate wavelengths, the eye would still perceive this combination as orange because the resulting stimulation of the three cone types would be similar to that produced by the single orange wavelength.</p>
+    <p>This phenomenon, where different combinations of wavelengths produce the same perceived color, is called metamerism. It demonstrates that our perception of color is based on the three signals from our cones, not on the specific wavelengths of light that produced those signals.</p>
+    
+    <p><strong>Physical Differences Despite Perceptual Similarity</strong></p>
+    <p>It's important to note that while these two versions of orange are perceived as the same color, they are physically quite different. If you were to pass each through a prism and project the result onto a screen, you would see very different patterns:</p>
+    <ul class="narrative-list">
+        <li>The single-wavelength orange light would produce a single, sharp line at its specific wavelength.</li>
+        <li>The mixture of red and green light would produce two separate lines—one for each wavelength in the mixture.</li>
+    </ul>
+    <p>This demonstrates that our perception of color is a simplified representation created by our visual system. The brain receives only three signals (red, green, blue) and constructs our experience of color from these limited inputs. Physical phenomena like prism dispersion reveal the underlying complexity that our eyes and brain have simplified for us.</p>
+    <p>This distinction between physical reality and perceptual experience is crucial for understanding both human vision and the design of color systems in computer graphics.</p>
+    
+    <p><strong>Why This Matters for Computer Graphics</strong></p>
+    <p>This understanding of human color perception—that we encode color as just three overlapping signals—explains why RGB color systems are so effective in computer graphics. We can create the perception of almost any color by carefully controlling just three values, matching the way our eyes actually process light, but the distinction between human perception of color and the actual nature of light has real implications for ray tracing - a topic we will touch on later.</p>
     <div class="hopdiv">
         <a href="./day9.html">Prev</a>
         <a href="../index.html">Home</a>

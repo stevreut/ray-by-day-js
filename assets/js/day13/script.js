@@ -12,45 +12,68 @@ onload = () => {
     const lightingVector = getLightingVector(true)
     let svgElem = createLitSvgElemAt(svgAnchor,lightingVector)
     svgAnchor.appendChild(svgElem)
+    
+    // Set up event listeners for number inputs
+    setupNumberInputListeners()
+    
+    // Set up event listeners for preset buttons
+    setupPresetButtonListeners()
+}
+
+function setupNumberInputListeners() {
     const controlDiv = document.getElementById("controldiv")
     if (controlDiv) {
-        controlDiv.addEventListener('input',(ev)=>{
+        // Listen for input changes on number inputs
+        controlDiv.addEventListener('input', (ev) => {
             const targetId = ev.target.id
-            if (targetId.slice(1) === 'Ranger') {
-                const prefix = targetId[0]
-                if ('xyz'.includes(prefix)) {
-                    const numbBox = document.getElementById(prefix+'Rnumb')
-                    if (numbBox) {
-                        numbBox.value = ev.target.value
-                    }
-                }
-            }
-        })
-        controlDiv.addEventListener('change',(ev)=>{
-            const targetId = ev.target.id 
-            if (targetId.slice(1) === 'Ranger') {
-                const prefix = targetId[0]
-                if ('xyz'.includes(prefix)) {
-                    const outputElem = document.getElementById('lightvect')
-                    outputElem.value = getLightingVector(false)
-                    outputElem.classList.add('outputhilite')
-                    setInterval(()=>outputElem.classList.remove('outputhilite'),800)
-                    svgAnchor.innerHTML = ''
-                    const lightingVector = getLightingVector(true)
-                    let svgElem = createLitSvgElemAt(svgAnchor,lightingVector)
-                    svgAnchor.appendChild(svgElem)
-                } else {
-                    console.error('What is id ' + id + '?')
-                }
+            if (targetId.endsWith('Rnumb')) {
+                updateVectorDisplay()
+                updateSVG()
             }
         })
     }
 }
 
+function setupPresetButtonListeners() {
+    const presetButtons = document.querySelectorAll('.preset-buttons button')
+    presetButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const x = button.getAttribute('data-x')
+            const y = button.getAttribute('data-y')
+            const z = button.getAttribute('data-z')
+            
+            document.getElementById('xRnumb').value = x
+            document.getElementById('yRnumb').value = y
+            document.getElementById('zRnumb').value = z
+            
+            updateVectorDisplay()
+            updateSVG()
+        })
+    })
+}
+
+function updateVectorDisplay() {
+    const x = document.getElementById('xRnumb').value
+    const y = document.getElementById('yRnumb').value
+    const z = document.getElementById('zRnumb').value
+    const outputElem = document.getElementById('lightvect')
+    outputElem.value = `${x}i + ${y}j + ${z}k`
+    outputElem.classList.add('outputhilite')
+    setTimeout(() => outputElem.classList.remove('outputhilite'), 800)
+}
+
+function updateSVG() {
+    const svgAnchor = document.getElementById(svgAnchorID)
+    svgAnchor.innerHTML = ''
+    const lightingVector = getLightingVector(true)
+    let svgElem = createLitSvgElemAt(svgAnchor, lightingVector)
+    svgAnchor.appendChild(svgElem)
+}
+
 function getLightingVector(doResize) {
-    const x = rectifyRanger('x')
-    const y = rectifyRanger('y')
-    const z = rectifyRanger('z')
+    const x = getNumberInputValue('x')
+    const y = getNumberInputValue('y')
+    const z = getNumberInputValue('z')
     const workingVector = new Vector3D(x,y,z)
     // const workingVector = new Vector3D(1,2,3) // TODO
     if (doResize) {
@@ -60,13 +83,14 @@ function getLightingVector(doResize) {
     } else {
         return workingVector
     }
-    function rectifyRanger(idPrefix) {
-        const id = idPrefix + 'Ranger'
-        const rangeSliderElem = document.getElementById(id)
-        if (!rangeSliderElem) {
+    
+    function getNumberInputValue(idPrefix) {
+        const id = idPrefix + 'Rnumb'
+        const numberInputElem = document.getElementById(id)
+        if (!numberInputElem) {
             throw 'no element for id ' + id
         }
-        let val = rangeSliderElem.value
+        let val = numberInputElem.value
         try {
             val = parseInt(val)
             if (Number.isNaN(val)) {

@@ -11,6 +11,14 @@
     <h1 class="subduedh1">Ray by Day JS</h1>
     <h2><span class="dayh2">Day 5</span> - JS Library for Color-Based Graphing of a 
         Function of Two Variables</h2>
+    <p><strong>On Day 5, we introduce the <em>BiVariantGrapher class</em>, a significant step forward in our visualization toolkit. This grapher brings several important improvements:</strong></p>
+    <ul class="narrative-list">
+      <li><strong>Familiar Cartesian Coordinates:</strong> The grid now follows the standard Cartesian convention: the horizontal (x) axis increases from left to right, and—crucially—the vertical (y) axis increases from bottom to top. This matches the way you've likely seen graphs in math and science, making it more intuitive to interpret.</li>
+      <li><strong>Origin at the Center:</strong> Unlike previous versions where the origin (0,0) was at the corner, the center of the image is now the origin. This change makes it easier to visualize functions and symmetries that are centered around (0,0).</li>
+      <li><strong>Flexible Scaling:</strong> We've moved away from equating a single pixel with a "unit" in our calculations. This decoupling allows for more flexible scaling and paves the way for zooming and panning features in the future.</li>
+      <li><strong>Custom Color Mapping:</strong> Most importantly, the grapher now accepts a function as a parameter that maps each (x, y) coordinate to a color. This means you can visualize a wide variety of mathematical functions and patterns simply by changing the color-mapping function.</li>
+    </ul>
+    <p>Try experimenting with different color functions and see how the grapher responds. Notice how these changes make the tool more powerful and adaptable for exploring mathematical relationships.</p>
     <div class="imgdiv">
         <h3>SVG dynamically created on this page by JavaScript making
             use of <code>svgutils.js</code> and <code>svg-grid-grapher.js</code> and

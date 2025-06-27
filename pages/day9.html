@@ -10,7 +10,43 @@
 <body>
     <h1 class="subduedh1">Ray by Day JS</h1>
     <h2><span class="dayh2">Day 9</span> - Classical Optics - The Nature of Light</h2>
-    <p>[Page under construction]</p>
+    <p><em>This page is still under construction, but here's an overview of the key concepts introduced today:</em></p>
+    <p>Light is a form of electromagnetic radiation that plays a central role in both our everyday experience and in the field of computer graphics. Before we explore how light is modeled in CGI, it's helpful to understand a few essential facts about real, physical light.</p>
+    <ul class="narrative-list">
+      <li><strong>The Speed of Light</strong><br>
+      Light travels at an extraordinary speed—known as "the speed of light in vacuo." <em>In vacuo</em> means "in a vacuum," or in empty space, where nothing slows light down. The speed of light in a vacuum is exactly <strong>299,792,458 meters per second</strong> (about <strong>186,282 miles per second</strong>). This value is not just a measurement—it's the foundation for the modern definitions of the meter in the International System of Units (SI). In other words, our standard distance is based on this precise speed.</li>
+      <li><strong>Frequency, Wavelength, and Color</strong><br>
+      Light can be described as a wave, characterized by wavelength (the distance between two consecutive peaks, measured in nanometers) and frequency (the number of wave cycles per second, measured in Hertz). These are related by the equation: <code>speed = wavelength × frequency</code>. The color of visible light is determined by its wavelength or frequency; for example, red light has a longer wavelength and lower frequency than blue light.</li>
+      <li><strong>The Spectrum of Light</strong><br>
+      While "light" often refers to what we can see, electromagnetic radiation spans a vast range. Visible light is just a small slice, with wavelengths from about <strong>380 nm (violet)</strong> to <strong>750 nm (red)</strong>. Beyond visible light are infrared, ultraviolet, radio waves, X-rays, and more.</li>
+      <li><strong>The Nature of Light</strong><br>
+      Light is a form of electromagnetic radiation, which means it is a wave of energy that travels through space. It is characterized by its wavelength (the distance between two consecutive peaks) and frequency (the number of wave cycles per second). The speed of light is constant, and the relationship between wavelength, frequency, and speed is given by the equation: <code>speed = wavelength × frequency</code>. The color of visible light is determined by its wavelength or frequency; for example, red light has a longer wavelength and lower frequency than blue light.  In short: the higher the frequency, the shorter the wavelength.</li>
+    </ul>
+    <p><strong>Key Behaviors of Light</strong></p>
+    <ul class="narrative-list">
+      <li><strong>Travel in a Straight Line (Rectilinear Propagation):</strong> In a uniform medium, light travels in straight lines. This is the foundation for the "ray" model used in many optical applications. <em>Caveat:</em> This straight-line behavior can break down at very small scales or when light encounters obstacles, leading to effects like diffraction and scattering.</li>
+      <li><strong>Reflection:</strong> When light encounters a surface, it can bounce off. The angle of incidence equals the angle of reflection. Ray tracing is particularly well-suited to modeling reflection, making it possible to simulate mirrors and shiny surfaces with high realism.</li>
+      <li><strong>Refraction:</strong> As light passes from one medium to another (such as air to water), it bends due to a change in speed. This is called refraction. Ray tracing can also model refraction effectively, allowing for realistic rendering of glass, water, and other transparent materials.</li>
+      <li><strong>Diffraction:</strong> When light passes by the edge of an object or through a small opening, it bends and spreads out. This effect is called diffraction. Ray tracing is not well-suited to modeling diffraction, as this phenomenon arises from the wave nature of light and requires different computational techniques.</li>
+      <li><strong>Scattering:</strong> Light can be redirected in many directions when it interacts with small particles or irregularities in a medium. Scattering, such as the blue color of the sky, is also challenging to model accurately with basic ray tracing and often requires additional or alternative methods. (There are, however, some "cheating" approximations that can be applied in ray tracing.)</li>
+      <!-- <li><strong>Absorption:</strong> Light can be absorbed by materials, transferring its energy to the material's atoms or molecules. This is why objects have color and why some materials heat up in sunlight.</li> -->
+      <li><strong>Polarization:</strong> Light waves can oscillate in particular directions. Polarization describes the orientation of these oscillations and is important in many optical technologies.</li>
+      <li><strong>Interference:</strong> When two or more light waves overlap, they can combine to form patterns of constructive and destructive interference, leading to colorful effects like those seen in soap bubbles.</li>
+    </ul>
+    <p><strong>Quantum Effects and the Limits of the Ray Model</strong><sup><a href="#qed-footnote">[1]</a></sup></p>
+    <p>Many of these behaviors—especially diffraction, interference, and even aspects of reflection and refraction—are governed by the quantum nature of light. Light exhibits both wave-like and particle-like properties (wave-particle duality), and its behavior at very small scales is described by quantum mechanics.</p>
+    <ul class="narrative-list">
+      <li><strong>At human scales</strong>, light often behaves like rays, which is why the ray model works well for most everyday optics and computer graphics.</li>
+      <li><strong>At microscopic or nanoscopic scales</strong>, the ray model breaks down, and wave or quantum models are needed to accurately describe light's behavior.</li>
+    </ul>
+    <div class="footnote-section">
+      <hr>
+      <p><strong>Footnotes</strong></p>
+      <ol>
+        <li id="qed-footnote">For a thorough but readable introduction to the fundamental nature of light, see Richard Feynman's book <em>Q.E.D.</em>—a classic work by one of science's greats and one of its greatest communicators.<br>
+        Learn more: <a href="https://en.wikipedia.org/wiki/QED:_The_Strange_Theory_of_Light_and_Matter" target="_blank" rel="noopener">Q.E.D.: The Strange Theory of Light and Matter (Wikipedia)</a></li>
+      </ol>
+    </div>
     <div class="hopdiv">
         <a href="./day8.html">Prev</a>
         <a href="../index.html">Home</a>

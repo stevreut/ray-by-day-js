@@ -10,6 +10,18 @@
 <body>
     <h1 class="subduedh1">Ray by Day JS</h1>
     <h2><span class="dayh2">Day 6</span> - Anti-Aliasing</h2>
+    <p><strong>On Day 6, we enhance the BiVariantGrapher class with an important new feature: <em>anti-aliasing</em>.</strong></p>
+    <p><strong>What is Anti-Aliasing?</strong><br>
+    Anti-aliasing is a technique used in computer graphics to smooth out the jagged edges ("aliasing") that can appear when rendering images at low resolutions. By blending colors at the boundaries, anti-aliasing creates a more visually appealing and realistic image.</p>
+    <p><strong>How is it implemented here?</strong><br>
+    In this grapher, anti-aliasing is achieved by dividing each virtual pixel into a grid of smaller sub-pixels. For each sub-pixel, the color-mapping function is evaluated, and the results are averaged to determine the final color of the pixel. This process smooths out abrupt color transitions and reduces visual artifacts.</p>
+    <ul class="narrative-list">
+      <li>If the anti-aliasing factor is <strong>n</strong>, each virtual pixel is subdivided into <strong>n × n</strong> sub-pixels.</li>
+      <li>The color for each sub-pixel is calculated, and then all are averaged together for the final display.</li>
+    </ul>
+    <p><strong>Trade-offs:</strong><br>
+    While anti-aliasing greatly improves image quality, it comes at a computational cost. The number of calculations increases by a factor of <strong>n²</strong> (for example, a factor of 4 means 16 times as many color calculations per pixel). This can make rendering slower, especially for high anti-aliasing settings.</p>
+    <p>Try toggling anti-aliasing on and off, and experiment with different factors to see the effect on both image quality and performance.</p>
     <div class="imgdiv">
         <h3>SVG dynamically created on this page by JavaScript making
             use of <code>svgutils.js</code>, <code>svg-grid-grapher.js</code> and

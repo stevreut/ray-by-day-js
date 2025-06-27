@@ -1,0 +1,67 @@
+/* Day 13 - Vector3D Control Styles */
+
+/* Preset Buttons + Number Inputs */
+.preset-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin: 10px 0;
+}
+
+.preset-buttons button {
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    border: 2px solid #4a90e2;
+    background: #ffffff;
+    color: #4a90e2;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.preset-buttons button:hover {
+    background: #4a90e2;
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(74, 144, 226, 0.3);
+}
+
+.preset-buttons button:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px rgba(74, 144, 226, 0.3);
+}
+
+.vector-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.vector-inputs label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+}
+
+.vector-inputs input {
+    width: 80px;
+    text-align: center;
+    padding: 4px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.vector-display {
+    margin: 15px 0;
+}
+
+.vector-display input {
+    width: 200px;
+    font-family: monospace;
+    padding: 4px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+} 

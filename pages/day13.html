@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ray by Day JS - class Vector3D</title>
     <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/day13-style.css">
     <link rel="icon" type="image/icon" href="../assets/images/icon/ray-trace-icon.ico">
 </head>
 <body>
@@ -15,17 +16,23 @@
             module <code>vector3d.js</code>
         </h3>
         <div id="controldiv" class="innerdiv label3div">
-            <label for="xRanger">x component of light source</label>
-            <input type="range" min="-100" max="100" value="50" size="5" width="8" id="xRanger" />
-            <input type="number" id="xRnumb" value="50" readonly />
-            <label for="yRanger">y component of light source</label>
-            <input type="range" min="-100" max="100" value="50" id="yRanger" />
-            <input type="number" id="yRnumb" value="50" readonly />
-            <label for="zRanger">z component of light source</label>
-            <input type="range" min="-100" max="100" value="50" id="zRanger" />
-            <input type="number" id="zRnumb" value="50" readonly />
-            <label for="lightvect">Lighting Vector</label>
-            <input type="text" id="lightvect" value="50i + 50j + 50k" readonly/>
+            <div class="preset-buttons">
+                <button data-x="0" data-y="0" data-z="100">Front</button>
+                <button data-x="0" data-y="0" data-z="-100">Back</button>
+                <button data-x="100" data-y="0" data-z="0">Right</button>
+                <button data-x="-100" data-y="0" data-z="0">Left</button>
+                <button data-x="0" data-y="100" data-z="0">Top</button>
+                <button data-x="0" data-y="-100" data-z="0">Bottom</button>
+                <button data-x="50" data-y="50" data-z="50">Diagonal</button>
+            </div>
+            <div class="vector-inputs">
+                <label for="xRnumb">X: <input type="number" id="xRnumb" value="50" min="-100" max="100" /></label>
+                <label for="yRnumb">Y: <input type="number" id="yRnumb" value="50" min="-100" max="100" /></label>
+                <label for="zRnumb">Z: <input type="number" id="zRnumb" value="50" min="-100" max="100" /></label>
+            </div>
+            <div class="vector-display">
+                <label for="lightvect">Lighting Vector: <input type="text" id="lightvect" value="50i + 50j + 50k" readonly/></label>
+            </div>
         </div>
         <p id="svghere">SVG should be produced here on script load.</p>
     </div>

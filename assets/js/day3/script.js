@@ -1,4 +1,5 @@
 import CommonCodeUtility from "../utils/code-ext/code-common.js"
+import { innerPixelWidth } from "../utils/dom-utils.js"
 
 const svgAnchorID = "svghere"
 const selectID = "idselect"
@@ -26,10 +27,21 @@ const SUBDIM = 8
 function createSvgElemAt(anch) {
     // IMPORTANT:  Note the use of createElementNS() rather than
     // createElement()
+    // Responsive width: up to 800px
+    const container = anch.parentElement;
+    let targetWidth = 800;
+    if (container) {
+        const w = innerPixelWidth(container);
+        if (w > 0) targetWidth = Math.min(w, 800);
+    }
+    // Maintain aspect ratio (square)
+    const targetHeight = targetWidth;
     const svg = document.createElementNS(SVGNS,'svg')
-    svg.setAttribute('width', DIM*2)
-    svg.setAttribute('height', DIM*2)
+    svg.setAttribute('width', targetWidth)
+    svg.setAttribute('height', targetHeight)
     svg.setAttribute('viewBox', '0 0 ' + DIM + ' ' + DIM)
+    svg.style.maxWidth = '100%';
+    svg.style.height = 'auto';
     const elemsAcross = Math.floor(DIM/SUBDIM)
     for (let row=0;row<elemsAcross;row++) {
         for (let col=0;col<elemsAcross;col++) {

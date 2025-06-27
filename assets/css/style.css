@@ -487,6 +487,39 @@ em {
     color: #1b6be2;
 }
 
+/* Static image label styling */
+.static-img-label {
+    display: inline-block;
+    background-color: #ff6b6b;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: bold;
+    margin-top: 8px;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* General footnote styling for narrative content */
+.footnote-section {
+    margin-top: 2em;
+}
+
+.footnote-section hr {
+    margin-top: 2em;
+}
+
+.footnote-section p {
+    font-size: 0.95em;
+}
+
+.footnote-section ol {
+    font-size: 0.95em;
+}
+
 @media screen and (max-width: 480px) {
     body {
         margin: 2mm;
