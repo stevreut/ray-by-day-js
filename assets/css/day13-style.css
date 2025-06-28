@@ -64,4 +64,103 @@
     padding: 4px;
     border: 1px solid #ccc;
     border-radius: 3px;
+}
+
+/* Mobile Responsive Styles */
+@media screen and (max-width: 480px) {
+    /* Preset buttons - stack in a more compact grid */
+    .preset-buttons {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 4px;
+        margin: 8px 0;
+    }
+    
+    .preset-buttons button {
+        padding: 8px 6px;
+        font-size: 11px;
+        min-height: 32px;
+    }
+    
+    /* Vector inputs - stack vertically with better spacing */
+    .vector-inputs {
+        gap: 8px;
+        margin: 12px 0;
+    }
+    
+    .vector-inputs label {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+        font-weight: 500;
+        min-width: 0; /* Allow flex items to shrink */
+    }
+    
+    .vector-inputs input {
+        width: 60px;
+        text-align: center;
+        padding: 6px;
+        font-size: 14px;
+        flex-shrink: 0; /* Prevent input from shrinking */
+    }
+    
+    /* Vector display - move below inputs and make full width */
+    .vector-display {
+        margin: 12px 0;
+        order: 3; /* Move to end of flex container */
+    }
+    
+    .vector-display label {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+    
+    .vector-display input {
+        width: 100%;
+        font-size: 12px;
+        padding: 6px;
+        word-break: break-all; /* Prevent horizontal overflow */
+    }
+    
+    /* Ensure proper ordering in the control div */
+    #controldiv {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    #controldiv .preset-buttons {
+        order: 1;
+    }
+    
+    #controldiv .vector-inputs {
+        order: 2;
+    }
+    
+    #controldiv .vector-display {
+        order: 3;
+    }
+}
+
+/* Extra small mobile devices */
+@media screen and (max-width: 360px) {
+    .preset-buttons {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .preset-buttons button {
+        font-size: 10px;
+        padding: 6px 4px;
+        min-height: 28px;
+    }
+    
+    .vector-inputs input {
+        max-width: 100px;
+        font-size: 13px;
+    }
+    
+    .vector-display input {
+        font-size: 11px;
+    }
 } 

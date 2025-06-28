@@ -10,7 +10,92 @@
 <body>
     <h1 class="subduedh1">Ray by Day JS</h1>
     <h2><span class="dayh2">Day 12</span> - Object Model for Ray Tracing</h2>
-    <p>[Page under construction]</p>
+    
+    <p>Having explored the fundamental concepts of light, color perception, and digital 
+        color representation, we now turn to the practical question of how to structure 
+        a ray tracing program. The object-oriented approach provides a natural way to 
+        model the components of a ray tracing system.</p>
+
+    <h3>The Core Classes</h3>
+    
+    <p>At the heart of any ray tracing system are several fundamental classes that 
+        represent the basic building blocks:</p>
+    
+    <ul class="narrative-list">
+        <li><strong>Vector3D</strong> - Represents points and directions in 3D space. 
+            This class handles all the mathematical operations we need for positions, 
+            directions, and geometric calculations.</li>
+        <li><strong>Ray</strong> - Represents a virtual ray of light with an origin 
+            point (Vector3D), a direction vector (Vector3D), and a color (Color).</li>
+        <li><strong>Color</strong> - Represents color values in our digital system. 
+            This class manages RGB values and provides methods for color operations 
+            like mixing and scaling.</li>
+    </ul>
+
+    <div class="imgdiv">
+        <img src="../assets/images/day12-class-diagram.svg" alt="Class relationship diagram showing Vector3D, Color, and Ray classes" style="max-width: 100%; height: auto;">
+        <div class="static-img-label">static image</div>
+        <p><em>Class relationship diagram showing the structure of our core classes. 
+            The Ray class contains two Vector3D instances (origin and direction) and 
+            one Color instance, while Vector3D and Color each encapsulate three 
+            numerical values.</em></p>
+    </div>
+
+    <h3>Vector Mathematics as Foundation</h3>
+    
+    <p>Before we can implement these classes, we need a solid foundation in vector 
+        mathematics. Vectors are essential for representing:</p>
+    
+    <ul class="narrative-list">
+        <li><strong>Positions</strong> - Points in 3D space where objects are located</li>
+        <li><strong>Directions</strong> - The orientation of rays and other vectors</li>
+    </ul>
+
+    <p>Our vector operations will include addition, subtraction, dot products, cross 
+        products, and normalization. These mathematical operations form the backbone 
+        of all ray-object intersection calculations and lighting computations. More 
+        on vectors in the next page.</p>
+
+    <h3>The Ray Model</h3>
+    
+    <p>A Ray consists of an origin point (Vector3D), a direction vector (Vector3D), 
+        and a color (Color). These three components together represent a virtual ray 
+        of light in 3D space.</p>
+
+    <h3>The Color Model</h3>
+    
+    <p>Our Color class uses floating-point values ranging from 0.0 to 1.0 for each 
+        RGB component, rather than the traditional 0-255 integer range. This approach 
+        provides several advantages for ray tracing calculations.</p>
+
+    <p>In this model, a color value of (1.0, 1.0, 1.0) represents full white, 
+        equivalent to #ffffff in traditional HTML color notation. However, unlike 
+        traditional color systems, our Color model can and will represent values 
+        greater than 1.0 in many cases. These "super-bright" colors are essential 
+        for realistic lighting calculations, where light sources and reflections 
+        can produce intensities that exceed the standard display range.</p>
+
+    <p>For example, a color value of (2.5, 1.8, 1.2) might represent a bright 
+        light source or a highly reflective surface that appears much brighter 
+        than pure white. These values will be clamped to the displayable range 
+        when converting to final output, but maintaining the full range during 
+        calculations preserves the accuracy of our lighting model.</p>
+
+    <h3>Building from Simple Foundations</h3>
+    
+    <p>By starting with these three fundamental classes, we can build a ray tracing 
+        system step by step. The Vector3D class provides the mathematical foundation, 
+        the Ray class represents the light paths we'll trace, and the Color class 
+        manages the visual output.</p>
+
+    <p>This modular approach means we can test and refine each component independently 
+        before combining them into more complex systems. We can also extend and modify 
+        these classes as our understanding and requirements evolve.</p>
+
+    <p>In the following pages, we'll implement these concepts step by step, starting 
+        with the fundamental Vector3D class that will support all our geometric 
+        calculations.</p>
+
     <div class="hopdiv">
         <a href="./day11.html">Prev</a>
         <a href="../index.html">Home</a>

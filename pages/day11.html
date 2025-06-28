@@ -3,14 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ray by Day JS - Representation of Light and Color</title>
+    <title>Ray by Day JS - Digital Color Representation</title>
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="icon" type="image/icon" href="../assets/images/icon/ray-trace-icon.ico">
 </head>
 <body>
     <h1 class="subduedh1">Ray by Day JS</h1>
-    <h2><span class="dayh2">Day 11</span> -  Representation of Light and Color</h2>
-    <p>[Page under construction]</p>
+    <h2><span class="dayh2">Day 11</span> - Digital Color Representation</h2>
+    
+    <p>In the previous pages, we explored the nature of light and how human vision 
+        perceives color. Now we turn to the practical question: how do computers 
+        represent and manipulate color for display on digital devices?</p>
+
+    <h3>The RGB Color Model</h3>
+    
+    <p>Most digital color systems are based on the <strong>RGB (Red, Green, Blue) 
+        color model</strong>. While other color models exist (such as CMYK for 
+        printing, HSV for color selection, or YUV for video), RGB has become the 
+        standard for computer graphics and display devices.</p>
+
+    <p>Display devices—whether LCD screens, OLED panels, or LED displays—create 
+        colors by emitting different mixtures of red, green, and blue light. Each 
+        pixel on your screen contains three sub-pixels, one for each primary color. 
+        By varying the intensity of these three colors, the display can reproduce a 
+        wide range of visible colors.</p>
+
+    <h3>Digital Color Values</h3>
+    
+    <p>In digital systems, each color channel (Red, Green, Blue) is represented by 
+        a numerical value. The most common format uses <strong>one-byte integers</strong>, 
+        giving each channel a range from 0 to 255. This provides 256 possible 
+        intensity levels per channel.</p>
+
+    <p>With three channels, each using 8 bits (one byte), we get what's called 
+        "24-bit color" or "true color," offering 16,777,216 possible color 
+        combinations (256³). This is often written as RGB(255, 128, 64) or #FF8040 
+        in hexadecimal notation.</p>
+
+    <p>While 8-bit per channel is standard, other bit depths are certainly possible 
+        and used in specialized applications:</p>
+    <ul class="narrative-list">
+        <li><strong>16-bit per channel</strong> (48-bit total) - Used in high-end 
+            photography and video editing</li>
+        <li><strong>10-bit per channel</strong> (30-bit total) - Common in 
+            professional displays and HDR content</li>
+        <li><strong>12-bit per channel</strong> (36-bit total) - Used in some 
+            digital cinema formats</li>
+    </ul>
+
+    <p>Beyond these standard formats, specialized fields use entirely different 
+        approaches. For example, the 
+        <a href="https://en.wikipedia.org/wiki/Advanced_Scientific_Data_Format" 
+           target="_blank">ASDF format</a> used in astronomy enables the recording 
+        of quantities across a rich variety of wavelengths, far beyond the 
+        three-color RGB model. Such formats are essential for scientific 
+        applications where precise spectral data is required.</p>
+
+    <h3>The Bounded Nature of Digital Color</h3>
+    
+    <p>Unlike color in the natural world, digital color representation has a 
+        fundamental limitation: <strong>there is an upper bound to the values</strong>. 
+        In nature, light can theoretically have any intensity, from complete 
+        darkness to the brightness of the sun. But in digital systems, we must work 
+        within fixed limits.</p>
+
+    <p>This bounded nature has important implications for ray tracing:</p>
+    <ul class="narrative-list">
+        <li><strong>Clamping</strong> - When calculations produce values outside the 
+            valid range (0-255 for 8-bit), they must be "clamped" to the nearest 
+            valid value</li>
+        <li><strong>Precision loss</strong> - Very bright or very dark areas may 
+            lose detail due to the limited range</li>
+        <li><strong>Color accuracy</strong> - The finite number of possible values 
+            means some subtle color variations cannot be represented</li>
+    </ul>
+
+    <p>For example, if our ray tracing calculations produce a color value of 
+        RGB(300, 150, 75), we must clamp the red channel to 255, resulting in 
+        RGB(255, 150, 75). This is why proper lighting calculations and exposure 
+        control are crucial in ray tracing.</p>
+
+    <h3>Beyond RGB: A Brief Note</h3>
+    
+    <p>While RGB dominates digital displays, it's worth noting that printed color 
+        works differently. Printers typically use the <strong>CMYK (Cyan, Magenta, 
+        Yellow, Key/Black) color model</strong>, which is subtractive rather than 
+        additive. Instead of emitting light, printed materials absorb certain 
+        wavelengths and reflect others. This fundamental difference means that the 
+        same RGB values will look different on screen versus in print, requiring 
+        careful color management for cross-media applications.</p>
+
+    <p>For our ray tracing work, we'll focus primarily on RGB, as our goal is to 
+        create images for digital display. Understanding how computers represent 
+        color digitally is essential for implementing realistic lighting and 
+        material effects in our ray tracer.</p>
+
+    <p>However, while the 0-255 integer range serves well for final display, it 
+        becomes cumbersome for the mathematical calculations involved in ray tracing. 
+        Working with arbitrary integer values like 255 as a cap makes lighting 
+        calculations, color mixing, and material interactions unnecessarily complex. 
+        For these purposes, we will prefer using <strong>floating-point numbers</strong> 
+        for our primary values. This approach simplifies our mathematical operations 
+        and provides better precision for intermediate calculations. We'll explore 
+        this color model in more detail in subsequent pages when we discuss a 
+        representation that better suits our ray tracing needs. While our final
+        output (whether image on the browser or a file) will be in RGB, we will 
+        use floating-point numbers for our intermediate calculations, and the 
+        benefit of that approach will be apparent when we discuss the details on 
+        later pages.
+    </p>
+
     <div class="hopdiv">
         <a href="./day10.html">Prev</a>
         <a href="../index.html">Home</a>
