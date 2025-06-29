@@ -9,7 +9,7 @@ import SunnySky from "../day25/sunny-sky.js"
 import GraphicStatusReportBar from "../utils/graph-status-bar.js"
 import SierpinskiTetrahedron from "./sierp-tetra.js"
 import { saveRayTraceImage, DAY_TYPES } from "../utils/image-saver.js"
-import CanvasGridGrapher from "../day20/canvas-grid-grapher.js"
+import CanvasGridGrapher from "../day16/canvas-grid-grapher.js"
 import { setImageDimensions } from "../utils/dom-utils.js"
 
 

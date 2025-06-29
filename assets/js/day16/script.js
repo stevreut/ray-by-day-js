@@ -1,5 +1,5 @@
 import Vector3D from "../day13/vector3d.js"
-import SVGGridGrapher from "../day7/svg-grid-grapher.js"
+import CanvasGridGrapher from "./canvas-grid-grapher.js"
 import BiVariantGrapher from "../day14/bivargrapher.js"
 import Ray from "../day14/ray.js"
 import Color from "../day14/color.js"
@@ -42,7 +42,7 @@ function setImageDimensions() {
 function processImage(imgParagraph,durationElem) {
     initRandomSpheres()
     imgParagraph.innerHTML = ''
-    const gridder = new SVGGridGrapher()
+    const gridder = new CanvasGridGrapher()
     const startTime = new Date()
     const grapher = new BiVariantGrapher(gridder,
         targetImageWidth,targetImageHeight,

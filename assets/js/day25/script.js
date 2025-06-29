@@ -15,7 +15,7 @@ import ReflectiveDodecahedron from "./refl-dodeca.js"
 import Compound12Sphere from "./compound-12-sphere.js"
 import GraphicStatusReportBar from "../utils/graph-status-bar.js"
 import { saveRayTraceImage, DAY_TYPES } from "../utils/image-saver.js"
-import CanvasGridGrapher from "../day20/canvas-grid-grapher.js"
+import CanvasGridGrapher from "../day16/canvas-grid-grapher.js"
 import { setImageDimensions } from "../utils/dom-utils.js"
 
 const IMG_PARA_ID = 'imgpara'

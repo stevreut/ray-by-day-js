@@ -1,4 +1,4 @@
-import GenericGridGrapher from "./gen-grid-grapher.js";
+import GenericGridGrapher from "../day7/gen-grid-grapher.js";
 import Color from "./color.js"
 
 class BiVariantGrapher {

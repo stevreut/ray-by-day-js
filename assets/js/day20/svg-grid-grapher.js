@@ -1,4 +1,4 @@
-import GenericGridGrapher from './gen-grid-grapher.js'
+import GenericGridGrapher from '../day7/gen-grid-grapher.js'
 import { makeSvgElem, makeSvgRectangle } from "./svgutils.js"
 
 class SVGGridGrapher extends GenericGridGrapher {

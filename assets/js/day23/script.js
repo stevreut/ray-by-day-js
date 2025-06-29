@@ -8,7 +8,7 @@ import OpticalEnvironment from "../day22/optical-env.js"
 import Plane from "../day22/plane.js"
 import RefractiveSphere from "../day22/refractive-sphere.js"
 import GraphicStatusReportBar from "../utils/graph-status-bar.js"
-import CanvasGridGrapher from "../day20/canvas-grid-grapher.js"
+import CanvasGridGrapher from "../day16/canvas-grid-grapher.js"
 import { setImageDimensions } from "../utils/dom-utils.js"
 
 import ReflectiveIcosahedron from "./refl-icos.js"

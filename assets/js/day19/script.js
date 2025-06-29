@@ -5,7 +5,7 @@ import Color from "../day14/color.js"
 import OpticalEnvironment from "../day18/optical-env.js"
 import ReflectiveSphere from "../day18/reflective-sphere.js"
 import Plane from "../day17/plane.js"
-import SVGGridGrapher from "../day7/svg-grid-grapher.js"
+import CanvasGridGrapher from "../day16/canvas-grid-grapher.js"
 
 const IMG_PARA_ID = 'imgpara'
 const REPEAT_BUTTON_ID = 'rptbtn'
@@ -79,7 +79,7 @@ function processImage(imgParagraph,cameraOrigin) {
         cameraOrigin.scalarMult(-1)
     )
     optEnv.setCamera(cameraRay)
-    const gridder = new SVGGridGrapher()
+    const gridder = new CanvasGridGrapher()
     const grapher = new BiVariantGrapher(gridder,
         targetImageSize,targetImageSize,1,Math.round(targetImageSize/4),f,
         (targetImageSize<DEFAULT_SINGLE_EYE_IMAGE_SIZE?3:2))

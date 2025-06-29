@@ -8,7 +8,7 @@ import OpticalEnvironment from "../day22/optical-env.js"
 import Plane from "../day22/plane.js"
 import RefractiveSphere from "../day22/refractive-sphere.js"
 import BiVariantGrapher from "../day20/bivargrapher.js"
-import CanvasGridGrapher from "../day20/canvas-grid-grapher.js"
+import CanvasGridGrapher from "../day16/canvas-grid-grapher.js"
 
 import SettingsInputBox from "../utils/settings-input-box.js"
 

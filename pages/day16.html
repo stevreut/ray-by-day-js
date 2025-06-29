@@ -10,6 +10,13 @@
 <body>
     <h1 class="subduedh1">Ray by Day JS</h1>
     <h2><span class="dayh2">Day 16</span> - class ShadowedSphere and shadowing generally</h2>
+    
+    <p>This page introduces shadowing in ray tracing, where objects cast shadows on other objects when they block light from reaching them. The <code>ShadowedSphere</code> class extends the basic sphere functionality to include shadow calculations.</p>
+    
+    <p>Starting from <a href="./day16.html">this page</a>, we'll see more of the benefit of the <code>GenericGridGrapher</code> class. The abstract interface it provides allows us to switch between different rendering backends while keeping the same high-level code structure.</p>
+    
+    <p>This page also marks the transition from <code>SVGGridGrapher</code> to <code>CanvasGridGrapher</code> as our underlying graphing utility. Canvas-based rendering provides better performance for complex ray tracing scenes and will be used on all subsequent days.</p>
+    
     <div class="imgdiv">
         <h3>Image created using ...</h3> <!-- TODO -->
         <p id="imgpara">Unable to generate image</p>
@@ -34,8 +41,7 @@
         "../assets/js/day14/color.js",
         "../assets/js/day14/bivargrapher.js",
         "../assets/js/day7/gen-grid-grapher.js",
-        "../assets/js/day7/svg-grid-grapher.js",
-        "../assets/js/day4/svgutils.js",
+        "../assets/js/day16/canvas-grid-grapher.js",
         "../assets/js/utils/dom-utils.js"
       ]);
     </script>
