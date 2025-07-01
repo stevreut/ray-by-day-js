@@ -219,6 +219,8 @@ function handleDayNightModeChange() {
             optEnv.removeOpticalObjectsByClassName('NightSky')
             optEnv.addOpticalObject(new SunnySky(randomSunDirection()))
         }
+        enableButton(lowQualityButton,true)
+        enableButton(highQualityButton,true)
     }
 }
 
@@ -228,12 +230,6 @@ function isNightMode() {
 
 function statusReporterFunction(frac) {
     statusBar.setProgress(frac);
-}
-
-async function saveImageAsDownload() {
-    await saveRayTraceImage(IMG_CANVAS_ID, DAY_TYPES.OBJECT_GROUPING, () => {
-        enableButton(saveImageButton,false)
-    })
 }
 
 let optEnv = null
