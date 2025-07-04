@@ -2,12 +2,13 @@ import Vector3D from "../day20/vector3d.js"
 import Ray from "../day20/ray.js"
 import Color from "../day20/color.js"
 import OpticalObject from "../day20/optical-object.js"
+import Matrix3D from "./matrix3d.js"
 
 class OpticalEnvironment {
     ASPECT_FACTOR = 4
     constructor() {
         this.optObjList = []
-        this.objCount = 0
+        this.lenseOrFilterList = [] // New list for lenses and filters
         this.camera = null
     }
     static SKY_BLUE
@@ -23,9 +24,16 @@ class OpticalEnvironment {
             throw 'attempted to add non-OpticalObject'
         }
         this.optObjList.push(obj)
-        this.objCount++
+    }
+    
+    addLenseOrFilter(obj) {
+        if (!(obj instanceof OpticalObject)) {
+            throw 'attempted to add non-OpticalObject to lenseOrFilterList'
+        }
+        this.lenseOrFilterList.push(obj)
     }
     removeOpticalObjectsByClassName(className) {
+        // Remove from regular objects list
         let i = this.optObjList.length-1
         let loopCount = 0
         while (i >= 0) {
@@ -40,7 +48,25 @@ class OpticalEnvironment {
             let matches = (className === name)
             if (matches) {
                 this.optObjList.splice(i,1)
-                this.objCount--
+            }
+            i--
+        }
+        
+        // Remove from lenses and filters list
+        i = this.lenseOrFilterList.length-1
+        loopCount = 0
+        while (i >= 0) {
+            loopCount++
+            while (i > 0 && i >= this.lenseOrFilterList.length) {
+                i--
+            }
+            if (loopCount > 1000) {  // sanity check (might need adjusting)
+                throw 'exceeded maximum anticipated number of environmental objects'
+            }
+            let name = this.lenseOrFilterList[i].constructor.name
+            let matches = (className === name)
+            if (matches) {
+                this.lenseOrFilterList.splice(i,1)
             }
             i--
         }
@@ -65,10 +91,21 @@ class OpticalEnvironment {
             this.camera.distance = focalDistance
             this.camera.directionApertureMultiplier = -this.ASPECT_FACTOR/this.camera.distance
         }
-    }
+        
+        // Create coordinate transformation matrices
+        // Camera coordinate system: -Z is camera direction, X and Y are screen axes
+        this.camera.worldToCameraMatrix = new Matrix3D(
+            [xUnit.getX(), xUnit.getY(), xUnit.getZ()],
+            [yUnit.getX(), yUnit.getY(), yUnit.getZ()],
+            [-dir.getX(), -dir.getY(), -dir.getZ()]
+        )
+        this.camera.cameraToWorldMatrix = this.camera.worldToCameraMatrix.inverse()
+        }
+    
     getObjectCount() {
-        return this.objCount
+        return this.optObjList.length
     }
+ 
     colorFromXY(x,y) {
         let ray = this.rayFromXY(x,y)
         if (!ray.count) {
@@ -85,11 +122,47 @@ class OpticalEnvironment {
             // To prevent infinite recursion
             return ray.color
         }
-        let { leastDist, leastDistObj } = this.getLeastDistanceObject(ray)
-        if (leastDist === null) {
-            return ray.color.filter(OpticalEnvironment.SKY_BLUE)
+        
+        // Phase 1: Process lenses and filters in camera coordinates
+        let processedRay = ray
+        if (this.lenseOrFilterList.length > 0) {
+            // Transform ray to camera coordinates for lens/filter processing
+            let cameraRay = this.transformRayToCameraCoordinates(ray)
+            
+            for (let lensOrFilter of this.lenseOrFilterList) {
+                const dist = lensOrFilter.interceptDistance(cameraRay)
+                if (dist !== null && dist > 0) {
+                    const result = lensOrFilter.handle(cameraRay)
+                    if (result instanceof Ray) {
+                        cameraRay = result
+                    } else if (result instanceof Color) {
+                        return result  // Lens/filter returned a color, we're done
+                    } else if (Array.isArray(result)) {
+                        if (this.isRayArray(result)) {
+                            // Take the first ray from the array for sequential processing
+                            cameraRay = result[0]
+                        } else {
+                            console.error('invalid return result ', result, ' ', typeof result)
+                            throw 'invalid handle result - neither Ray nor expected Array type'
+                        }
+                    } else {
+                        console.error('bad result type = ', typeof result, ' result = ', result)
+                        throw 'unexpected result type - neither array nor Ray'
+                    }
+                }
+            }
+            
+            // Transform processed ray back to world coordinates
+            processedRay = this.transformRayToWorldCoordinates(cameraRay)
         }
-        let result = leastDistObj.handle(ray)
+        
+        // Phase 2: Process regular objects in world coordinates
+        let { leastDist, leastDistObj } = this.getLeastDistanceObject(processedRay)
+        if (leastDist === null) {
+            return processedRay.color.filter(OpticalEnvironment.SKY_BLUE)
+        }
+        
+        let result = leastDistObj.handle(processedRay)
         let rayArray = []
         if (result instanceof Ray) {
             rayArray.push(result)
@@ -110,9 +183,10 @@ class OpticalEnvironment {
             console.error('bad result type = ', typeof result, ' result = ', result)
             throw 'unexpected result type - neither array nor Ray'
         }
+        
         let colorStack = []
-        rayArray.forEach(subRay=>{
-            subRay.count = ray.count+1  // IMPORTANT!
+        rayArray.forEach(subRay => {
+            subRay.count = processedRay.count + 1  // IMPORTANT!
             const subColor = this.colorFromRay(subRay)  // NOTE: RECURSIVE!!
             colorStack.push(subColor)
         })
@@ -160,17 +234,34 @@ class OpticalEnvironment {
     getLeastDistanceObject(ray) {
         let leastDist = null
         let leastDistObj = null
-        this.optObjList.forEach(obj=>{
+        
+        // Only check regular objects (lenses/filters are handled separately)
+        this.optObjList.forEach(obj => {
             let dist = obj.interceptDistance(ray)
             if (dist !== null && (leastDist === null || dist < leastDist)) {
                 leastDist = dist
                 leastDistObj = obj
             }
         })
+        
         return {
             leastDist,
             leastDistObj
         }
+    }
+    
+    transformRayToCameraCoordinates(worldRay) {
+        // Transform ray origin and direction to camera coordinates
+        const cameraOrigin = this.camera.worldToCameraMatrix.vectorMult(worldRay.getOrigin())
+        const cameraDirection = this.camera.worldToCameraMatrix.vectorMult(worldRay.getDirection())
+        return new Ray(cameraOrigin, cameraDirection, worldRay.color)
+    }
+    
+    transformRayToWorldCoordinates(cameraRay) {
+        // Transform ray origin and direction back to world coordinates
+        const worldOrigin = this.camera.cameraToWorldMatrix.vectorMult(cameraRay.getOrigin())
+        const worldDirection = this.camera.cameraToWorldMatrix.vectorMult(cameraRay.getDirection())
+        return new Ray(worldOrigin, worldDirection, cameraRay.color)
     }
 }
 

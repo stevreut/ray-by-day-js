@@ -598,7 +598,7 @@ function initRandomShapes2(camera) {
     let rejectCount = 0
     const shapeTempArray = []
     const MIN_SPACE = 0.2
-    const SHAPE_NAMES = 'comp;icos;spht;cube;dode;octa'.split(';')
+    const SHAPE_NAMES = 'comp;comp;comp;spht;spht;spht;icos;spht;cube;dode;octa'.split(';')
     
     while (shapeTempArray.length < TARGET_SHAPE_COUNT) {
         let candidateObject = {

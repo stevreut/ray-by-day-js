@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ray by Day JS - Lens Demo</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/day24-style.css">
+    <link rel="icon" type="image/icon" href="../assets/images/icon/ray-trace-icon.ico">
+</head>
+<body>
+    <h1 class="subduedh1">Ray by Day JS</h1>
+    <h2><span class="dayh2">Day 28</span> - Lens Demo (Convex Lens)</h2>
+    <div class="imgdiv">
+        <p id="imgpara">Image creation in progress...</p>
+        <div id="statbar"></div>
+        <p id="dur"></p>
+        <p>
+            <button id="rptbtn" class="btndisabled" disabled>Compose and Render Low-Quality Image</button>
+            <button id="lowqbtn" class="btndisabled" disabled>Render LOW-Quality</button>
+            <button id="highqbtn" class="btndisabled" disabled>Render HIGH-Quality</button>
+            <button id="savebtn" class="btndisabled" disabled>Save Image</button>
+        </p>
+    </div>
+    <div class="settingsbox">
+        <h3>Lens Settings</h3>
+        <div id="fr1inputs" class="settings">
+        </div>
+    </div>
+    <h3 class="resource-index-header">Resources used in this page</h3>
+    <div id="resource-index"></div>
+    <script type="module">
+      import CodeFormatter from "../assets/js/utils/code-ext/code-formatter.js";
+      const cf = new CodeFormatter();
+      cf.insertResourceIndex("resource-index", [
+        "./day28-demo.html",
+        "../assets/js/day28/script-demo.js",
+        "../assets/js/day28/convex-lens.js",
+        "../assets/js/day20/vector3d.js",
+        "../assets/js/day20/ray.js",
+        "../assets/js/day20/color.js",
+        "../assets/js/day20/bivargrapher.js",
+        "../assets/js/day28/optical-env.js",
+        "../assets/js/day28/matrix3d.js",
+        "../assets/js/day22/plane.js",
+        "../assets/js/day22/refractive-sphere.js",
+        "../assets/js/day25/sunny-sky.js",
+        "../assets/js/day25/refl-tetra.js",
+        "../assets/js/day25/refl-cube.js",
+        "../assets/js/day25/refl-octa.js",
+        "../assets/js/day25/refl-icos.js",
+        "../assets/js/day25/refl-dodeca.js",
+        "../assets/js/day25/compound-12-sphere.js",
+        "../assets/js/utils/settings-input-box.js",
+        "../assets/js/utils/graph-status-bar.js",
+        "../assets/js/utils/image-saver.js",
+        "../assets/js/day16/canvas-grid-grapher.js",
+        "../assets/js/utils/dom-utils.js",
+        "../assets/js/day20/optical-object.js"
+      ]);
+    </script>
+    <div class="hopdiv">
+        <a href="./day28.html">Back to Day 28</a>
+        <a href="../index.html">Home</a>
+    </div>
+    <script src="../assets/js/day28/script-demo.js" type="module"></script>
+</body>
+</html> 
