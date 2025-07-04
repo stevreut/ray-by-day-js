@@ -3,6 +3,7 @@ import Ray from "../day20/ray.js"
 import Color from "../day20/color.js"
 import BiVariantGrapher from "../day20/bivargrapher.js"
 import OpticalEnvironment from "../day22/optical-env.js"
+import OpticalEnvironmentNew from "./optical-env.js"
 import Plane from "../day22/plane.js"
 import RefractiveSphere from "../day22/refractive-sphere.js"
 import SunnySky from "../day25/sunny-sky.js"
@@ -28,6 +29,16 @@ const SAVE_IMAGE_BUTTON_ID = 'savebtn'
 const IMG_CANVAS_ID = 'renderedcanvas'
 const SETTINGS_ID = 'fr1inputs'
 
+// Second section constants
+const IMG_PARA_ID_2 = 'imgpara2'
+const STATUS_BAR_ID_2 = 'statbar2'
+const DURATION_TEXT_ID_2 = 'dur2'
+const REPEAT_BUTTON_ID_2 = 'rptbtn2'
+const HI_QUALITY_BUTTON_ID_2 = 'highqbtn2'
+const LO_QUALITY_BUTTON_ID_2 = 'lowqbtn2'
+const SAVE_IMAGE_BUTTON_ID_2 = 'savebtn2'
+const IMG_CANVAS_ID_2 = 'renderedcanvas2'
+
 // Platonic solids colors in HTML hex values
 const TETRA_HEX_COLOR = "#c299cc"
 const CUBE_HEX_COLOR = "#cc9999"
@@ -44,7 +55,6 @@ let antiAlias = null
 
 let sunVector = null
 
-let statBarElem = null
 let goAgainButton = null
 let highQualityButton = null
 let lowQualityButton = null
@@ -56,6 +66,16 @@ let settingsInputBox1 = null
 let settingsDiv = null
 let statusBar = null
 
+// Second section variables
+let goAgainButton2 = null
+let highQualityButton2 = null
+let lowQualityButton2 = null
+let saveImageButton2 = null
+let imgParagraph2 = null
+let durationElem2 = null
+let statusBar2 = null
+let optEnv2 = null
+
 onload = async () => {
     try {
         imgParagraph = linkElement(IMG_PARA_ID)
@@ -64,7 +84,6 @@ onload = async () => {
         lowQualityButton = linkElement(LO_QUALITY_BUTTON_ID)
         saveImageButton = linkElement(SAVE_IMAGE_BUTTON_ID)
         durationElem = linkElement(DURATION_TEXT_ID)
-        statBarElem = linkElement(STATUS_BAR_ID)
         settingsDiv = linkElement(SETTINGS_ID)
         statusBar = new GraphicStatusReportBar(STATUS_BAR_ID);
         const dimensions = setImageDimensions(imgParagraph, false, DEFAULT_IMAGE_WIDTH)
@@ -75,8 +94,20 @@ onload = async () => {
         insertBlankCanvas()
         formatInputs()
         initEnvironment()
-        await processImage(imgParagraph,durationElem)
-        enableButton(lowQualityButton,false)
+        
+        // Initialize second section
+        initSecondSection()
+        
+        // Start both image generations in parallel
+        const firstImage = processImage(imgParagraph, durationElem)
+        const secondImage = processImage2(imgParagraph2, durationElem2, false)
+        
+        // Wait for both to complete
+        await Promise.all([firstImage, secondImage])
+        
+        // Enable buttons after both complete
+        enableButton(lowQualityButton, false)
+        enableButton(lowQualityButton2, false)
         goAgainButton.addEventListener('click',async ()=>{
             const dimensions = setImageDimensions(imgParagraph, false, DEFAULT_IMAGE_WIDTH)
             targetImageWidth = dimensions.targetWidth
@@ -407,4 +438,235 @@ function formatFrame1Inputs() {
         }
     ],true)
     settingsDiv.appendChild(settingsInputBox1.getTable())
+}
+
+// Second section functions
+async function initSecondSection() {
+    try {
+        imgParagraph2 = linkElement(IMG_PARA_ID_2)
+        goAgainButton2 = linkElement(REPEAT_BUTTON_ID_2)
+        highQualityButton2 = linkElement(HI_QUALITY_BUTTON_ID_2)
+        lowQualityButton2 = linkElement(LO_QUALITY_BUTTON_ID_2)
+        saveImageButton2 = linkElement(SAVE_IMAGE_BUTTON_ID_2)
+        durationElem2 = linkElement(DURATION_TEXT_ID_2)
+        statusBar2 = new GraphicStatusReportBar(STATUS_BAR_ID_2)
+        
+        // Hard-coded settings for second section
+        const hardcodedDimensions = setImageDimensions(imgParagraph2, false, DEFAULT_IMAGE_WIDTH)
+        insertBlankCanvas2()
+        initEnvironment2()
+        
+        // Add event listeners for second section
+        goAgainButton2.addEventListener('click', async () => {
+            initEnvironment2()
+            await processImage2(imgParagraph2, durationElem2, false)
+            enableButton(highQualityButton2, true)
+            enableButton(lowQualityButton2, false)
+        })
+        
+        highQualityButton2.addEventListener('click', async () => {
+            await processImage2(imgParagraph2, durationElem2, true)
+            enableButton(highQualityButton2, false)
+            enableButton(lowQualityButton2, true)
+        })
+        
+        lowQualityButton2.addEventListener('click', async () => {
+            await processImage2(imgParagraph2, durationElem2, false)
+            enableButton(highQualityButton2, true)
+            enableButton(lowQualityButton2, false)
+        })
+        
+        saveImageButton2.addEventListener('click', async () => {
+            enableButton(goAgainButton2, false)
+            const hiIsEnabled = !highQualityButton2.disabled
+            const loIsEnabled = !lowQualityButton2.disabled
+            enableButton(highQualityButton2, false)
+            enableButton(lowQualityButton2, false)
+            await saveRayTraceImage(IMG_CANVAS_ID_2, DAY_TYPES.LENSE_ENHANCED, () => {
+                enableButton(saveImageButton2, false)
+            })
+            enableButton(goAgainButton2, true)
+            enableButton(highQualityButton2, hiIsEnabled)
+            enableButton(lowQualityButton2, loIsEnabled)
+        })
+    } catch (err) {
+        console.error('Second section error = ', err)
+        alert('Second section error = ' + err.toString())
+    }
+}
+
+async function processImage2(imgParagraph, durationElem, highQuality = false) {
+    durationElem.textContent = ''
+    enableButton(goAgainButton2, false)
+    enableButton(highQualityButton2, false)
+    enableButton(lowQualityButton2, false)
+    enableButton(saveImageButton2, false)
+    
+    const gridder = new CanvasGridGrapher()
+    const startTime = new Date()
+    const dimensions = setImageDimensions(imgParagraph, highQuality, DEFAULT_IMAGE_WIDTH)
+    
+    const grapher = new BiVariantGrapher(
+        gridder,
+        Math.floor(dimensions.targetWidth/dimensions.pixelSize),
+        Math.floor(dimensions.targetHeight/dimensions.pixelSize),
+        dimensions.pixelSize, 
+        dimensions.targetHeight/dimensions.pixelSize*0.33,
+        (x,y) => {
+            if (!optEnv2) {
+                throw 'optEnv2 not initiated'
+            }
+            return optEnv2.colorFromXY(x,y)
+        },
+        dimensions.antiAlias,
+        statusReporterFunction2
+    )
+    
+    let canvasElem = await grapher.drawGraph()
+    const finTime = new Date()
+    const durationMs = finTime.getTime()-startTime.getTime()
+    const durationSecs = durationMs/1000
+    imgParagraph.innerHTML = ''
+    imgParagraph.appendChild(canvasElem)
+    canvasElem.id = IMG_CANVAS_ID_2
+    durationElem.textContent = 'Image generation duration: ' + durationSecs + ' seconds'
+    enableButton(goAgainButton2, true)
+    enableButton(highQualityButton2, true)
+    enableButton(lowQualityButton2, true)
+    enableButton(saveImageButton2, true)
+}
+
+function insertBlankCanvas2() {
+    const canv = document.createElement('canvas')
+    if (canv) {
+        imgParagraph2.innerHTML = ''
+        canv.width = DEFAULT_IMAGE_WIDTH
+        canv.height = DEFAULT_IMAGE_WIDTH * 0.75
+        canv.style.maxWidth = '100%'
+        canv.style.height = 'auto'
+        const localContext = canv.getContext('2d')
+        if (localContext) {
+            localContext.fillStyle = '#ddd';
+            localContext.fillRect(0,0,canv.width,canv.height)
+            localContext.fillStyle = '#bbb';
+            const currentFont = localContext.font
+            const fontParts = currentFont.split(' ')
+            const newFont = '36px ' + fontParts.slice(1).join(' ')
+            localContext.font = newFont
+            localContext.fillText('Enhanced Environment - Image creation in progress...',30,80)
+        }
+        imgParagraph2.appendChild(canv)
+    }
+}
+
+function statusReporterFunction2(frac) {
+    statusBar2.setProgress(frac);
+}
+
+function initEnvironment2() {
+    optEnv2 = new OpticalEnvironmentNew()
+    const cameraOrigin = new randomCameraPosition()
+    const cameraDirection = cameraOrigin.scalarMult(-1)
+    const cameraRay = new Ray(cameraOrigin, cameraDirection)
+    
+    // Hard-coded settings
+    const apertRadius = 0.3
+    const focalDistance = 10
+    optEnv2.setCamera(cameraRay, apertRadius, focalDistance)
+    
+    // const bigLense = setBigLense2(cameraRay)
+    initRandomShapes2(cameraRay)
+    optEnv2.addOpticalObject(new Plane(-7.5,5,2.5))
+    sunVector = randomSunDirection()
+    optEnv2.addOpticalObject(new SunnySky(sunVector))
+}
+
+// function setBigLense2(cam) {
+//     const lenseRadius = 4
+//     const lenseCenterOffset = 2 + lenseRadius
+//     const lenseCenter = cam.getOrigin().add(cam.getDirection().normalized().scalarMult(lenseCenterOffset))
+//     const lenseSphere = new RefractiveSphere(lenseCenter, lenseRadius, new Color(), 1.6)
+//     optEnv2.addOpticalObject(lenseSphere)
+//     return lenseSphere
+// }
+
+function initRandomShapes2(camera) {
+    if (!(camera instanceof Ray)) {
+        throw 'unexpected parameter types'
+    }
+    const TARGET_SHAPE_COUNT = 6
+    let rejectCount = 0
+    const shapeTempArray = []
+    const MIN_SPACE = 0.2
+    const SHAPE_NAMES = 'comp;icos;spht;cube;dode;octa'.split(';')
+    
+    while (shapeTempArray.length < TARGET_SHAPE_COUNT) {
+        let candidateObject = {
+            center: randomCenter2(camera)
+        }
+        let rando = Math.floor(Math.random()*SHAPE_NAMES.length)
+        candidateObject.type = SHAPE_NAMES[rando]
+        candidateObject.radius = 1
+        let hasIntersect = false
+        shapeTempArray.forEach(otherShape=>{
+            if (!hasIntersect) {
+                if (otherShape.center.subt(candidateObject.center).magn() <= 
+                        otherShape.radius+candidateObject.radius+MIN_SPACE) {
+                    hasIntersect = true
+                }
+            }
+        })
+        if (hasIntersect) {
+            rejectCount++
+        } else {
+            shapeTempArray.push(candidateObject)
+        }
+    }
+
+    function randomCenter2(camera) {
+        const camOrigin = camera.getOrigin()
+        const camDirection = camera.getDirection().normalized()
+        const rangeCenter = camOrigin.add(camDirection.scalarMult(10))
+        let arr = []
+        for (let i=0;i<3;i++) {
+            arr.push((Math.random()-0.5)*4)
+        }
+        let ctr = new Vector3D(arr)
+        return ctr.add(rangeCenter)
+    }
+    
+    shapeTempArray.forEach(shape=>{
+        const { type } = shape
+        let obj = null
+        switch (type) {
+            case 'comp':
+                obj = new Compound12Sphere(shape.center,shape.radius*0.45,shape.radius*0.55,
+                    Color.colorFromHex(GOLD_HEX_COLOR))
+                break;
+            case 'icos':
+                obj = new ReflectiveIcosahedron(shape.center,shape.radius,
+                    Color.colorFromHex(ICOSA_HEX_COLOR))
+                break;
+            case 'spht':
+                obj = new RefractiveSphere(shape.center,shape.radius,randomColor(),1.5)
+                break;
+            case 'cube':
+                obj = new ReflectiveCube(shape.center,shape.radius,
+                    Color.colorFromHex(CUBE_HEX_COLOR))
+                break;
+            case 'dode':
+                obj = new ReflectiveDodecahedron(shape.center,shape.radius,
+                    Color.colorFromHex(DODECA_HEX_COLOR))
+                break;
+            case 'octa':
+                obj = new ReflectiveOctahedron(shape.center,shape.radius,
+                    Color.colorFromHex(OCTA_HEX_COLOR))
+                break;
+            default:
+                console.error('unexpected shape = ', type, ' - ignored')
+        }
+        if (obj) {
+            optEnv2.addOpticalObject(obj)
+        }
+    })
 }
