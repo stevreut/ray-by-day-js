@@ -245,11 +245,11 @@ function initRandomShapes(camOrigin) {
     if (!(camOrigin instanceof Vector3D)) {
         throw 'unexpected parameter types'
     }
-    const TARGET_SHAPE_COUNT = 6
+    const TARGET_SHAPE_COUNT = 12  // Increased from 6 to 12
     let rejectCount = 0
     const shapeTempArray = []
-    const MIN_SPACE = 0.2
-    const SHAPE_NAMES = 'comp;comp;spht;spht;icos;cube;dode;octa'.split(';')
+    const MIN_SPACE = 0.3  // Slightly increased spacing
+    const SHAPE_NAMES = 'comp;comp;comp;spht;spht;spht;spht;icos;icos;cube;cube;dode;dode;octa;octa;tetr'.split(';')
     
     while (shapeTempArray.length < TARGET_SHAPE_COUNT) {
         let candidateObject = {
@@ -257,7 +257,7 @@ function initRandomShapes(camOrigin) {
         }
         let rando = Math.floor(Math.random()*SHAPE_NAMES.length)
         candidateObject.type = SHAPE_NAMES[rando]
-        candidateObject.radius = 1
+        candidateObject.radius = 0.8 + Math.random() * 0.4  // Random radius between 0.8 and 1.2
         let hasIntersect = false
         shapeTempArray.forEach(otherShape=>{
             if (!hasIntersect) {
@@ -269,19 +269,40 @@ function initRandomShapes(camOrigin) {
         })
         if (hasIntersect) {
             rejectCount++
+            // Safety check: if we've rejected too many attempts, reduce target count
+            if (rejectCount > 1000) {
+                console.warn(`Could only place ${shapeTempArray.length} objects after ${rejectCount} attempts. Stopping.`)
+                break
+            }
         } else {
             shapeTempArray.push(candidateObject)
         }
     }
     
     function randomCenter(camOrigin) {
-        const rangeCenter = camOrigin.add(new Vector3D(0, 0, 20))  // Place objects behind lens
-        let arr = []
-        for (let i=0;i<3;i++) {
-            arr.push((Math.random()-0.5)*8)
-        }
-        let ctr = new Vector3D(arr)
-        return ctr.add(rangeCenter)
+        // Camera points toward origin (0,0,0), so place objects in that direction
+        // Get the direction from camera to origin (which is the camera's view direction)
+        const cameraDirection = new Vector3D(0, 0, 0).subt(camOrigin).normalized()
+        
+        // Place objects at different distances along the camera's view direction
+        const baseDistance = 15 + Math.random() * 10  // Random distance between 15-25
+        const rangeCenter = camOrigin.add(cameraDirection.scalarMult(baseDistance))
+        
+        // Spread objects perpendicular to the camera direction
+        // Create a coordinate system perpendicular to the camera direction
+        const upVector = new Vector3D(0, 1, 0)
+        const rightVector = cameraDirection.cross(upVector).normalized()
+        const upPerpVector = rightVector.cross(cameraDirection).normalized()
+        
+        // Add random offsets perpendicular to the camera direction
+        const rightOffset = (Math.random() - 0.5) * 8  // ±4 units
+        const upOffset = (Math.random() - 0.5) * 8     // ±4 units
+        
+        const finalCenter = rangeCenter
+            .add(rightVector.scalarMult(rightOffset))
+            .add(upPerpVector.scalarMult(upOffset))
+        
+        return finalCenter
     }
     
     shapeTempArray.forEach(shape=>{
@@ -297,11 +318,15 @@ function initRandomShapes(camOrigin) {
                     Color.colorFromHex(ICOSA_HEX_COLOR))
                 break;
             case 'spht':
-                obj = new RefractiveSphere(shape.center,shape.radius,randomColor(),1.5)
+                obj = new RefractiveSphere(shape.center,shape.radius,randomColor(),1.3 + Math.random() * 0.4)
                 break;
             case 'cube':
                 obj = new ReflectiveCube(shape.center,shape.radius,
                     Color.colorFromHex(CUBE_HEX_COLOR))
+                break;
+            case 'tetr':
+                obj = new ReflectiveTetrahedron(shape.center,shape.radius,
+                    Color.colorFromHex(TETRA_HEX_COLOR))
                 break;
             case 'dode':
                 obj = new ReflectiveDodecahedron(shape.center,shape.radius,
