@@ -132,7 +132,7 @@ class OpticalEnvironment {
             for (let lensOrFilter of this.lenseOrFilterList) {
                 const dist = lensOrFilter.interceptDistance(cameraRay)
                 if (dist !== null && dist > 0) {
-                    const result = lensOrFilter.handle(cameraRay)
+                    const result = lensOrFilter.handle(cameraRay, dist)
                     if (result instanceof Ray) {
                         cameraRay = result
                     } else if (result instanceof Color) {

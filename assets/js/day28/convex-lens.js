@@ -4,10 +4,10 @@ import Color from "../day20/color.js"
 import OpticalObject from "../day20/optical-object.js"
 
 class ConvexLens extends OpticalObject {
-    constructor(center, radius, thickness, refractiveIndex = 1.8) {
+    constructor(distance, radius, thickness, indexOfRefraction = 1.5) {
         super()
-        if (!(center instanceof Vector3D)) {
-            throw 'center must be a Vector3D'
+        if (typeof distance !== 'number' || distance <= 0) {
+            throw 'distance must be a positive number'
         }
         if (typeof radius !== 'number' || radius <= 0) {
             throw 'radius must be a positive number'
@@ -15,140 +15,147 @@ class ConvexLens extends OpticalObject {
         if (typeof thickness !== 'number' || thickness <= 0) {
             throw 'thickness must be a positive number'
         }
-        if (typeof refractiveIndex !== 'number' || refractiveIndex <= 1) {
-            throw 'refractiveIndex must be greater than 1'
+        if (typeof indexOfRefraction !== 'number' || indexOfRefraction <= 1) {
+            throw 'indexOfRefraction must be greater than 1'
+        }
+        if (thickness > 2 * radius) {
+            throw 'thickness must be <= 2*radius'
+        }
+        if (thickness >= distance*2) {
+            throw 'thickness must be < distance*2'
         }
         
-        this.center = center
-        this.radius = radius
+        this.distance = distance
+        this.lensRadius = radius
+        this.lensRadiusSquared = radius * radius
         this.thickness = thickness
-        this.refractiveIndex = refractiveIndex
+        this.indexOfRefraction = indexOfRefraction
         
-        // Calculate the center of the spherical surface
-        // The planar surface is at center, the spherical surface is offset by thickness
-        this.sphereCenter = center.add(new Vector3D(0, 0, thickness))
+        // Calculate half thickness for convenience
+        this.halfThickness = thickness / 2
         
-        // Calculate the radius of curvature of the spherical surface
-        // For a convex lens, the spherical surface has positive curvature
-        this.sphereRadius = radius * 2  // Make it reasonably curved
+        // Calculate sphere radius using chord formula
+        // radius = (chord_length² + 4×height²) / (8×height)
+        // where chord_length = 2 × radius and height = halfThickness
+        const chordLength = 2 * radius
+        const height = this.halfThickness
+        this.sphereRadius = (chordLength * chordLength + 4 * height * height) / (8 * height)
+        this.sphereRadiusSquared = this.sphereRadius * this.sphereRadius
+        
+        // Calculate sphere centers
+        // Both spheres have radius = this.sphereRadius
+        // Midpoint between centers is at (0, 0, -distance)
+        // Separation distance = 2*sphereRadius - 2*height
+        const separationDistance = 2 * this.sphereRadius - 2 * height
+        const halfSeparation = separationDistance / 2
+
+        // Pay careful attention here:  The "front" sphere is actually the one whose center is 
+        // farther away, where as the "back" where, which contributes the back side of the lense, has
+        // its center closer to the camera (and, in many instances, behind the camera).
+        
+        // Front sphere center (closer to camera)
+        this.frontSphereCenter = new Vector3D(0, 0, -distance - halfSeparation)
+        
+        // Back sphere center (further from camera)
+        this.backSphereCenter = new Vector3D(0, 0, -distance + halfSeparation)
     }
     
     interceptDistance(ray) {
-        // Check intersection with the planar surface first (closer to camera)
-        const planarDist = this.interceptPlanarSurface(ray)
-        if (planarDist !== null && planarDist > 0) {
-            return planarDist
-        }
-        
-        // Check intersection with the spherical surface
-        const sphereDist = this.interceptSphericalSurface(ray)
-        if (sphereDist !== null && sphereDist > 0) {
-            return sphereDist
-        }
-        
-        return null
+        // Check intersection with the front sphere (closer to camera)
+        return this.interceptSphere(ray, this.frontSphereCenter, this.sphereRadius)
     }
     
-    interceptPlanarSurface(ray) {
-        // Planar surface is perpendicular to Z-axis at the lens center
-        const rayDir = ray.getDirection()
-        const rayOrigin = ray.getOrigin()
-        
-        // Check if ray is moving toward the plane (negative Z direction)
-        if (rayDir.getZ() >= 0) {
-            return null  // Ray is moving away from or parallel to plane
-        }
-        
-        // Calculate intersection with the plane
-        const planeZ = this.center.getZ()
-        const t = (planeZ - rayOrigin.getZ()) / rayDir.getZ()
-        
-        if (t <= 0) {
-            return null  // Intersection is behind the ray origin
-        }
-        
-        // Check if intersection point is within the lens radius
-        const intersectionPoint = rayOrigin.add(rayDir.scalarMult(t))
-        const distanceFromCenter = intersectionPoint.subt(this.center).magn()
-        
-        if (distanceFromCenter <= this.radius) {
-            return t
-        }
-        
-        return null
-    }
-    
-    interceptSphericalSurface(ray) {
-        // Use the same logic as a sphere but with the offset center
-        const C = this.sphereCenter.subt(ray.getOrigin())
-        const D = ray.getDirection()
+    interceptSphere(ray, sphereCenter) {
+        // Standard sphere-ray intersection
+        const C = sphereCenter.subt(ray.getOrigin())
+        const D = ray.getDirection().normalized()
         const CD = C.dot(D)
-        const det = CD**2 - D.magnSqr()*(C.magnSqr() - this.sphereRadius**2)
+        const det = CD**2 - D.magnSqr()*(C.magnSqr() - this.sphereRadiusSquared)
         
         if (det <= 0) {
             return null
         }
         
         const detRoot = Math.sqrt(det)
-        let k = CD - detRoot
-        if (k <= 0) {
-            k = CD + detRoot
-            if (k <= 0) {
-                return null
-            }
+        const k1 = CD - detRoot
+        
+        // Choose the appropriate intersection based on ray origin
+        let k = null
+        if (k1 > 0) {
+            k = k1  // Use closer intersection if ray starts outside
+        } else {
+            const k2 = CD + detRoot
+            if (k2 > 0) 
+            k = k2  // Use farther intersection if ray starts inside
         }
         
-        k /= D.magn()
-        return k
+        if (k === null) {
+            return null
+        }
+        
+        // Check if intersection point is within lens aperture (lensRadius)
+        const intersectionPoint = ray.getOrigin().add(D.scalarMult(k))
+        
+        // Lens center is at (0, 0, -distance)
+        const lensCenter = new Vector3D(0, 0, -this.distance)
+        const offsetFromLensCenter = intersectionPoint.subt(lensCenter)
+        const xOffset = offsetFromLensCenter.getX()
+        const yOffset = offsetFromLensCenter.getY()
+        const distanceFromAxisSquared = xOffset*xOffset + yOffset*yOffset
+        
+        if (distanceFromAxisSquared <= this.lensRadiusSquared) {
+            return k
+        }
+        
+        return null
     }
     
-    handle(ray) {
-        const dist = this.interceptDistance(ray)
-        if (dist === null || dist <= 0) {
+    handle(ray, distance) {
+        if (distance === null || distance <= 0) {
             return ray.color
         }
         
-        const rayDir = ray.getDirection()
-        const intersectionPoint = ray.getOrigin().add(rayDir.scalarMult(dist))
+        // Calculate intersection point with front sphere
+        const rayDir = ray.getDirection().normalized()
+        const frontIntersectionPoint = ray.getOrigin().add(rayDir.scalarMult(distance))
         
-        // Determine which surface was hit
-        const distanceFromCenter = intersectionPoint.subt(this.center).magn()
-        const isPlanarSurface = Math.abs(intersectionPoint.getZ() - this.center.getZ()) < 0.001
+        // Calculate normal vector pointing outward from front sphere center
+        const frontNormal = frontIntersectionPoint.subt(this.frontSphereCenter).normalized()
+        const incidentDir = ray.getDirection()
         
-        if (isPlanarSurface) {
-            // Handle planar surface (entering the lens)
-            return this.handlePlanarSurface(ray, intersectionPoint)
-        } else {
-            // Handle spherical surface (exiting the lens)
-            return this.handleSphericalSurface(ray, intersectionPoint)
+        // Refract from air to glass using Vector3D.refract method
+        const refractedDir = incidentDir.refract(frontNormal, this.indexOfRefraction)
+        
+        // Create ray inside the lens
+        const internalRay = new Ray(frontIntersectionPoint, refractedDir, ray.color)
+        
+        // Find intersection with back sphere
+        const backDistance = this.interceptSphere(internalRay, this.backSphereCenter, this.sphereRadius)
+        
+        if (backDistance === null || backDistance <= 0) {
+            // This shouldn't happen with our geometry, but handle it gracefully
+            return ray.color
         }
+        
+        // Calculate intersection point with back sphere
+        const backIntersectionPoint = internalRay.getOrigin().add(refractedDir.normalized().scalarMult(backDistance))
+        
+        // Calculate normal vector pointing outward from back sphere center
+        const backNormal = backIntersectionPoint.subt(this.backSphereCenter).normalized()
+        
+        // Refract from glass to air using Vector3D.refract method
+        const finalRefractedDir = refractedDir.refract(backNormal, 1/this.indexOfRefraction)
+        
+        // Temporarily alter color based on distance traversed through lens material
+        const distanceTraversed = backDistance
+        const alteredColor = ray.color.overDistance(distanceTraversed, new Color(0.5, 0.3, 0.3))
+        
+        // Create final ray exiting the lens
+        const finalRay = new Ray(backIntersectionPoint, finalRefractedDir, alteredColor)
+        return finalRay
     }
     
-    handlePlanarSurface(ray, intersectionPoint) {
-        // Planar surface normal is always (0, 0, 1) in camera coordinates
-        const normal = new Vector3D(0, 0, 1)
-        const incidentDir = ray.getDirection()
-        
-        // Refract into the lens material
-        const refractedDir = incidentDir.refract(normal, this.refractiveIndex)
-        
-        // Create new ray continuing through the lens
-        const newRay = new Ray(intersectionPoint, refractedDir, ray.color)
-        return newRay
-    }
-    
-    handleSphericalSurface(ray, intersectionPoint) {
-        // Calculate normal vector pointing outward from sphere center
-        const normal = intersectionPoint.subt(this.sphereCenter).normalized()
-        const incidentDir = ray.getDirection()
-        
-        // Refract out of the lens material (from lens to air, so 1/refractiveIndex)
-        const refractedDir = incidentDir.refract(normal, 1/this.refractiveIndex)
-        
-        // Create new ray exiting the lens
-        const newRay = new Ray(intersectionPoint, refractedDir, ray.color)
-        return newRay
-    }
+
 }
 
 export default ConvexLens 

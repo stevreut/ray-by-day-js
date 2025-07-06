@@ -226,12 +226,12 @@ function initEnvironment() {
     optEnv.setCamera(cameraRay, apertRadius, focalDistance)
     
     // Add the convex lens using the new lens/filter functionality
-    const lensCenter = new Vector3D(0, 0, settingsInputBox1.get('lensedist'))
+    const lensDistance = settingsInputBox1.get('lensedist')
     const lensRadius = settingsInputBox1.get('lenserad')
     const lensThickness = settingsInputBox1.get('lensethick')
     const lensRefractiveIndex = settingsInputBox1.get('lenseidx')
     
-    const convexLens = new ConvexLens(lensCenter, lensRadius, lensThickness, lensRefractiveIndex)
+    const convexLens = new ConvexLens(lensDistance, lensRadius, lensThickness, lensRefractiveIndex)
     optEnv.addLenseOrFilter(convexLens)  // Use the new lens/filter method!
     
     // Add some objects behind the lens

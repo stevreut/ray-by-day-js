@@ -14,10 +14,10 @@ class Matrix3D {
         *   within that row.
         */
         if (args.length === 1) {
-            if (!Array.isArray(args)) {
+            if (!Array.isArray(args[0])) {
                 throw 'single argument is not an array'
             }
-            this.#init(args)
+            this.#init(args[0])
         } else if (args.length === 3) {
             if (Array.isArray(args[0])) {
                 this.#init([...args])
