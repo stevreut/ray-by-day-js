@@ -3,8 +3,8 @@ import Ray from "../day20/ray.js"
 import Color from "../day20/color.js"
 import OpticalObject from "../day20/optical-object.js"
 
-class ConvexLens extends OpticalObject {
-    constructor(distance, radius, thickness, indexOfRefraction = 1.5) {
+class ConcaveLens extends OpticalObject {
+    constructor(distance, radius, thickness, sphereRadius, indexOfRefraction = 1.5) {
         super()
         if (typeof distance !== 'number' || distance <= 0) {
             throw 'distance must be a positive number'
@@ -15,49 +15,44 @@ class ConvexLens extends OpticalObject {
         if (typeof thickness !== 'number' || thickness <= 0) {
             throw 'thickness must be a positive number'
         }
+        if (typeof sphereRadius !== 'number' || sphereRadius <= 0) {
+            throw 'sphereRadius must be a positive number'
+        }
         if (typeof indexOfRefraction !== 'number' || indexOfRefraction <= 1) {
             throw 'indexOfRefraction must be greater than 1'
         }
-        if (thickness > 1.8 * radius) {
-            throw 'thickness must be <= 1.8*radius'
+        if (sphereRadius < 2 * radius) {
+            throw 'sphereRadius must be at least 2 * radius for concave lens'
         }
-        if (thickness >= distance*1.8) {
-            throw 'thickness must be < distance*1.8'
+        if (thickness >= 2 * radius) {
+            throw 'thickness must be < 2*radius for concave lens'
+        }
+        if (thickness >= distance) {
+            throw 'thickness must be < distance'
         }
         
         this.distance = distance
         this.lensRadius = radius
         this.lensRadiusSquared = radius * radius
         this.thickness = thickness
+        this.sphereRadius = sphereRadius
+        this.sphereRadiusSquared = sphereRadius * sphereRadius
         this.indexOfRefraction = indexOfRefraction
         
         // Calculate half thickness for convenience
         this.halfThickness = thickness / 2
         
-        // Calculate sphere radius using chord formula
-        // radius = (chord_length² + 4×height²) / (8×height)
-        // where chord_length = 2 × radius and height = halfThickness
-        const chordLength = 2 * radius
-        const height = this.halfThickness
-        this.sphereRadius = (chordLength * chordLength + 4 * height * height) / (8 * height)
-        this.sphereRadiusSquared = this.sphereRadius * this.sphereRadius
-        
-        // Calculate sphere centers
-        // Both spheres have radius = this.sphereRadius
-        // Midpoint between centers is at (0, 0, -distance)
-        // Separation distance = 2*sphereRadius - 2*height
-        const separationDistance = 2 * this.sphereRadius - 2 * height
+        // Calculate sphere centers for concave lens
+        // For a concave lens, the sphere centers are positioned to create a diverging lens
+        // The front sphere center is behind the lens center, the back sphere center is in front
+        const separationDistance = 2 * this.sphereRadius - thickness
         const halfSeparation = separationDistance / 2
 
-        // Pay careful attention here:  The "front" sphere is actually the one whose center is 
-        // farther away, where as the "back" where, which contributes the back side of the lense, has
-        // its center closer to the camera (and, in many instances, behind the camera).
+        // Front sphere center (behind lens center)
+        this.frontSphereCenter = new Vector3D(0, 0, -distance + halfSeparation)
         
-        // Front sphere center (closer to camera)
-        this.frontSphereCenter = new Vector3D(0, 0, -distance - halfSeparation)
-        
-        // Back sphere center (further from camera)
-        this.backSphereCenter = new Vector3D(0, 0, -distance + halfSeparation)
+        // Back sphere center (in front of lens center)
+        this.backSphereCenter = new Vector3D(0, 0, -distance - halfSeparation)
     }
     
     interceptDistance(ray) {
@@ -119,12 +114,12 @@ class ConvexLens extends OpticalObject {
         const rayDir = ray.getDirection().normalized()
         const frontIntersectionPoint = ray.getOrigin().add(rayDir.scalarMult(distance))
         
-        // Calculate normal vector pointing outward from front sphere center
-        const frontNormal = frontIntersectionPoint.subt(this.frontSphereCenter).normalized()
+        // Calculate normal vector pointing inward toward front sphere center (concave surface)
+        const frontNormal = this.frontSphereCenter.subt(frontIntersectionPoint).normalized()
         const incidentDir = ray.getDirection()
         
         // Refract from air to glass using Vector3D.refract method
-        const refractedDir = incidentDir.refract(frontNormal, this.indexOfRefraction)
+        const refractedDir = incidentDir.refract(frontNormal, 1/this.indexOfRefraction)
         
         // Create ray inside the lens
         const internalRay = new Ray(frontIntersectionPoint, refractedDir, ray.color)
@@ -133,22 +128,32 @@ class ConvexLens extends OpticalObject {
         const backDistance = this.interceptSphere(internalRay, this.backSphereCenter, this.sphereRadius)
         
         if (backDistance === null || backDistance <= 0) {
-            // This shouldn't happen with our geometry, but handle it gracefully
-            return ray.color
+            // For concave lenses, internal rays may not intersect the back sphere
+            // This means the ray is diverging away from the back surface
+            // The ray continues in the refracted direction from the front surface
+            // Temporarily alter color based on distance through lens material (approximate)
+            const approximateDistance = this.thickness
+            const alteredColor = ray.color.filter((new Color(0.8,0.8,0.9)).overDistance(approximateDistance))
+            console.log('off-axis color scenario: ' + alteredColor.toString())
+            
+            // Create ray continuing in refracted direction from front surface
+            const continuingRay = new Ray(frontIntersectionPoint, refractedDir, alteredColor)
+            return continuingRay
         }
         
         // Calculate intersection point with back sphere
         const backIntersectionPoint = internalRay.getOrigin().add(refractedDir.normalized().scalarMult(backDistance))
         
-        // Calculate normal vector pointing outward from back sphere center
-        const backNormal = backIntersectionPoint.subt(this.backSphereCenter).normalized()
+        // Calculate normal vector pointing inward toward back sphere center (concave surface)
+        const backNormal = this.backSphereCenter.subt(backIntersectionPoint).normalized()
         
         // Refract from glass to air using Vector3D.refract method
-        const finalRefractedDir = refractedDir.refract(backNormal, 1/this.indexOfRefraction)
+        const finalRefractedDir = refractedDir.refract(backNormal, this.indexOfRefraction)
         
         // Temporarily alter color based on distance traversed through lens material
         const distanceTraversed = backDistance
-        const alteredColor = ray.color.filter((new Color(0.8,0.8,0.9)).overDistance(distanceTraversed))
+        const alteredColor = ray.color.filter(new Color(0.9,0.95,0.9).overDistance(distanceTraversed))
+        console.log('normal color scenario: ' + alteredColor.toString())
         
         // Create final ray exiting the lens
         const finalRay = new Ray(backIntersectionPoint, finalRefractedDir, alteredColor)
@@ -158,4 +163,4 @@ class ConvexLens extends OpticalObject {
 
 }
 
-export default ConvexLens 
+export default ConcaveLens 

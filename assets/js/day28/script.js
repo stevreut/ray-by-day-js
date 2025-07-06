@@ -5,6 +5,7 @@ import BiVariantGrapher from "../day20/bivargrapher.js"
 import OpticalEnvironment from "../day22/optical-env.js"
 import OpticalEnvironmentNew from "./optical-env.js"
 import ConvexLens from "./convex-lens.js"
+import ConcaveLens from "./concave-lens.js"
 import Plane from "../day22/plane.js"
 import RefractiveSphere from "../day22/refractive-sphere.js"
 import SunnySky from "../day25/sunny-sky.js"
@@ -40,6 +41,17 @@ const HI_QUALITY_BUTTON_ID_2 = 'highqbtn2'
 const LO_QUALITY_BUTTON_ID_2 = 'lowqbtn2'
 const SAVE_IMAGE_BUTTON_ID_2 = 'savebtn2'
 const IMG_CANVAS_ID_2 = 'renderedcanvas2'
+
+// Third section constants
+const SETTINGS_ID_3 = 'fr3inputs'
+const IMG_PARA_ID_3 = 'imgpara3'
+const STATUS_BAR_ID_3 = 'statbar3'
+const DURATION_TEXT_ID_3 = 'dur3'
+const REPEAT_BUTTON_ID_3 = 'rptbtn3'
+const HI_QUALITY_BUTTON_ID_3 = 'highqbtn3'
+const LO_QUALITY_BUTTON_ID_3 = 'lowqbtn3'
+const SAVE_IMAGE_BUTTON_ID_3 = 'savebtn3'
+const IMG_CANVAS_ID_3 = 'renderedcanvas3'
 
 // Platonic solids colors in HTML hex values
 const TETRA_HEX_COLOR = "#c299cc"
@@ -80,6 +92,18 @@ let durationElem2 = null
 let statusBar2 = null
 let optEnv2 = null
 
+// Third section variables
+let settingsInputBox3 = null
+let settingsDiv3 = null
+let goAgainButton3 = null
+let highQualityButton3 = null
+let lowQualityButton3 = null
+let saveImageButton3 = null
+let imgParagraph3 = null
+let durationElem3 = null
+let statusBar3 = null
+let optEnv3 = null
+
 onload = async () => {
     try {
         imgParagraph = linkElement(IMG_PARA_ID)
@@ -102,16 +126,21 @@ onload = async () => {
         // Initialize second section
         initSecondSection()
         
-        // Start both image generations in parallel
+        // Initialize third section
+        await initThirdSection()
+        
+        // Start all three image generations in parallel
         const firstImage = processImage(imgParagraph, durationElem)
         const secondImage = processImage2(imgParagraph2, durationElem2, false)
+        const thirdImage = processImage3(imgParagraph3, durationElem3, false)
         
-        // Wait for both to complete
-        await Promise.all([firstImage, secondImage])
+        // Wait for all to complete
+        await Promise.all([firstImage, secondImage, thirdImage])
         
-        // Enable buttons after both complete
+        // Enable buttons after all complete
         enableButton(lowQualityButton, false)
         enableButton(lowQualityButton2, false)
+        enableButton(lowQualityButton3, false)
         goAgainButton.addEventListener('click',async ()=>{
             const dimensions = setImageDimensions(imgParagraph, false, DEFAULT_IMAGE_WIDTH)
             targetImageWidth = dimensions.targetWidth
@@ -750,4 +779,313 @@ function initRandomShapes2(camOrigin) {
             optEnv2.addOpticalObject(obj)
         }
     })
+}
+
+// Third section functions
+async function initThirdSection() {
+    try {
+        imgParagraph3 = linkElement(IMG_PARA_ID_3)
+        goAgainButton3 = linkElement(REPEAT_BUTTON_ID_3)
+        highQualityButton3 = linkElement(HI_QUALITY_BUTTON_ID_3)
+        lowQualityButton3 = linkElement(LO_QUALITY_BUTTON_ID_3)
+        saveImageButton3 = linkElement(SAVE_IMAGE_BUTTON_ID_3)
+        durationElem3 = linkElement(DURATION_TEXT_ID_3)
+        settingsDiv3 = linkElement(SETTINGS_ID_3)
+        statusBar3 = new GraphicStatusReportBar(STATUS_BAR_ID_3)
+        
+        // Initialize third settings input box
+        formatInputs3()
+        
+        const hardcodedDimensions = setImageDimensions(imgParagraph3, false, DEFAULT_IMAGE_WIDTH)
+        insertBlankCanvas3()
+        initEnvironment3()
+        
+        // Add event listeners for third section
+        goAgainButton3.addEventListener('click', async () => {
+            initEnvironment3()
+            await processImage3(imgParagraph3, durationElem3, false)
+            enableButton(highQualityButton3, true)
+            enableButton(lowQualityButton3, false)
+        })
+        
+        highQualityButton3.addEventListener('click', async () => {
+            await processImage3(imgParagraph3, durationElem3, true)
+            enableButton(highQualityButton3, false)
+            enableButton(lowQualityButton3, true)
+        })
+        
+        lowQualityButton3.addEventListener('click', async () => {
+            await processImage3(imgParagraph3, durationElem3, false)
+            enableButton(highQualityButton3, true)
+            enableButton(lowQualityButton3, false)
+        })
+        
+        saveImageButton3.addEventListener('click', async () => {
+            enableButton(goAgainButton3, false)
+            const hiIsEnabled = !highQualityButton3.disabled
+            const loIsEnabled = !lowQualityButton3.disabled
+            enableButton(highQualityButton3, false)
+            enableButton(lowQualityButton3, false)
+            await saveRayTraceImage(IMG_CANVAS_ID_3, DAY_TYPES.LENSE_ENHANCED, () => {
+                enableButton(saveImageButton3, false)
+            })
+            enableButton(goAgainButton3, true)
+            enableButton(highQualityButton3, hiIsEnabled)
+            enableButton(lowQualityButton3, loIsEnabled)
+        })
+    } catch (err) {
+        console.error('Third section error = ', err)
+        alert('Third section error = ' + err.toString())
+    }
+}
+
+async function processImage3(imgParagraph, durationElem, highQuality = false) {
+    durationElem.textContent = ''
+    enableButton(goAgainButton3, false)
+    enableButton(highQualityButton3, false)
+    enableButton(lowQualityButton3, false)
+    enableButton(saveImageButton3, false)
+    
+    const gridder = new CanvasGridGrapher()
+    const startTime = new Date()
+    const dimensions = setImageDimensions(imgParagraph, highQuality, DEFAULT_IMAGE_WIDTH)
+    
+    const grapher = new BiVariantGrapher(
+        gridder,
+        Math.floor(dimensions.targetWidth/dimensions.pixelSize),
+        Math.floor(dimensions.targetHeight/dimensions.pixelSize),
+        dimensions.pixelSize, 
+        dimensions.targetHeight/dimensions.pixelSize*0.33,
+        (x,y) => {
+            if (!optEnv3) {
+                throw 'optEnv3 not initiated'
+            }
+            return optEnv3.colorFromXY(x,y)
+        },
+        dimensions.antiAlias,
+        statusReporterFunction3
+    )
+    
+    let canvasElem = await grapher.drawGraph()
+    const finTime = new Date()
+    const durationMs = finTime.getTime()-startTime.getTime()
+    const durationSecs = durationMs/1000
+    imgParagraph.innerHTML = ''
+    imgParagraph.appendChild(canvasElem)
+    canvasElem.id = IMG_CANVAS_ID_3
+    durationElem.textContent = 'Image generation duration: ' + durationSecs + ' seconds'
+    enableButton(goAgainButton3, true)
+    enableButton(highQualityButton3, true)
+    enableButton(lowQualityButton3, true)
+    enableButton(saveImageButton3, true)
+}
+
+function insertBlankCanvas3() {
+    const canv = document.createElement('canvas')
+    if (canv) {
+        imgParagraph3.innerHTML = ''
+        canv.width = DEFAULT_IMAGE_WIDTH
+        canv.height = DEFAULT_IMAGE_WIDTH * 0.75
+        canv.style.maxWidth = '100%'
+        canv.style.height = 'auto'
+        const localContext = canv.getContext('2d')
+        if (localContext) {
+            localContext.fillStyle = '#ddd';
+            localContext.fillRect(0,0,canv.width,canv.height)
+            localContext.fillStyle = '#bbb';
+            const currentFont = localContext.font
+            const fontParts = currentFont.split(' ')
+            const newFont = '36px ' + fontParts.slice(1).join(' ')
+            localContext.font = newFont
+            localContext.fillText('Concave Lens Environment - Image creation in progress...',30,80)
+        }
+        imgParagraph3.appendChild(canv)
+    }
+}
+
+function statusReporterFunction3(frac) {
+    statusBar3.setProgress(frac);
+}
+
+function initEnvironment3() {
+    optEnv3 = new OpticalEnvironmentNew()
+    const cameraOrigin = new randomCameraPosition()
+    const cameraDirection = cameraOrigin.scalarMult(-1)
+    const cameraRay = new Ray(cameraOrigin, cameraDirection)
+    
+    // Get settings from the third input box
+    const apertRadius = settingsInputBox3.get('apertdiam')/2
+    const focalDistance = settingsInputBox3.get('focus')
+    optEnv3.setCamera(cameraRay, apertRadius, focalDistance)
+    
+    // Add the concave lens using the new lens/filter functionality
+    const lensDistance = settingsInputBox3.get('lensedist')
+    const lensRadius = settingsInputBox3.get('lenserad')
+    const lensThickness = settingsInputBox3.get('lensethick')
+    const sphereRadius = settingsInputBox3.get('sphererad')
+    const lensRefractiveIndex = settingsInputBox3.get('lenseidx')
+    
+    const concaveLens = new ConcaveLens(lensDistance, lensRadius, lensThickness, sphereRadius, lensRefractiveIndex)
+    optEnv3.addLenseOrFilter(concaveLens)  // Use the new lens/filter method!
+    
+    // Add some objects behind the lens
+    initRandomShapes3(cameraRay.getOrigin())
+    optEnv3.addOpticalObject(new Plane(-15, 10, 5))
+    sunVector = randomSunDirection()
+    optEnv3.addOpticalObject(new SunnySky(sunVector))
+}
+
+function initRandomShapes3(camOrigin) {
+    if (!(camOrigin instanceof Vector3D)) {
+        throw 'unexpected parameter types'
+    }
+    const TARGET_SHAPE_COUNT = 12
+    let rejectCount = 0
+    const shapeTempArray = []
+    const MIN_SPACE = 0.3
+    const SHAPE_NAMES = 'comp;comp;comp;spht;spht;spht;spht;icos;icos;cube;cube;dode;dode;octa;octa;tetr'.split(';')
+    
+    // First, place one object directly in line with the camera direction behind the lens
+    const cameraDirection = new Vector3D(0, 0, 0).subt(camOrigin).normalized()
+    const lensDistance = settingsInputBox3.get('lensedist')
+    const baseDistance = lensDistance + 10 + Math.random() * 5  // Behind the lens
+    const centerlineObject = {
+        center: camOrigin.add(cameraDirection.scalarMult(baseDistance)),
+        type: SHAPE_NAMES[Math.floor(Math.random()*SHAPE_NAMES.length)],
+        radius: 0.8 + Math.random() * 0.4
+    }
+    shapeTempArray.push(centerlineObject)
+    
+    // Then place the remaining objects randomly
+    while (shapeTempArray.length < TARGET_SHAPE_COUNT) {
+        let candidateObject = {
+            center: randomCenter3(camOrigin)
+        }
+        let rando = Math.floor(Math.random()*SHAPE_NAMES.length)
+        candidateObject.type = SHAPE_NAMES[rando]
+        candidateObject.radius = 0.8 + Math.random() * 0.4
+        let hasIntersect = false
+        shapeTempArray.forEach(otherShape=>{
+            if (!hasIntersect) {
+                if (otherShape.center.subt(candidateObject.center).magn() <= 
+                        otherShape.radius+candidateObject.radius+MIN_SPACE) {
+                    hasIntersect = true
+                }
+            }
+        })
+        if (hasIntersect) {
+            rejectCount++
+            if (rejectCount > 1000) {
+                console.warn(`Could only place ${shapeTempArray.length} objects after ${rejectCount} attempts. Stopping.`)
+                break
+            }
+        } else {
+            shapeTempArray.push(candidateObject)
+        }
+    }
+    
+    function randomCenter3(camOrigin) {
+        const cameraDirection = new Vector3D(0, 0, 0).subt(camOrigin).normalized()
+        const baseDistance = 15 + Math.random() * 10
+        const rangeCenter = camOrigin.add(cameraDirection.scalarMult(baseDistance))
+        
+        const upVector = new Vector3D(0, 1, 0)
+        const rightVector = cameraDirection.cross(upVector).normalized()
+        const upPerpVector = rightVector.cross(cameraDirection).normalized()
+        
+        const rightOffset = (Math.random() - 0.5) * 8
+        const upOffset = (Math.random() - 0.5) * 8
+        
+        const finalCenter = rangeCenter
+            .add(rightVector.scalarMult(rightOffset))
+            .add(upPerpVector.scalarMult(upOffset))
+        
+        return finalCenter
+    }
+    
+    shapeTempArray.forEach(shape=>{
+        const { type } = shape
+        let obj = null
+        switch (type) {
+            case 'comp':
+                obj = new Compound12Sphere(shape.center,shape.radius*0.45,shape.radius*0.55,
+                    Color.colorFromHex(GOLD_HEX_COLOR))
+                break;
+            case 'icos':
+                obj = new ReflectiveIcosahedron(shape.center,shape.radius,
+                    Color.colorFromHex(ICOSA_HEX_COLOR))
+                break;
+            case 'spht':
+                obj = new RefractiveSphere(shape.center,shape.radius,randomColor(),1.3 + Math.random() * 0.4)
+                break;
+            case 'cube':
+                obj = new ReflectiveCube(shape.center,shape.radius,
+                    Color.colorFromHex(CUBE_HEX_COLOR))
+                break;
+            case 'tetr':
+                obj = new ReflectiveTetrahedron(shape.center,shape.radius,
+                    Color.colorFromHex(TETRA_HEX_COLOR))
+                break;
+            case 'dode':
+                obj = new ReflectiveDodecahedron(shape.center,shape.radius,
+                    Color.colorFromHex(DODECA_HEX_COLOR))
+                break;
+            case 'octa':
+                obj = new ReflectiveOctahedron(shape.center,shape.radius,
+                    Color.colorFromHex(OCTA_HEX_COLOR))
+                break;
+            default:
+                console.error('unexpected shape = ', type, ' - ignored')
+        }
+        if (obj) {
+            optEnv3.addOpticalObject(obj)
+        }
+    })
+}
+
+function formatInputs3() {
+    formatFrame3Inputs()
+}
+
+function formatFrame3Inputs() {
+    settingsInputBox3 = new SettingsInputBox("fr3",[
+        {
+            id: 'focus',
+            label: 'Focal Distance',
+            min: 0.1,
+            value: 8
+        },
+        {
+            id: 'apertdiam',
+            label: 'Aperture',
+            min: 0, max: 5,
+            value: 0.2
+        },
+        {
+            id: 'lensedist',
+            label: 'Distance to Center of Lens',
+            min: 1, max: 10, value: 3
+        },
+        {
+            id: 'lenserad',
+            label: 'Lens Radius',
+            min: 0.5, max: 15, value: 3
+        },
+        {   
+            id: 'lensethick',
+            label: 'Lens Thickness',
+            min: 0.01, max: 5, value: 0.5
+        },
+        {
+            id: 'sphererad',
+            label: 'Sphere Radius',
+            min: 4, max: 200, value: 8
+        },
+        {   
+            id: 'lenseidx',
+            label: 'Lens Index of Refraction',
+            min: 1.1, max: 20, value: 1.5
+        }
+    ],true)
+    settingsDiv3.appendChild(settingsInputBox3.getTable())
 }

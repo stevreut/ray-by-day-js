@@ -33,43 +33,9 @@ class OpticalEnvironment {
         this.lenseOrFilterList.push(obj)
     }
     removeOpticalObjectsByClassName(className) {
-        // Remove from regular objects list
-        let i = this.optObjList.length-1
-        let loopCount = 0
-        while (i >= 0) {
-            loopCount++
-            while (i > 0 && i >= this.optObjList.length) {
-                i--
-            }
-            if (loopCount > 1000) {  // sanity check (might need adjusting)
-                throw 'exceeded maximum anticipated number of environmental objects'
-            }
-            let name = this.optObjList[i].constructor.name
-            let matches = (className === name)
-            if (matches) {
-                this.optObjList.splice(i,1)
-            }
-            i--
-        }
-        
-        // Remove from lenses and filters list
-        i = this.lenseOrFilterList.length-1
-        loopCount = 0
-        while (i >= 0) {
-            loopCount++
-            while (i > 0 && i >= this.lenseOrFilterList.length) {
-                i--
-            }
-            if (loopCount > 1000) {  // sanity check (might need adjusting)
-                throw 'exceeded maximum anticipated number of environmental objects'
-            }
-            let name = this.lenseOrFilterList[i].constructor.name
-            let matches = (className === name)
-            if (matches) {
-                this.lenseOrFilterList.splice(i,1)
-            }
-            i--
-        }
+        // Remove all objects with the given class name from both lists
+        this.optObjList = this.optObjList.filter(obj => obj.constructor.name !== className)
+        this.lenseOrFilterList = this.lenseOrFilterList.filter(obj => obj.constructor.name !== className)
     }
     setCamera(cameraRay,aperture=0,focalDistance=4) {
         if (!(cameraRay instanceof Ray)) {
