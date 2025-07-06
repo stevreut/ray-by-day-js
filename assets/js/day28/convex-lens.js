@@ -18,11 +18,11 @@ class ConvexLens extends OpticalObject {
         if (typeof indexOfRefraction !== 'number' || indexOfRefraction <= 1) {
             throw 'indexOfRefraction must be greater than 1'
         }
-        if (thickness > 2 * radius) {
-            throw 'thickness must be <= 2*radius'
+        if (thickness > 1.8 * radius) {
+            throw 'thickness must be <= 1.8*radius'
         }
-        if (thickness >= distance*2) {
-            throw 'thickness must be < distance*2'
+        if (thickness >= distance*1.8) {
+            throw 'thickness must be < distance*1.8'
         }
         
         this.distance = distance
