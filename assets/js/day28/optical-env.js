@@ -126,8 +126,8 @@ class OpticalEnvironment {
         // Phase 1: Process lenses and filters in camera coordinates
         let processedRay = ray
         if (this.lenseOrFilterList.length > 0) {
-            // Transform ray to camera coordinates for lens/filter processing
-            let cameraRay = this.transformRayToCameraCoordinates(ray)
+            // Ray is already in camera coordinates, process lenses/filters directly
+            let cameraRay = ray
             
             for (let lensOrFilter of this.lenseOrFilterList) {
                 const dist = lensOrFilter.interceptDistance(cameraRay)
@@ -152,17 +152,26 @@ class OpticalEnvironment {
                 }
             }
             
-            // Transform processed ray back to world coordinates
+            // Transform processed ray to world coordinates for Phase 2
             processedRay = this.transformRayToWorldCoordinates(cameraRay)
         }
         
         // Phase 2: Process regular objects in world coordinates
-        let { leastDist, leastDistObj } = this.getLeastDistanceObject(processedRay)
-        if (leastDist === null) {
-            return processedRay.color.filter(OpticalEnvironment.SKY_BLUE)
+        return this.processRegularObjects(processedRay)
+    }
+    
+    processRegularObjects(ray) {
+        if (ray.count >= this.MAX_ITERATIONS) {
+            // To prevent infinite recursion
+            return ray.color
         }
         
-        let result = leastDistObj.handle(processedRay)
+        let { leastDist, leastDistObj } = this.getLeastDistanceObject(ray)
+        if (leastDist === null) {
+            return ray.color.filter(OpticalEnvironment.SKY_BLUE)
+        }
+        
+        let result = leastDistObj.handle(ray)
         let rayArray = []
         if (result instanceof Ray) {
             rayArray.push(result)
@@ -186,8 +195,8 @@ class OpticalEnvironment {
         
         let colorStack = []
         rayArray.forEach(subRay => {
-            subRay.count = processedRay.count + 1  // IMPORTANT!
-            const subColor = this.colorFromRay(subRay)  // NOTE: RECURSIVE!!
+            subRay.count = ray.count + 1  // IMPORTANT!
+            const subColor = this.processRegularObjects(subRay)  // NOTE: RECURSIVE - but only Phase 2!
             colorStack.push(subColor)
         })
         return Color.sum(colorStack)
@@ -205,21 +214,19 @@ class OpticalEnvironment {
         return true
     }
     rayFromXY(x,y) {
-        let origVector = this.camera.orig
-        let dirVector = this.camera.xUnit.scalarMult(x)
-            .add(this.camera.yUnit.scalarMult(y))
-            .add(this.camera.dir.scalarMult(this.ASPECT_FACTOR))
+        // Generate ray in camera coordinates: origin at (0,0,0), direction toward (x,y,-ASPECT_FACTOR)
+        let cameraOrigin = new Vector3D(0, 0, 0)
+        let cameraDirection = new Vector3D(x, y, -this.ASPECT_FACTOR)
+        
         if (this.camera.usingAperture) {
             const [randX,randY] = randomWithinUnitCircle()
-            const randomBlurVector = this.camera.xUnit.scalarMult(this.camera.semiAperture*randX)
-                .add(this.camera.yUnit.scalarMult(this.camera.semiAperture*randY))
-            origVector = origVector.add(randomBlurVector)
-            dirVector = dirVector.add(randomBlurVector.scalarMult(this.camera.directionApertureMultiplier))
+            // Add aperture blur in camera coordinates
+            cameraOrigin = cameraOrigin.add(new Vector3D(randX * this.camera.semiAperture, randY * this.camera.semiAperture, 0))
+            cameraDirection = cameraDirection.add(new Vector3D(randX * this.camera.semiAperture * this.camera.directionApertureMultiplier, 
+                                                              randY * this.camera.semiAperture * this.camera.directionApertureMultiplier, 0))
         }
-        return new Ray(origVector,
-            dirVector,
-            OpticalEnvironment.WHITE
-        )
+        
+        return new Ray(cameraOrigin, cameraDirection, OpticalEnvironment.WHITE)
         //
         function randomWithinUnitCircle() {
             while (true) {
@@ -250,16 +257,21 @@ class OpticalEnvironment {
         }
     }
     
-    transformRayToCameraCoordinates(worldRay) {
-        // Transform ray origin and direction to camera coordinates
-        const cameraOrigin = this.camera.worldToCameraMatrix.vectorMult(worldRay.getOrigin())
-        const cameraDirection = this.camera.worldToCameraMatrix.vectorMult(worldRay.getDirection())
-        return new Ray(cameraOrigin, cameraDirection, worldRay.color)
-    }
+    // Currently unused - kept for future use or debugging
+    // transformRayToCameraCoordinates(worldRay) {
+    //     // Transform ray origin and direction to camera coordinates
+    //     // First subtract camera origin, then apply rotation matrix
+    //     const relativeOrigin = worldRay.getOrigin().subt(this.camera.orig)
+    //     const cameraOrigin = this.camera.worldToCameraMatrix.vectorMult(relativeOrigin)
+    //     const cameraDirection = this.camera.worldToCameraMatrix.vectorMult(worldRay.getDirection())
+    //     return new Ray(cameraOrigin, cameraDirection, worldRay.color)
+    // }
     
     transformRayToWorldCoordinates(cameraRay) {
         // Transform ray origin and direction back to world coordinates
+        // First apply rotation matrix, then add camera origin
         const worldOrigin = this.camera.cameraToWorldMatrix.vectorMult(cameraRay.getOrigin())
+            .add(this.camera.orig)
         const worldDirection = this.camera.cameraToWorldMatrix.vectorMult(cameraRay.getDirection())
         return new Ray(worldOrigin, worldDirection, cameraRay.color)
     }
