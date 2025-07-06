@@ -61,6 +61,8 @@ const ICOSA_HEX_COLOR = "#99ccad"
 const DODECA_HEX_COLOR = "#99adcc"
 const GOLD_HEX_COLOR = "#ccb070"
 
+const LO_QUAL_PIXSIZE = 5
+
 const DEFAULT_IMAGE_WIDTH = 1024
 let targetImageWidth = null
 let targetImageHeight = null
@@ -115,6 +117,7 @@ onload = async () => {
         settingsDiv = linkElement(SETTINGS_ID)
         statusBar = new GraphicStatusReportBar(STATUS_BAR_ID);
         const dimensions = setImageDimensions(imgParagraph, false, DEFAULT_IMAGE_WIDTH)
+        dimensions.pixelSize = LO_QUAL_PIXSIZE
         targetImageWidth = dimensions.targetWidth
         targetImageHeight = dimensions.targetHeight
         pixelSize = dimensions.pixelSize
@@ -143,6 +146,7 @@ onload = async () => {
         enableButton(lowQualityButton3, false)
         goAgainButton.addEventListener('click',async ()=>{
             const dimensions = setImageDimensions(imgParagraph, false, DEFAULT_IMAGE_WIDTH)
+            dimensions.pixelSize = LO_QUAL_PIXSIZE
             targetImageWidth = dimensions.targetWidth
             targetImageHeight = dimensions.targetHeight
             pixelSize = dimensions.pixelSize
@@ -164,6 +168,7 @@ onload = async () => {
         })
         lowQualityButton.addEventListener('click',async ()=>{
             const dimensions = setImageDimensions(imgParagraph, false, DEFAULT_IMAGE_WIDTH)
+            dimensions.pixelSize = LO_QUAL_PIXSIZE
             targetImageWidth = dimensions.targetWidth
             targetImageHeight = dimensions.targetHeight
             pixelSize = dimensions.pixelSize
@@ -493,7 +498,7 @@ function formatFrame2Inputs() {
         },
         {
             id: 'lensedist',
-            label: 'Distance to Center ofLens',
+            label: 'Distance to Center of Lens',
             min: 1, max: 10, value: 5
         },
         {
@@ -531,6 +536,7 @@ async function initSecondSection() {
         formatInputs2()
         
         const hardcodedDimensions = setImageDimensions(imgParagraph2, false, DEFAULT_IMAGE_WIDTH)
+        hardcodedDimensions.pixelSize = LO_QUAL_PIXSIZE
         insertBlankCanvas2()
         initEnvironment2()
         
@@ -583,7 +589,9 @@ async function processImage2(imgParagraph, durationElem, highQuality = false) {
     const gridder = new CanvasGridGrapher()
     const startTime = new Date()
     const dimensions = setImageDimensions(imgParagraph, highQuality, DEFAULT_IMAGE_WIDTH)
-    
+    if (!highQuality) {
+        dimensions.pixelSize = LO_QUAL_PIXSIZE
+    }
     const grapher = new BiVariantGrapher(
         gridder,
         Math.floor(dimensions.targetWidth/dimensions.pixelSize),
@@ -797,6 +805,7 @@ async function initThirdSection() {
         formatInputs3()
         
         const hardcodedDimensions = setImageDimensions(imgParagraph3, false, DEFAULT_IMAGE_WIDTH)
+        hardcodedDimensions.pixelSize = LO_QUAL_PIXSIZE
         insertBlankCanvas3()
         initEnvironment3()
         
@@ -849,6 +858,9 @@ async function processImage3(imgParagraph, durationElem, highQuality = false) {
     const gridder = new CanvasGridGrapher()
     const startTime = new Date()
     const dimensions = setImageDimensions(imgParagraph, highQuality, DEFAULT_IMAGE_WIDTH)
+    if (!highQuality) {
+        dimensions.pixelSize = LO_QUAL_PIXSIZE
+    }
     
     const grapher = new BiVariantGrapher(
         gridder,
@@ -1064,7 +1076,7 @@ function formatFrame3Inputs() {
         {
             id: 'lensedist',
             label: 'Distance to Center of Lens',
-            min: 1, max: 10, value: 3
+            min: 1, max: 10, value: 8
         },
         {
             id: 'lenserad',
@@ -1074,12 +1086,12 @@ function formatFrame3Inputs() {
         {   
             id: 'lensethick',
             label: 'Lens Thickness',
-            min: 0.01, max: 5, value: 0.5
+            min: 0.01, max: 5, value: 0.1
         },
         {
             id: 'sphererad',
-            label: 'Sphere Radius',
-            min: 4, max: 200, value: 8
+            label: 'Spherical Radius of Lense Surfaces',
+            min: 4, max: 200, value: 10
         },
         {   
             id: 'lenseidx',

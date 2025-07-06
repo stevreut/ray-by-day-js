@@ -45,7 +45,7 @@ class ConcaveLens extends OpticalObject {
         // Calculate sphere centers for concave lens
         // For a concave lens, the sphere centers are positioned to create a diverging lens
         // The front sphere center is behind the lens center, the back sphere center is in front
-        const separationDistance = 2 * this.sphereRadius - thickness
+        const separationDistance = 2 * this.sphereRadius + thickness
         const halfSeparation = separationDistance / 2
 
         // Front sphere center (behind lens center)
@@ -119,7 +119,7 @@ class ConcaveLens extends OpticalObject {
         const incidentDir = ray.getDirection()
         
         // Refract from air to glass using Vector3D.refract method
-        const refractedDir = incidentDir.refract(frontNormal, 1/this.indexOfRefraction)
+        const refractedDir = incidentDir.refract(frontNormal, this.indexOfRefraction)
         
         // Create ray inside the lens
         const internalRay = new Ray(frontIntersectionPoint, refractedDir, ray.color)
@@ -128,17 +128,9 @@ class ConcaveLens extends OpticalObject {
         const backDistance = this.interceptSphere(internalRay, this.backSphereCenter, this.sphereRadius)
         
         if (backDistance === null || backDistance <= 0) {
-            // For concave lenses, internal rays may not intersect the back sphere
-            // This means the ray is diverging away from the back surface
-            // The ray continues in the refracted direction from the front surface
-            // Temporarily alter color based on distance through lens material (approximate)
-            const approximateDistance = this.thickness
-            const alteredColor = ray.color.filter((new Color(0.8,0.8,0.9)).overDistance(approximateDistance))
-            console.log('off-axis color scenario: ' + alteredColor.toString())
-            
-            // Create ray continuing in refracted direction from front surface
-            const continuingRay = new Ray(frontIntersectionPoint, refractedDir, alteredColor)
-            return continuingRay
+            // If the internal ray doesn't intersect the second sphere, 
+            // return the original incident ray unaltered
+            return ray
         }
         
         // Calculate intersection point with back sphere
@@ -148,12 +140,11 @@ class ConcaveLens extends OpticalObject {
         const backNormal = this.backSphereCenter.subt(backIntersectionPoint).normalized()
         
         // Refract from glass to air using Vector3D.refract method
-        const finalRefractedDir = refractedDir.refract(backNormal, this.indexOfRefraction)
+        const finalRefractedDir = refractedDir.refract(backNormal, 1/this.indexOfRefraction)
         
         // Temporarily alter color based on distance traversed through lens material
         const distanceTraversed = backDistance
         const alteredColor = ray.color.filter(new Color(0.9,0.95,0.9).overDistance(distanceTraversed))
-        console.log('normal color scenario: ' + alteredColor.toString())
         
         // Create final ray exiting the lens
         const finalRay = new Ray(backIntersectionPoint, finalRefractedDir, alteredColor)
