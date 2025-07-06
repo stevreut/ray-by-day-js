@@ -28,7 +28,7 @@
         </div>
     </div>
     <div class="imgdiv">
-        <h3>Enhanced Optical Environment (Hard-coded Settings)</h3>
+        <h3>Enhanced Optical Environment (Convex Lens)</h3>
         <p id="imgpara2">Image creation in progress...</p>
         <div id="statbar2"></div>
         <p id="dur2"></p>
@@ -39,6 +39,11 @@
             <button id="savebtn2" class="btndisabled" disabled>Save Image</button>
         </p>
     </div>
+    <div class="settingsbox">
+        <h3>Enhanced Lens Settings</h3>
+        <div id="fr2inputs" class="settings">
+        </div>
+    </div>
     <h3 class="resource-index-header">Resources used in this page</h3>
     <div id="resource-index"></div>
     <script type="module">
@@ -47,6 +52,9 @@
       cf.insertResourceIndex("resource-index", [
         "./day28.html",
         "../assets/js/day28/script.js",
+        "../assets/js/day28/convex-lens.js",
+        "../assets/js/day28/optical-env.js",
+        "../assets/js/day28/matrix3d.js",
         "../assets/js/day20/vector3d.js",
         "../assets/js/day20/ray.js",
         "../assets/js/day20/color.js",

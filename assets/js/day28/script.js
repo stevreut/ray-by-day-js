@@ -4,6 +4,7 @@ import Color from "../day20/color.js"
 import BiVariantGrapher from "../day20/bivargrapher.js"
 import OpticalEnvironment from "../day22/optical-env.js"
 import OpticalEnvironmentNew from "./optical-env.js"
+import ConvexLens from "./convex-lens.js"
 import Plane from "../day22/plane.js"
 import RefractiveSphere from "../day22/refractive-sphere.js"
 import SunnySky from "../day25/sunny-sky.js"
@@ -30,6 +31,7 @@ const IMG_CANVAS_ID = 'renderedcanvas'
 const SETTINGS_ID = 'fr1inputs'
 
 // Second section constants
+const SETTINGS_ID_2 = 'fr2inputs'
 const IMG_PARA_ID_2 = 'imgpara2'
 const STATUS_BAR_ID_2 = 'statbar2'
 const DURATION_TEXT_ID_2 = 'dur2'
@@ -67,6 +69,8 @@ let settingsDiv = null
 let statusBar = null
 
 // Second section variables
+let settingsInputBox2 = null
+let settingsDiv2 = null
 let goAgainButton2 = null
 let highQualityButton2 = null
 let lowQualityButton2 = null
@@ -440,6 +444,48 @@ function formatFrame1Inputs() {
     settingsDiv.appendChild(settingsInputBox1.getTable())
 }
 
+function formatInputs2() {
+    formatFrame2Inputs()
+}
+
+function formatFrame2Inputs() {
+    settingsInputBox2 = new SettingsInputBox("fr2",[
+        {
+            id: 'focus',
+            label: 'Focal Distance',
+            min: 0.1,
+            value: 20
+        },
+        {
+            id: 'apertdiam',
+            label: 'Aperture',
+            min: 0, max: 5,
+            value: 0.3
+        },
+        {
+            id: 'lensedist',
+            label: 'Distance to Center ofLens',
+            min: 1, max: 10, value: 5
+        },
+        {
+            id: 'lenserad',
+            label: 'Lens Radius',
+            min: 1, max: 15, value: 2.5
+        },
+        {   
+            id: 'lensethick',
+            label: 'Lens Thickness',
+            min: 0.01, max: 5, value: 0.5
+        },
+        {   
+            id: 'lenseidx',
+            label: 'Lens Index of Refraction',
+            min: 1.001, max: 30, value: 1.5
+        }
+    ],true)
+    settingsDiv2.appendChild(settingsInputBox2.getTable())
+}
+
 // Second section functions
 async function initSecondSection() {
     try {
@@ -449,9 +495,12 @@ async function initSecondSection() {
         lowQualityButton2 = linkElement(LO_QUALITY_BUTTON_ID_2)
         saveImageButton2 = linkElement(SAVE_IMAGE_BUTTON_ID_2)
         durationElem2 = linkElement(DURATION_TEXT_ID_2)
+        settingsDiv2 = linkElement(SETTINGS_ID_2)
         statusBar2 = new GraphicStatusReportBar(STATUS_BAR_ID_2)
         
-        // Hard-coded settings for second section
+        // Initialize second settings input box
+        formatInputs2()
+        
         const hardcodedDimensions = setImageDimensions(imgParagraph2, false, DEFAULT_IMAGE_WIDTH)
         insertBlankCanvas2()
         initEnvironment2()
@@ -569,14 +618,23 @@ function initEnvironment2() {
     const cameraDirection = cameraOrigin.scalarMult(-1)
     const cameraRay = new Ray(cameraOrigin, cameraDirection)
     
-    // Hard-coded settings
-    const apertRadius = 0.3
-    const focalDistance = 10
+    // Get settings from the second input box
+    const apertRadius = settingsInputBox2.get('apertdiam')/2
+    const focalDistance = settingsInputBox2.get('focus')
     optEnv2.setCamera(cameraRay, apertRadius, focalDistance)
     
-    // const bigLense = setBigLense2(cameraRay)
-    initRandomShapes2(cameraRay)
-    optEnv2.addOpticalObject(new Plane(-7.5,5,2.5))
+    // Add the convex lens using the new lens/filter functionality
+    const lensDistance = settingsInputBox2.get('lensedist')
+    const lensRadius = settingsInputBox2.get('lenserad')
+    const lensThickness = settingsInputBox2.get('lensethick')
+    const lensRefractiveIndex = settingsInputBox2.get('lenseidx')
+    
+    const convexLens = new ConvexLens(lensDistance, lensRadius, lensThickness, lensRefractiveIndex)
+    optEnv2.addLenseOrFilter(convexLens)  // Use the new lens/filter method!
+    
+    // Add some objects behind the lens
+    initRandomShapes2(cameraRay.getOrigin())
+    optEnv2.addOpticalObject(new Plane(-15, 10, 5))
     sunVector = randomSunDirection()
     optEnv2.addOpticalObject(new SunnySky(sunVector))
 }
@@ -590,23 +648,23 @@ function initEnvironment2() {
 //     return lenseSphere
 // }
 
-function initRandomShapes2(camera) {
-    if (!(camera instanceof Ray)) {
+function initRandomShapes2(camOrigin) {
+    if (!(camOrigin instanceof Vector3D)) {
         throw 'unexpected parameter types'
     }
-    const TARGET_SHAPE_COUNT = 6
+    const TARGET_SHAPE_COUNT = 12  // Increased from 6 to 12
     let rejectCount = 0
     const shapeTempArray = []
-    const MIN_SPACE = 0.2
-    const SHAPE_NAMES = 'comp;comp;comp;spht;spht;spht;icos;spht;cube;dode;octa'.split(';')
+    const MIN_SPACE = 0.3  // Slightly increased spacing
+    const SHAPE_NAMES = 'comp;comp;comp;spht;spht;spht;spht;icos;icos;cube;cube;dode;dode;octa;octa;tetr'.split(';')
     
     while (shapeTempArray.length < TARGET_SHAPE_COUNT) {
         let candidateObject = {
-            center: randomCenter2(camera)
+            center: randomCenter2(camOrigin)
         }
         let rando = Math.floor(Math.random()*SHAPE_NAMES.length)
         candidateObject.type = SHAPE_NAMES[rando]
-        candidateObject.radius = 1
+        candidateObject.radius = 0.8 + Math.random() * 0.4  // Random radius between 0.8 and 1.2
         let hasIntersect = false
         shapeTempArray.forEach(otherShape=>{
             if (!hasIntersect) {
@@ -618,21 +676,40 @@ function initRandomShapes2(camera) {
         })
         if (hasIntersect) {
             rejectCount++
+            // Safety check: if we've rejected too many attempts, reduce target count
+            if (rejectCount > 1000) {
+                console.warn(`Could only place ${shapeTempArray.length} objects after ${rejectCount} attempts. Stopping.`)
+                break
+            }
         } else {
             shapeTempArray.push(candidateObject)
         }
     }
-
-    function randomCenter2(camera) {
-        const camOrigin = camera.getOrigin()
-        const camDirection = camera.getDirection().normalized()
-        const rangeCenter = camOrigin.add(camDirection.scalarMult(10))
-        let arr = []
-        for (let i=0;i<3;i++) {
-            arr.push((Math.random()-0.5)*4)
-        }
-        let ctr = new Vector3D(arr)
-        return ctr.add(rangeCenter)
+    
+    function randomCenter2(camOrigin) {
+        // Camera points toward origin (0,0,0), so place objects in that direction
+        // Get the direction from camera to origin (which is the camera's view direction)
+        const cameraDirection = new Vector3D(0, 0, 0).subt(camOrigin).normalized()
+        
+        // Place objects at different distances along the camera's view direction
+        const baseDistance = 15 + Math.random() * 10  // Random distance between 15-25
+        const rangeCenter = camOrigin.add(cameraDirection.scalarMult(baseDistance))
+        
+        // Spread objects perpendicular to the camera direction
+        // Create a coordinate system perpendicular to the camera direction
+        const upVector = new Vector3D(0, 1, 0)
+        const rightVector = cameraDirection.cross(upVector).normalized()
+        const upPerpVector = rightVector.cross(cameraDirection).normalized()
+        
+        // Add random offsets perpendicular to the camera direction
+        const rightOffset = (Math.random() - 0.5) * 8  // ±4 units
+        const upOffset = (Math.random() - 0.5) * 8     // ±4 units
+        
+        const finalCenter = rangeCenter
+            .add(rightVector.scalarMult(rightOffset))
+            .add(upPerpVector.scalarMult(upOffset))
+        
+        return finalCenter
     }
     
     shapeTempArray.forEach(shape=>{
@@ -648,11 +725,15 @@ function initRandomShapes2(camera) {
                     Color.colorFromHex(ICOSA_HEX_COLOR))
                 break;
             case 'spht':
-                obj = new RefractiveSphere(shape.center,shape.radius,randomColor(),1.5)
+                obj = new RefractiveSphere(shape.center,shape.radius,randomColor(),1.3 + Math.random() * 0.4)
                 break;
             case 'cube':
                 obj = new ReflectiveCube(shape.center,shape.radius,
                     Color.colorFromHex(CUBE_HEX_COLOR))
+                break;
+            case 'tetr':
+                obj = new ReflectiveTetrahedron(shape.center,shape.radius,
+                    Color.colorFromHex(TETRA_HEX_COLOR))
                 break;
             case 'dode':
                 obj = new ReflectiveDodecahedron(shape.center,shape.radius,
