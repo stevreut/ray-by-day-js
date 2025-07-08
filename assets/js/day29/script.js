@@ -240,7 +240,7 @@ function initEnvironment() {
         cameraOrigin,
         cameraDirection
     )
-    optEnv.setCamera(cameraRay,0 /*0.25* TODO*/,cameraOriginDistance)
+    optEnv.setCamera(cameraRay,0,cameraOriginDistance)
     initRandomShapes()
     optEnv.addOpticalObject(new Plane(-7.5,5,2.5))
     if (isNightMode()) {
