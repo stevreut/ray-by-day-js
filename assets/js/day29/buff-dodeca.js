@@ -1,9 +1,9 @@
 import Vector3D from "../day20/vector3d.js";
 
-import ReflectiveFacetedSolid from "../day25/refl-faceted-solid.js"
+import BuffFacetedSolid from "./buff-faceted-solid.js"
 
-class BuffDodecahedron extends ReflectiveFacetedSolid {
-    constructor(center,radius,color) {
+class BuffDodecahedron extends BuffFacetedSolid {
+    constructor(center,radius,color,scatter=0,transformationMatrix) {
         const K = Math.PI/180
         const A = 36*K
         const B = 60*K
@@ -69,7 +69,7 @@ class BuffDodecahedron extends ReflectiveFacetedSolid {
             [15,16,17,18,19]
 
         ]
-        super(center,color,vList,fList)
+        super(center,color,vList,fList,scatter,transformationMatrix)
     }
 }
 

@@ -9,6 +9,7 @@ import SunnySky from "../day25/sunny-sky.js"
 import NightSky from "../day25/night-sky.js"
 import BuffIcosahedron from "./buff-icosa.js"
 import BuffDodecahedron from "./buff-dodeca.js"
+import BuffFacetedSolid from "./buff-faceted-solid.js"
 import Compound12Sphere from "../day25/compound-12-sphere.js"
 import GraphicStatusReportBar from "../utils/graph-status-bar.js"
 import { saveRayTraceImage, DAY_TYPES } from "../utils/image-saver.js"
@@ -294,7 +295,7 @@ function initRandomShapes() {
                 break;
             case 'icos':
                 obj = new BuffIcosahedron(shape.center,shape.radius,
-                    Color.colorFromHex(ICOSA_HEX_COLOR))
+                    Color.colorFromHex(ICOSA_HEX_COLOR), 0.1)
                 break;
             case 'spht':
                 // Make some spheres reflective instead of refractive for more reflection

@@ -1,9 +1,9 @@
 import Vector3D from "../day20/vector3d.js";
 
-import ReflectiveFacetedSolid from "../day25/refl-faceted-solid.js"
+import BuffFacetedSolid from "./buff-faceted-solid.js"
 
-class BuffIcosahedron extends ReflectiveFacetedSolid {
-    constructor(center,radius,color) {
+class BuffIcosahedron extends BuffFacetedSolid {
+    constructor(center,radius,color,scatter=0,transformationMatrix) {
         const TH1 = Math.atan(2)
         const TH2 = Math.PI/5
         const Z1 = Math.cos(TH1)
@@ -47,8 +47,10 @@ class BuffIcosahedron extends ReflectiveFacetedSolid {
             [9,10,11],
             [10,6,11]
         ]
-        super(center,color,vList,fList)
+        super(center,color,vList,fList,scatter,transformationMatrix)
     }
+    
+
 }
 
 export default BuffIcosahedron 
