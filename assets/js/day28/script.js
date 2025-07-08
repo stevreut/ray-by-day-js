@@ -6,7 +6,6 @@ import OpticalEnvironment from "../day22/optical-env.js"
 import OpticalEnvironmentNew from "./optical-env.js"
 import ConvexLens from "./convex-lens.js"
 import ConcaveLens from "./concave-lens.js"
-import DirectionalFilter from "./directional-filter.js"
 import Plane from "../day22/plane.js"
 import RefractiveSphere from "../day22/refractive-sphere.js"
 import SunnySky from "../day25/sunny-sky.js"
@@ -668,7 +667,7 @@ function initEnvironment2() {
     const lensRefractiveIndex = settingsInputBox2.get('lenseidx')
     
     const convexLens = new ConvexLens(lensDistance, lensRadius, lensThickness, lensRefractiveIndex)
-    optEnv2.addLenseOrFilter(convexLens)  // Use the new lens/filter method!
+    optEnv2.addLense(convexLens)  // Use the new lens method!
     
     // Add some objects behind the lens
     initRandomShapes2(cameraRay.getOrigin())
@@ -939,11 +938,7 @@ function initEnvironment3() {
     const lensRefractiveIndex = settingsInputBox3.get('lenseidx')
     
     const concaveLens = new ConcaveLens(lensDistance, lensRadius, lensThickness, sphereRadius, lensRefractiveIndex)
-    optEnv3.addLenseOrFilter(concaveLens)  // Use the new lens/filter method!
-    
-    // Add a directional filter for aesthetic effect - creates color variation based on ray direction
-    const aestheticFilter = new DirectionalFilter(Color.colorFromHex("#ff6600"), Color.colorFromHex("#0066ff"), 0.2)
-    optEnv3.addLenseOrFilter(aestheticFilter)
+    optEnv3.addLense(concaveLens)  // Use the new lens method!
 
     // Add some objects behind the lens
     initRandomShapes3(cameraRay.getOrigin())

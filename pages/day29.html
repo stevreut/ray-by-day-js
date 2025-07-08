@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ray by Day JS - Scattered Reflection</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="icon" type="image/icon" href="../assets/images/icon/ray-trace-icon.ico">
+</head>
+<body>
+    <h1 class="subduedh1">Ray by Day JS</h1>
+    <h2><span class="dayh2">Day 29</span> - Scattered Reflection</h2>
+    <div class="imgdiv">
+        <p id="imgpara">Image creation in progress...</p>
+        <div id="statbar"></div>
+        <p id="dur"></p>
+        <p>
+            <button id="rptbtn" class="btndisabled" disabled>Compose and Render Low-Quality Image</button>
+            <button id="lowqbtn" class="btndisabled" disabled>Render LOW-Quality</button>
+            <button id="highqbtn" class="btndisabled" disabled>Render HIGH-Quality</button>
+            <button id="savebtn" class="btndisabled" disabled>Save Image</button>
+            <select id="daymodeselect">
+                <option value="day" selected>Day</option>
+                <option value="night">Night</option>
+            </select>
+        </p>
+    </div>
+    <div class="settingsbox">
+        <h3>Settings</h3>
+        <div id="fr1inputs" class="settings">
+        </div>
+    </div>
+    <h3 class="resource-index-header">Resources used in this page</h3>
+    <div id="resource-index"></div>
+    <script type="module">
+      import CodeFormatter from "../assets/js/utils/code-ext/code-formatter.js";
+      const cf = new CodeFormatter();
+      cf.insertResourceIndex("resource-index", [
+        "./day29.html",
+        "../assets/js/day29/script.js",
+        "../assets/js/day25/sunny-sky.js",
+        "../assets/js/day25/night-sky.js",
+        "../assets/js/day29/buff-icosa.js",
+        "../assets/js/day29/buff-dodeca.js",
+        "../assets/js/day25/compound-12-sphere.js",
+        "../assets/js/day16/canvas-grid-grapher.js",
+        "../assets/js/day7/gen-grid-grapher.js",
+        "../assets/js/day20/vector3d.js",
+        "../assets/js/day20/ray.js",
+        "../assets/js/day20/color.js",
+        "../assets/js/day20/bivargrapher.js",
+        "../assets/js/day22/optical-env.js",
+        "../assets/js/day22/plane.js",
+        "../assets/js/day22/refractive-sphere.js",
+        "../assets/js/utils/graph-status-bar.js",
+        "../assets/js/utils/image-saver.js",
+        "../assets/js/utils/dom-utils.js",
+        "../assets/js/day20/optical-object.js",
+        "../assets/js/day22/sky.js",
+        "../assets/js/day23/reflective-triangle.js",
+        "../assets/js/day23/triangle.js",
+        "../assets/js/day20/reflective-sphere.js"
+      ]);
+    </script>
+    <div class="hopdiv">
+        <a href="./day28.html">Prev</a>
+        <a href="../index.html">Home</a>
+        <a href="./day29.html">Next</a>
+    </div>
+    <script src="../assets/js/day29/script.js" type="module"></script>
+</body>
+</html> 

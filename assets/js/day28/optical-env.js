@@ -8,7 +8,7 @@ class OpticalEnvironment {
     ASPECT_FACTOR = 4
     constructor() {
         this.optObjList = []
-        this.lenseOrFilterList = [] // New list for lenses and filters
+        this.lenseList = [] // List for lenses
         this.camera = null
     }
     static SKY_BLUE
@@ -26,16 +26,16 @@ class OpticalEnvironment {
         this.optObjList.push(obj)
     }
     
-    addLenseOrFilter(obj) {
+    addLense(obj) {
         if (!(obj instanceof OpticalObject)) {
-            throw 'attempted to add non-OpticalObject to lenseOrFilterList'
+            throw 'attempted to add non-OpticalObject to lenseList'
         }
-        this.lenseOrFilterList.push(obj)
+        this.lenseList.push(obj)
     }
     removeOpticalObjectsByClassName(className) {
         // Remove all objects with the given class name from both lists
         this.optObjList = this.optObjList.filter(obj => obj.constructor.name !== className)
-        this.lenseOrFilterList = this.lenseOrFilterList.filter(obj => obj.constructor.name !== className)
+        this.lenseList = this.lenseList.filter(obj => obj.constructor.name !== className)
     }
     setCamera(cameraRay,aperture=0,focalDistance=4) {
         if (!(cameraRay instanceof Ray)) {
@@ -89,20 +89,20 @@ class OpticalEnvironment {
             return ray.color
         }
         
-        // Phase 1: Process lenses and filters in camera coordinates
+        // Phase 1: Process lenses in camera coordinates
         let processedRay = ray
-        if (this.lenseOrFilterList.length > 0) {
-            // Ray is already in camera coordinates, process lenses/filters directly
+        if (this.lenseList.length > 0) {
+            // Ray is already in camera coordinates, process lenses directly
             let cameraRay = ray
             
-            for (let lensOrFilter of this.lenseOrFilterList) {
-                const dist = lensOrFilter.interceptDistance(cameraRay)
+            for (let lens of this.lenseList) {
+                const dist = lens.interceptDistance(cameraRay)
                 if (dist !== null && dist > 0) {
-                    const result = lensOrFilter.handle(cameraRay, dist)
+                    const result = lens.handle(cameraRay, dist)
                     if (result instanceof Ray) {
                         cameraRay = result
                     } else if (result instanceof Color) {
-                        return result  // Lens/filter returned a color, we're done
+                        return result  // Lens returned a color, we're done
                     } else if (Array.isArray(result)) {
                         if (this.isRayArray(result)) {
                             // Take the first ray from the array for sequential processing
