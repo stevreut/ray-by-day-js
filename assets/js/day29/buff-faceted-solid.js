@@ -10,8 +10,8 @@ class BuffFacetedSolid extends OpticalObjectGroup {
         if (scatter < 0) {
             throw new Error('Scatter parameter must be non-negative')
         }
-        if (scatter > 10) {
-            scatter = 10
+        if (scatter > 0.99) {
+            scatter = 0.99
         }
         
         if (transformationMatrix) {

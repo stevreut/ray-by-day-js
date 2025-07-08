@@ -9,8 +9,8 @@ import SunnySky from "../day25/sunny-sky.js"
 import NightSky from "../day25/night-sky.js"
 import BuffIcosahedron from "./buff-icosa.js"
 import BuffDodecahedron from "./buff-dodeca.js"
-import BuffFacetedSolid from "./buff-faceted-solid.js"
-import Compound12Sphere from "../day25/compound-12-sphere.js"
+import ReflectiveSphere from "./reflective-sphere.js"
+import Compound12Sphere from "./compound-12-sphere.js"
 import GraphicStatusReportBar from "../utils/graph-status-bar.js"
 import { saveRayTraceImage, DAY_TYPES } from "../utils/image-saver.js"
 import CanvasGridGrapher from "../day16/canvas-grid-grapher.js"
@@ -33,8 +33,8 @@ const OCTA_HEX_COLOR = "#c2cc99"
 const ICOSA_HEX_COLOR = "#99ccad"
 const DODECA_HEX_COLOR = "#99adcc"
 const GOLD_HEX_COLOR = "#ccb070"
-
-const STATUS_CONTAINER_CLASS = 'progress-container'
+const PALE_ORANGE_HEX_COLOR = "#E8B984"
+const PALE_LAVENDER_HEX_COLOR = "#D8C0E0"
 
 const DEFAULT_IMAGE_WIDTH = 1024
 let targetImageWidth = null
@@ -44,7 +44,6 @@ let antiAlias = null
 
 let sunVector = null
 
-let statBarElem = null
 let goAgainButton = null
 let highQualityButton = null
 let lowQualityButton = null
@@ -241,7 +240,7 @@ function initEnvironment() {
         cameraOrigin,
         cameraDirection
     )
-    optEnv.setCamera(cameraRay,0.25,cameraOriginDistance)
+    optEnv.setCamera(cameraRay,0 /*0.25* TODO*/,cameraOriginDistance)
     initRandomShapes()
     optEnv.addOpticalObject(new Plane(-7.5,5,2.5))
     if (isNightMode()) {
@@ -253,12 +252,12 @@ function initEnvironment() {
 }
 
 function initRandomShapes() {
-    const TARGET_SHAPE_COUNT = 15  // Reduced from 20 to 15
+    const TARGET_SHAPE_COUNT = 25
     let rejectCount = 0
     const shapeTempArray = []
     const MIN_SPACE = 0.15  // Reduced spacing to pack more objects
     // Focus on reflective objects for scattered reflection demonstration
-    const SHAPE_NAMES = 'comp;comp;icos;icos;icos;dode;dode;spht;spht'.split(';')
+    const SHAPE_NAMES = 'comp;comp;icos;icos;icos;dode;dode;spht;spht;refl;refl;refls;refls;comps;comps'.split(';')
     while (shapeTempArray.length < TARGET_SHAPE_COUNT) {
         let candidateObject = {
             center: randomCenter()
@@ -298,17 +297,23 @@ function initRandomShapes() {
                     Color.colorFromHex(ICOSA_HEX_COLOR), 0.1)
                 break;
             case 'spht':
-                // Make some spheres reflective instead of refractive for more reflection
-                if (Math.random() > 0.5) {
-                    obj = new RefractiveSphere(shape.center,shape.radius,randomColor(),1.5)
-                } else {
-                    // Create a reflective sphere by using a very high refractive index
-                    obj = new RefractiveSphere(shape.center,shape.radius,randomColor(),1000)
-                }
+                obj = new RefractiveSphere(shape.center,shape.radius,randomColor(),1.5)
                 break;
             case 'dode':
                 obj = new BuffDodecahedron(shape.center,shape.radius,
-                    Color.colorFromHex(DODECA_HEX_COLOR))
+                    Color.colorFromHex(DODECA_HEX_COLOR), 0.02)
+                break;
+            case 'refl':
+                obj = new ReflectiveSphere(shape.center,shape.radius,
+                    Color.colorFromHex(PALE_ORANGE_HEX_COLOR))
+                break;
+            case 'refls':
+                obj = new ReflectiveSphere(shape.center,shape.radius,
+                    Color.colorFromHex(PALE_LAVENDER_HEX_COLOR), 0.2)
+                break;
+            case 'comps':
+                obj = new Compound12Sphere(shape.center,shape.radius*0.45,shape.radius*0.55,
+                    Color.colorFromHex(PALE_LAVENDER_HEX_COLOR), 0.3)
                 break;
             default:
                 console.error('unexpected shape = ', type, ' - ignored')
