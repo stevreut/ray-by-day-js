@@ -120,17 +120,16 @@ function generateRayExtensions() {
 function generateSpheres() {
     const spheres = [];
     
-    // Sphere 1: Yellow sphere at (5, 0, -2) with radius 2
-    spheres.push(new Sphere(5, 0, -2, 2, "#ffff00"));
+    spheres.push(new Sphere(5, 0, -3, 2, "#00ffff"));
     
-    // Sphere 2: Cyan sphere at (-10, 5, -1) with radius 2
-    spheres.push(new Sphere(-10, 5, -2, 2, "#00ffff"));
+    spheres.push(new Sphere(-4, 2, -3, 2, "#80aaaa"));
 
-    // Sphere 3: Red sphere at (0, 0, -2) with radius 2
-    spheres.push(new Sphere(0, 0, -2, 2, "#ff0000"));
+    spheres.push(new Sphere(0, 0, -3, 2, "#40cccc"));
 
-    spheres.push(new Sphere(0, 0, 4, 2, "#ff00ff"));
-    
+    spheres.push(new Sphere(0, 2, -7.5, 2, "#80aabb")); 
+
+    spheres.push(new Sphere(-2, 10, -10, 2, "#90bbbb")); 
+
     return spheres;
 }
 
