@@ -124,7 +124,7 @@ function main() {
         }
         
         // Write SVG file
-        const outputPath = path.join(outputDir, 'ray-from-eye-14.svg');
+        const outputPath = path.join(outputDir, 'seq14-ray-from-eye.svg');
         fs.writeFileSync(outputPath, svgContent);
         
         console.log(`SVG generated successfully: ${outputPath}`);

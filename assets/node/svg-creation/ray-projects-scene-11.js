@@ -196,7 +196,7 @@ function generateSVG() {
 function main() {
     try {
         const svgContent = generateSVG();
-        const outputPath = path.join(__dirname, '../../../tools-outputs/svg-graphics/ray-projects-scene-11.svg');
+        const outputPath = path.join(__dirname, '../../../tools-outputs/svg-graphics/seq11-ray-projects-scene.svg');
         
         // Ensure output directory exists
         const outputDir = path.dirname(outputPath);

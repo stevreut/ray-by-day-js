@@ -69,7 +69,7 @@ function generateSVG() {
 function main() {
     try {
         const svgContent = generateSVG();
-        const outputPath = path.join(__dirname, '../../../tools-outputs/svg-graphics/big-pixels-subdivided-03.svg');
+        const outputPath = path.join(__dirname, '../../../tools-outputs/svg-graphics/seq03-big-pixels-subdivided.svg');
         
         // Ensure output directory exists
         const outputDir = path.dirname(outputPath);

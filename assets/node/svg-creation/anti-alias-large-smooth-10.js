@@ -76,7 +76,7 @@ function generateSVG() {
 function main() {
     try {
         const svgContent = generateSVG();
-        const outputPath = path.join(__dirname, '../../../tools-outputs/svg-graphics/anti-alias-large-smooth-10.svg');
+        const outputPath = path.join(__dirname, '../../../tools-outputs/svg-graphics/seq10-anti-alias-large-smooth.svg');
         
         // Ensure output directory exists
         const outputDir = path.dirname(outputPath);

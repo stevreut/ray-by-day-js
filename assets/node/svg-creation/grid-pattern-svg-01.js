@@ -45,7 +45,7 @@ function generateSVG() {
 function main() {
     try {
         const svgContent = generateSVG();
-        const outputPath = path.join(__dirname, '../../../tools-outputs/svg-graphics/grid-pattern-01.svg');
+        const outputPath = path.join(__dirname, '../../../tools-outputs/svg-graphics/seq01-grid-pattern.svg');
         
         // Ensure output directory exists
         const outputDir = path.dirname(outputPath);

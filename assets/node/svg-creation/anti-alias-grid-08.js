@@ -86,7 +86,7 @@ function generateSVG() {
 function main() {
     try {
         const svgContent = generateSVG();
-        const outputPath = path.join(__dirname, '../../../tools-outputs/svg-graphics/anti-alias-grid-08.svg');
+        const outputPath = path.join(__dirname, '../../../tools-outputs/svg-graphics/seq08-anti-alias-grid.svg');
         
         // Ensure output directory exists
         const outputDir = path.dirname(outputPath);

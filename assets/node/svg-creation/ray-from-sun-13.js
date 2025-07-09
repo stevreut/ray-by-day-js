@@ -125,7 +125,7 @@ function main() {
         }
         
         // Write SVG file
-        const outputPath = path.join(outputDir, 'ray-from-sun-13.svg');
+        const outputPath = path.join(outputDir, 'seq13-ray-from-sun.svg');
         fs.writeFileSync(outputPath, svgContent);
         
         console.log(`SVG generated successfully: ${outputPath}`);

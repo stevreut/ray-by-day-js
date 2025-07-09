@@ -45,7 +45,7 @@ function generateSVG() {
 function main() {
     try {
         const svgContent = generateSVG();
-        const outputPath = path.join(__dirname, '../../../tools-outputs/svg-graphics/anti-alias-large-jagged-09.svg');
+        const outputPath = path.join(__dirname, '../../../tools-outputs/svg-graphics/seq09-anti-alias-large-jagged.svg');
         
         // Ensure output directory exists
         const outputDir = path.dirname(outputPath);
