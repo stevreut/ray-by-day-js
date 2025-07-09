@@ -88,6 +88,15 @@ function generateSVG() {
   ${drawLightRay(300 + sunRadius * 0.7, 350 - sunRadius * 0.7, 300 - sunRadius * 0.7, 350 + sunRadius * 0.3)}
   ${drawLightRay(300 - sunRadius * 0.7, 350 + sunRadius * 0.3, eyeX + eyeWidth/2 + 15, eyeY - 20)}
   
+  <!-- Two pairs of rays that emanate from sun, contact circles, then proceed randomly -->
+  <!-- First pair: sun -> blue circle -> random direction -->
+  ${drawRayFromSunTo(400 + sunRadius * 0.8, 200 - sunRadius * 0.8)}
+  ${drawLightRay(400 + sunRadius * 0.8, 200 - sunRadius * 0.8, 400 + sunRadius * 8.0, 200 - sunRadius * 9.0)}
+  
+  <!-- Second pair: sun -> cyan circle -> random direction -->
+  ${drawRayFromSunTo(600 - sunRadius * 0.6, 400 + sunRadius * 0.6)}
+  ${drawLightRay(600 - sunRadius * 0.6, 400 + sunRadius * 0.6, 600 - sunRadius * 10.0, 400 + sunRadius * 6.0)}
+  
   <!-- Schematic eye in lower left -->
   <g stroke="#809080" stroke-width="2" fill="none" transform="translate(${eyeX} ${eyeY}) rotate(-20) scale(1.5) translate(-${eyeX} -${eyeY})">
     <!-- Upper eyelid - curves slightly down and joins lower eyelid on left -->
@@ -97,6 +106,9 @@ function generateSVG() {
     <!-- Convex arc on right side connecting the two eyelid arcs - starts further left and meets precisely -->
     <path d="M ${eyeX + eyeWidth/5} ${eyeY - eyeHeight/4} Q ${eyeX + eyeWidth/3} ${eyeY} ${eyeX + eyeWidth/5} ${eyeY + eyeHeight/4}"/>
   </g>
+  
+  <!-- Thick white line segment near the eye -->
+  <line x1="${eyeX + eyeWidth/2 + 25}" y1="${eyeY - 80}" x2="${eyeX + eyeWidth/2 + 65}" y2="${eyeY + 40}" stroke="white" stroke-width="${strokeWidth + 2}"/>
 </svg>`;
 
     return svgContent;
