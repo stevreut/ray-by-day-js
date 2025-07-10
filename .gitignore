@@ -18,6 +18,10 @@ tools/
 tools-outputs/
 convs/
 
+# Demo files
+pages/daydemo.html
+assets/js/daydemo/
+
 # Runtime data
 pids
 *.pid

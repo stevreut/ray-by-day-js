@@ -3,7 +3,7 @@ const path = require('path');
 
 // Output configuration
 const OUTPUT_DIR = path.join(__dirname, '../../../tools-outputs/svg-graphics');
-const OUTPUT_FILE = path.join(OUTPUT_DIR, 'seq17-vector-operations.svg');
+const OUTPUT_FILE = path.join(OUTPUT_DIR, 'seq17-vector-addition.svg');
 
 // SVG configuration
 const SVG_WIDTH = 1200;
