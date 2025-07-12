@@ -76,5 +76,6 @@ export const DAY_TYPES = {
     SHADOWS: 'shadows',
     STEREO: 'stereo',
     LENSE_ENHANCED: 'lense-enhanced',
-    SCATTERED_REFLECTION: 'scattered-reflection'
+    SCATTERED_REFLECTION: 'scattered-reflection',
+    IMAGE_PLANE: 'image-plane'
 } 

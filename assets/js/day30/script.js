@@ -6,10 +6,12 @@ import Color from "../day20/color.js"
 import BiVariantGrapher from "../day20/bivargrapher.js"
 import OpticalEnvironment from "../day22/optical-env.js"
 import Plane from "../day22/plane.js"
-import RefractiveSphere from "../day22/refractive-sphere.js"
+import ReflectiveSphere from "../day20/reflective-sphere.js"
 import SunnySky from "../day25/sunny-sky.js"
 import NightSky from "../day25/night-sky.js"
 import CanvasGridGrapher from "../day16/canvas-grid-grapher.js"
+import ImagePlane from "./image-plane.js"
+import { saveRayTraceImage, DAY_TYPES } from "../utils/image-saver.js"
 
 const IMG_PARA_ID = 'imgpara'
 const STATUS_BAR_ID = 'statbar'
@@ -52,12 +54,13 @@ onload = async () => {
         antiAlias = dimensions.antiAlias
         insertBlankCanvas()
         handleDayNightModeChange()
-        initEnvironment()
-        await processImage(imgParagraph, durationElem)
         
-        // TEMPORARY CODE START - Load and display phillyjs.png image
-        await loadAndDisplayImage()
+        // TEMPORARY CODE START - Load phillyjs.png image and create ImagePlane
+        const phillyjsImage = await loadPhillyJSImage()
         // TEMPORARY CODE END
+        
+        initEnvironment(phillyjsImage)
+        await processImage(imgParagraph, durationElem)
         enableButton(lowQualityButton, false)
         dayModeSelect.addEventListener('change', () => {
             handleDayNightModeChange()
@@ -68,6 +71,7 @@ onload = async () => {
             targetImageHeight = dimensions.targetHeight
             pixelSize = dimensions.pixelSize
             antiAlias = dimensions.antiAlias
+            initEnvironment(phillyjsImage)
             await processImage(imgParagraph, durationElem)
             enableButton(highQualityButton, true)
             enableButton(lowQualityButton, false)
@@ -98,8 +102,9 @@ onload = async () => {
             const loIsEnabled = !lowQualityButton.disabled
             enableButton(highQualityButton, false)
             enableButton(lowQualityButton, false)
-            // TODO: Implement save functionality for day30
-            enableButton(saveImageButton, false)
+            await saveRayTraceImage('renderedcanvas', DAY_TYPES.IMAGE_PLANE, () => {
+                enableButton(saveImageButton, false)
+            })
             enableButton(goAgainButton, true)
             enableButton(highQualityButton, hiIsEnabled)
             enableButton(lowQualityButton, loIsEnabled)
@@ -219,7 +224,7 @@ function statusReporterFunction(frac) {
 
 let optEnv = null
 
-function initEnvironment() {
+function initEnvironment(image = null) {
     optEnv = new OpticalEnvironment()
     const cameraOrigin = randomCameraPosition()
     const cameraDirection = cameraOrigin.scalarMult(-1)
@@ -230,18 +235,21 @@ function initEnvironment() {
     )
     optEnv.setCamera(cameraRay, 0, cameraOriginDistance)
     
-    // Add checkered plane at y = -1
-    optEnv.addOpticalObject(new Plane(-1, 1, 0.5))
+    // Add image plane or checkered plane at y = -1
+    if (image) {
+        optEnv.addOpticalObject(new ImagePlane(-1, image, 5, true, new Color(0.2, 0.2, 0.2))) // 5 units wide per tile, no tiling, dark gray default
+    } else {
+        optEnv.addOpticalObject(new Plane(-1, 1, 0.5))
+    }
     
-    // Add transparent sphere at (0,0,0) with radius 1 and color (0.9,0.9,0.9)
-    const sphereColor = new Color(0.9, 0.9, 0.9)
-    const transparentSphere = new RefractiveSphere(
-        new Vector3D(0, 0, 0), 
+    // Add reflective sphere at (0,0,0) with radius 1 and color (0.8,0.8,0.8)
+    const sphereColor = new Color(0.8, 0.8, 0.8)
+    const reflectiveSphere = new ReflectiveSphere(
+        new Vector3D(-0.5, 0.8, 0), 
         1, 
-        sphereColor, 
-        1.5  // refractive index of 1.5 (approximation of glass)
+        sphereColor
     )
-    optEnv.addOpticalObject(transparentSphere)
+    optEnv.addOpticalObject(reflectiveSphere)
     
     // Add sky based on day/night mode
     if (isNightMode()) {
@@ -253,20 +261,21 @@ function initEnvironment() {
 }
 
 function randomCameraPosition() {
-    const LO_DIST = 5
-    const HI_DIST = 15
+    const LO_DIST = 3
+    const HI_DIST = 8
     const LO_LAT = 3
     const HI_LAT = 40
-    const longitude = (Math.random()-0.5)*2*Math.PI
+    const LO_LON = 150
+    const HI_LON = 210
+    const longitude = (Math.random()*(HI_LON-LO_LON)+LO_LON)*Math.PI/180
     let latitude = Math.random()**2 // **2 skews towards lower values
     latitude = latitude*(HI_LAT-LO_LAT)+LO_LAT  // camera elevation angle - between LO_LAT and HI_LAT degrees
     latitude *= Math.PI/180 // converted to radians
-    let distance = Math.sqrt(Math.random())  // sqrt skews towards higher values, still between 0 and 1
-    distance *= (HI_DIST-LO_DIST)+LO_DIST  // camera distance - between LO_DIST and HI_DIST
+    const distance = Math.random()*(HI_DIST-LO_DIST)+LO_DIST  // camera distance - between LO_DIST and HI_DIST
     const z = Math.sin(latitude)*distance 
     const cosDist = Math.cos(latitude)*distance
-    const x = Math.cos(longitude)*cosDist
-    const y = Math.sin(longitude)*cosDist
+    const x = Math.sin(longitude)*cosDist
+    const y = Math.cos(longitude)*cosDist
     const vec = new Vector3D(x,y,z)
     return vec
 }
@@ -284,8 +293,8 @@ function randomSunDirection() {
     }
 }
 
-// TEMPORARY CODE START - Load and display phillyjs.png image
-async function loadAndDisplayImage() {
+// TEMPORARY CODE START - Load phillyjs.png image
+async function loadPhillyJSImage() {
     try {
         // Create HTMLImageElement
         const img = new Image()
@@ -302,29 +311,11 @@ async function loadAndDisplayImage() {
         // Wait for image to load
         await imageLoaded
         
-        // Create canvas element
-        const canvas = document.createElement('canvas')
-        canvas.width = img.naturalWidth
-        canvas.height = img.naturalHeight
-        canvas.style.maxWidth = '100%'
-        canvas.style.height = 'auto'
-        canvas.style.marginTop = '20px'
-        canvas.style.marginBottom = '20px'
-        canvas.style.border = '1px solid #ccc'
-        canvas.style.display = 'block'
-        canvas.style.position = 'static'
-        
-        // Get canvas context and draw the image
-        const ctx = canvas.getContext('2d')
-        ctx.drawImage(img, 0, 0)
-        
-        // Add canvas to the page below the buttons
-        const imgdiv = document.querySelector('.imgdiv')
-        imgdiv.appendChild(canvas)
-        
-        console.log('PhillyJS image loaded and displayed successfully')
+        console.log('PhillyJS image loaded successfully')
+        return img
     } catch (error) {
         console.error('Error loading phillyjs.png:', error)
+        return null
     }
 }
 // TEMPORARY CODE END 
