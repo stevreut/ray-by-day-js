@@ -54,6 +54,10 @@ onload = async () => {
         handleDayNightModeChange()
         initEnvironment()
         await processImage(imgParagraph, durationElem)
+        
+        // TEMPORARY CODE START - Load and display phillyjs.png image
+        await loadAndDisplayImage()
+        // TEMPORARY CODE END
         enableButton(lowQualityButton, false)
         dayModeSelect.addEventListener('change', () => {
             handleDayNightModeChange()
@@ -278,4 +282,49 @@ function randomSunDirection() {
                 return new Vector3D(x,y,z)
         }
     }
-} 
+}
+
+// TEMPORARY CODE START - Load and display phillyjs.png image
+async function loadAndDisplayImage() {
+    try {
+        // Create HTMLImageElement
+        const img = new Image()
+        
+        // Set up promise to wait for image to load
+        const imageLoaded = new Promise((resolve, reject) => {
+            img.onload = resolve
+            img.onerror = reject
+        })
+        
+        // Set the source to load the image
+        img.src = '../assets/images/phillyjs.png'
+        
+        // Wait for image to load
+        await imageLoaded
+        
+        // Create canvas element
+        const canvas = document.createElement('canvas')
+        canvas.width = img.naturalWidth
+        canvas.height = img.naturalHeight
+        canvas.style.maxWidth = '100%'
+        canvas.style.height = 'auto'
+        canvas.style.marginTop = '20px'
+        canvas.style.marginBottom = '20px'
+        canvas.style.border = '1px solid #ccc'
+        canvas.style.display = 'block'
+        canvas.style.position = 'static'
+        
+        // Get canvas context and draw the image
+        const ctx = canvas.getContext('2d')
+        ctx.drawImage(img, 0, 0)
+        
+        // Add canvas to the page below the buttons
+        const imgdiv = document.querySelector('.imgdiv')
+        imgdiv.appendChild(canvas)
+        
+        console.log('PhillyJS image loaded and displayed successfully')
+    } catch (error) {
+        console.error('Error loading phillyjs.png:', error)
+    }
+}
+// TEMPORARY CODE END 
