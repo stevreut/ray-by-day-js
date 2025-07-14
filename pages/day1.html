@@ -19,30 +19,40 @@
     <h2><span class="dayh2">Day 1</span> - Static SVG File</h2>
     
     <p><em>Unless otherwise noted, all images shown in these pages are created dynamically <strong>by your browser</strong> at the time the page is loaded, 
-        <strong>using the code</strong> discussed in these pages. Images for which this is not the case will be explicitly noted as a "static image."</em></p>
+        using the JavaScript code discussed in these pages. Images for which this is not the case are explicitly annotated as a "static image."</em></p>
     <p><em>The important JavaScript and HTML code used to generate these images and interactive features is listed in the <strong><a href="#resource-index">Resources used in this page</a></strong> section at the bottom of each page.</em></p>
     
     <div class="innerdiv">
         <h3>Introduction: Simulating Raster Graphics with SVG</h3>
         <p>
-            This series begins with a fundamental approach to graphics programming: simulating raster (pixel-based) images using SVG (Scalable Vector Graphics). 
+            This series begins by simulating raster (pixel-based) images using SVG (Scalable Vector Graphics). 
             While we'll eventually move to more sophisticated rendering techniques, starting with SVG provides a clear foundation for understanding how 
             individual pixels can be manipulated to create images.
-            <span style="display:block; margin-top:0.5em;"><em>(If you want to dive straight into ray tracing concepts and coding, you can <a href="./day12.html">jump ahead to Day 12</a>. However, I believe you'll find it worthwhile to digest the concepts in these introductory pages first.)</em></span>
+            <span style="display:block; margin-top:0.5em;"><em>(If you want to dive straight into ray tracing concepts and coding, you can <a href="./day12.html">jump ahead to Day 12</a>. However, I think you will find it worthwhile to digest the concepts in these introductory pages first.)</em></span>
         </p>
         
-        <h3>Day 1: External SVG File Inclusion</h3>
+        <h3>External SVG File Inclusion</h3>
         <p>
-            Our first step demonstrates the simplest approach: including a pre-created SVG file as an external resource using the HTML <code>&lt;img&gt;</code> element. 
-            This approach treats the SVG file like any other image file (PNG, JPG, etc.), but with the advantage that the SVG content can be examined 
+            Our first step demonstrates the simplest approach: including a pre-created SVG file as an external resource using
+            the HTML <code>&lt;img&gt;</code> element.
+            This approach treats the SVG file like any other image file (PNG, JPG, etc.), but with the advantage that the SVG
+            content can be examined
             and understood as structured markup rather than binary data.
         </p>
         
         <p>
-            The image below shows a 20×20 pixel grid where each "pixel" is actually a small SVG rectangle. This creates the illusion of a raster image 
-            while maintaining the benefits of vector graphics: scalability, inspectability, and programmatic manipulation potential.
+            The image below shows a 20×20 pixel grid where each "pixel" is actually a small SVG rectangle. This creates the
+            illusion of a raster image
+            while maintaining the benefits of vector graphics: scalability, inspectability, and programmatic manipulation
+            potential.
         </p>
-    </div>
+        <p>Be careful of the word "vector" in this site. On this page it refers to a category of graphics file types rather than
+            the mathematical
+            sense of the word "vector". In later pages we will be making frequent use of that mathematical
+            understanding of the word "vector" but not on this page.
+            Check out <a href="https://guides.lib.umich.edu/c.php?g=282942&p=1885352">this page</a>
+            from the University of Michigan Library for a good explanation of the difference between raster and vector graphics.
+        </p>
     
     <div class="imgdiv">
         <h3>Image file day1-static.svg</h3>
@@ -53,14 +63,17 @@
         <h3>HTML referencing file day1-static.svg</h3>
         <p>
             The HTML code below shows how we reference the external SVG file using a standard <code>&lt;img&gt;</code> element. This is the simplest way to include 
-            an SVG file in a web page, treating it just like any other image format. The browser loads the SVG file and renders it as part of the page content.
+            an SVG file in a web page, treating it just like any other image file. The browser loads the SVG file and renders it as part of the page content.
         </p>
         <pre id="imgrefcode">Code extract failed</pre>
         <h3>Excerpt of contents of file day1-static.svg</h3>
         <p>
-            Here we can see the actual SVG markup that creates our simulated raster image. Each <code>&lt;rect&gt;</code> element represents a single "pixel" in our 
+            Here we can see the actual SVG markup that creates our simulated raster image. Each <code>&lt;rect&gt;</code> element represents a single virtual "pixel" in our 
             20×20 grid. The SVG uses a coordinate system where each rectangle is positioned using x and y attributes, with colors specified by the fill attribute. 
             This structured approach makes it easy to understand how the image is constructed.
+        </p>
+        <p>
+            It is ironic that we are using SVG, a vector graphics format, to simulate a raster image.  But it is a good way to start 
         </p>
         <pre id="svgcode">Code extract failed</pre>
         <h3>Code for generating SVG content as string</h3>
@@ -78,6 +91,14 @@
             <li>Each virtual pixel is formatted as a <code>&lt;rect&gt;</code> (rectangle) element with specific x, y, width, and height attributes</li>
             <li>The color of each pixel/rectangle is calculated from the row and column coordinates, creating an implicit function that returns a color based on position - this coordinate-to-color mapping is a fundamental concept we'll explore further in later contexts</li>
         </ul>
+        <p>
+            For now, notice how the code that defines the pixel colors based on (x,y) coordinates is entangled with the code that creates 
+            the SVG document syntax and the logical loops that iterates through all combinations of row and column.  It would be nice if 
+            we could isolate the code that defines the pixel colors from the code that creates the SVG document syntax and the logical loops that 
+            iterate through all combinations of row and column.  Isolating these two distinct kinds of code would allow us to 
+            adjust the dimensions and resolution of the image without fussing with the code that defines the image and vice versa.  We will do exactly that
+            in one of the future pages.
+        </p>
         <pre id="makesvgcode">Code extract failed</pre>
     </div>
     <div>
