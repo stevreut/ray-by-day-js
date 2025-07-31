@@ -14,7 +14,13 @@ class CodeExtractor {
         const codeLines = data.split('\n')
         const extCodeLines = codeLines.slice(firstLine-1,lastLine)
         let str = ''
-        extCodeLines.forEach(line=>str += (line+'\n'))
+        extCodeLines.forEach((line, index) => {
+            str += line
+            // Add newline after each line except the last one
+            if (index < extCodeLines.length - 1) {
+                str += '\n'
+            }
+        })
         return str
     }
     

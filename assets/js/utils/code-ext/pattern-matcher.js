@@ -30,8 +30,8 @@ export default class PatternMatcher {
         }
         
         // Validate boundaries
-        if (startLine >= endLine) {
-            throw new Error(`Invalid pattern boundaries: start (${startLine}) >= end (${endLine})`);
+        if (startLine > endLine) {
+            throw new Error(`Invalid pattern boundaries: start (${startLine}) > end (${endLine})`);
         }
         
         return { startLine: startLine + 1, endLine: endLine + 1 }; // Convert to 1-indexed

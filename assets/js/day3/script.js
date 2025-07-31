@@ -4,6 +4,7 @@ import { innerPixelWidth } from "../utils/dom-utils.js"
 const svgAnchorID = "svghere"
 const selectID = "idselect"
 const CODE_EXC_ID = 'dynsvgcode'
+const CODE_EXC_ID2 = 'dynsvgcode2'
 
 let commonUtilObj = null
 
@@ -17,7 +18,9 @@ onload = () => {
     let svgElem = createSvgElemAt(svgAnchor)
     setDropDown(selectID)
     const scriptUrl = '../assets/js/day3/script.js'
-    commonUtilObj.insertTitledCodeAtPreexistingElement(CODE_EXC_ID,scriptUrl,22,63,'script.js - dynamic SVG creation in DOM')
+    commonUtilObj.insertTitledCodeByPattern(CODE_EXC_ID, scriptUrl, 'const SVGNS = \'', { regex: /}/, occurrence: 5 }, 'script.js - dynamic SVG creation in DOM', true, 'js')
+    const colorPattern = "const " + "color = "
+    commonUtilObj.insertUntitledCodeByPattern(CODE_EXC_ID2, scriptUrl, colorPattern, { linesAfter: 0 }, true, 'js')
 }
 
 const SVGNS = 'http://www.w3.org/2000/svg'
