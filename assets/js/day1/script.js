@@ -43,16 +43,17 @@ onload = async function() {
     const scriptUrl = '../assets/js/day1/script.js'
     const svgUrl = '../assets/images/day1-static.svg'
     const pageUrl = './day1.html'
-    commonUtilObj.insertTitledCodeAtPreexistingElement(
-        svgImgRef,pageUrl,42,45,
-        '<img> element tag referencing static SVG file (plus surrounding <div>)',true,'html')
+    const functExp = "func" + "tion getSvgContent"
+    commonUtilObj.insertTitledCodeByPattern(
+        svgImgRef, pageUrl, '<div class="imgdiv">', '</div>:2',
+        '<img> element tag referencing static SVG file (plus surrounding <div>)', true, 'xml')
     const SVG_LINES_TO_SHOW = 10
     commonUtilObj.insertTitledCodeAtPreexistingElement(
         svgCodeElem,svgUrl,1,SVG_LINES_TO_SHOW,
         'First ' + SVG_LINES_TO_SHOW + ' lines of day1-static.svg',true,'svg')
-    commonUtilObj.insertTitledCodeAtPreexistingElement(
-        makeSvgCodeElem,scriptUrl,58,106,
-        'getSvgContent() from day1/script.js',true,'js')
+    commonUtilObj.insertTitledCodeByPattern(
+        makeSvgCodeElem, scriptUrl, { regex: new RegExp(functExp) }, { regex: /}/, occurrence: 13 },
+        'getSvgContent() from day1/script.js', true, 'js')
 }
 
 function getSvgContent(width,height,pixelSize) {

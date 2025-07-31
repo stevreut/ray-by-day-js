@@ -6,9 +6,7 @@ class CommonCodeUtility {
         this.extractor = new CodeExtractor()
         this.formatter = new CodeFormatter()
         
-        // Debug: Check if the new methods are available
-        console.log('CommonCodeUtility constructor - extractor methods:', Object.getOwnPropertyNames(Object.getPrototypeOf(this.extractor)));
-        console.log('CommonCodeUtility constructor - getCodeByPattern available:', typeof this.extractor.getCodeByPattern);
+
     }
     getCodeExtractor() {
         return this.extractor

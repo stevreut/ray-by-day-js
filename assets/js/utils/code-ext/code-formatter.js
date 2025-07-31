@@ -90,7 +90,9 @@ class CodeFormatter {
                 const commentRegexCss = /(\/\*[\s\S]*?\*\/)/g;
                 const newContentCss = htmlContent.replace(commentRegexCss,replacementSpan)
                 return newContentCss
-            case 'html','xml','svg' :
+            case 'html':
+            case 'xml':
+            case 'svg':
                 const commentRegexXml = /&lt;!--([\s\S]*?)--&gt;/g
                 const newContentXml = htmlContent.replace(commentRegexXml,replacementSpan)
                 return newContentXml

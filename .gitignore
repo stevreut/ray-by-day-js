@@ -20,6 +20,7 @@ convs/
 
 # Demo files
 pages/daydemo.html
+pages/pattern-test.html
 assets/js/daydemo/
 
 # Runtime data
