@@ -33,12 +33,12 @@ onload = async function() {
     }
     const pageUrl = './day2.html'
     const scriptUrl = '../assets/js/day2/script.js'
-    commonUtilsObj.insertTitledCodeAtPreexistingElement('svgcode',pageUrl,45,59,
-        "Beginning of embedded SVG content (plus header, etc.)",true)
-    commonUtilsObj.insertTitledCodeAtPreexistingElement('randomchgcode',
-        scriptUrl,10,20,"day2/script.js",true)
-    commonUtilsObj.insertTitledCodeAtPreexistingElement('specchgcode',scriptUrl,25,33,
-        'day2/script.js',true)
+    commonUtilsObj.insertTitledCodeByPattern('svgcode', pageUrl, '<div class="imgdiv">', 'fill="#ffccaa"/>:10',
+        "Beginning of embedded SVG content (plus header, etc.)", true, 'xml')
+    commonUtilsObj.insertTitledCodeByPattern('randomchgcode', scriptUrl, 'randomChangeButton.addEventListener(\'', '})',
+        "day2/script.js", true, 'js')
+    commonUtilsObj.insertTitledCodeByPattern('specchgcode', scriptUrl, 'changeSpecificCellButton.addEventListener(\'', '})',
+        "day2/script.js", true, 'js')
 }
 
 function setupInputValidation() {
