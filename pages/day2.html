@@ -26,8 +26,9 @@
     <div class="innerdiv">
         <h3>Day 2: Inline SVG and DOM Manipulation</h3>
         <p>
-            Building on Day 1's external file approach, Day 2 demonstrates the power of embedding SVG content directly within HTML. 
-            This approach provides a crucial advantage: the ability to manipulate SVG elements as part of the Document Object Model (DOM).
+            Building on Day 1's external file approach, Day 2 demonstrates embedding SVG content directly within the HTML. 
+            This approach provides a small but important advantage over Day 1's use of a static SVG file: the ability
+            to manipulate SVG elements as part of the Document Object Model (DOM).
         </p>
         
         <p>
@@ -37,8 +38,12 @@
         </p>
         
         <p>
-            The image below shows the same 20×20 pixel grid as Day 1, but now embedded directly in the HTML. 
-            This inline approach enables interactive features like the color manipulation controls you'll see below the image.
+            The image below shows a 10 &#x00d7; 10 pixel grid but, unlike on Day 1, it is now embedded directly in the HTML. 
+            This inline approach enables interactive features like the color manipulation controls you'll see below.
+        </p>
+
+        <p>
+            (Notice that the XML header is not used when the SVG content is included directly in the HTML.)
         </p>
     </div>
     
@@ -449,7 +454,20 @@
             </svg>
         </p>
         <div class="static-img-label">STATIC IMAGE (sort of)</div>
+        <p>
+            Try clicking the "Change Random Square" button to see how the SVG image content
+            can now be dynamically change on this page, whereas the image shown on Day 1
+            was entirely static. 
+        </p>
         <p><button id="chgbtn">Change Random Square</button></p>
+        <p>
+            Try choosing a color below (using the
+            <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/hex-color">HTML color code syntax</a>) and row and column
+            coordinates and then clicking on "Set Color at Position" to change the color
+            of a specific pixel.  Again, this is 
+            dynamic behavior that would not have been possible if the SVG content had 
+            been simply references by an <code>&lt;img&gt;</code> element as on Day 1.
+        </p>
         <div class="innerdiv labeldiv">
             <label for="txtcolor">Color</label>
             <input type="text" size="7" value="#000000" id="txtcolor" />
