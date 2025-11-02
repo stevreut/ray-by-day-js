@@ -5,6 +5,7 @@ const svgAnchorID = "svghere"
 const selectID = "idselect"
 const CODE_EXC_ID = 'dynsvgcode'
 const CODE_EXC_ID2 = 'dynsvgcode2'
+const CODE_EXT_ID3 = 'dynsvgcode3'
 
 let commonUtilObj = null
 
@@ -21,6 +22,7 @@ onload = () => {
     commonUtilObj.insertTitledCodeByPattern(CODE_EXC_ID, scriptUrl, 'const SVGNS = \'', { regex: /}/, occurrence: 5 }, 'script.js - dynamic SVG creation in DOM', true, 'js')
     const colorPattern = "const " + "color = "
     commonUtilObj.insertUntitledCodeByPattern(CODE_EXC_ID2, scriptUrl, colorPattern, { linesAfter: 0 }, true, 'js')
+    commonUtilObj.insertTitledCodeByPattern(CODE_EXT_ID3, scriptUrl, 'function setDrop' + 'Down', { regex: /}/, occurrence: 7 }, 'script.js - function setDrop' + 'Down()', true, 'js');
 }
 
 const SVGNS = 'http://www.w3.org/2000/svg'
