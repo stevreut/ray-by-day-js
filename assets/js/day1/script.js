@@ -96,7 +96,7 @@ function getSvgContent(width,height,pixelSize) {
             // 'stroke=' and 'stroke-width=' attributes specify the color of the 
             // rectangles' borders and the width of those borders, respectively.
             let rectangleElemStr = 
-                `\n  <rect x="${vertOffset}" y="${horizOffset}" ` +
+                `\n  <rect x="${horizOffset}" y="${vertOffset}" ` +
                 `width="${pixelSize}" height="${pixelSize}" ` +
                 `stroke="#fff" stroke-width="1" fill="${colorHex}"/>`
             svgString += rectangleElemStr
