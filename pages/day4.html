@@ -14,21 +14,27 @@
         <h3>Day 4: Abstraction with SVG Libraries</h3>
         <p>
             In the previous days, we built up from static SVG files to inline SVG and then to dynamic SVG generation using JavaScript. 
-            Today, we take a major step toward scalable, maintainable graphics code by introducing two key libraries: <code>svgutils.js</code> and <code>svg-grid-grapher.js</code>.
+            Today we take a step further in isolating the function that describes the image (a function that returns color from (x,y) coordinates) 
+            from the implementation details of generating graphics in whatever mode we choose (SVG for now).
+            We do this by introducing two new libraries: <code>svgutils.js</code> and <code>svg-grid-grapher.js</code>.
         </p>
         <h4>svgutils.js: Simplifying SVG Element Creation</h4>
         <p>
-            The <code>svgutils.js</code> library frees the developer from the repetitive details of creating SVG elements and setting their attributes. 
-            Instead of manually constructing SVG markup or calling <code>document.createElementNS</code> for every shape, you can use simple utility functions to create and configure SVG elements programmatically.
+            The <code>svgutils.js</code> library frees us from the repetitive details of creating SVG elements and setting their attributes. 
+            Instead of manually constructing SVG markup or calling <code>document.createElementNS()</code> for every shape, we just call utility functions
+            in this new library to create and configure SVG elements.
         </p>
         <h4>svg-grid-grapher.js: Abstracting Raster Graphics</h4>
         <p>
-            Building on <code>svgutils.js</code>, the <code>svg-grid-grapher.js</code> library provides a higher-level abstraction for simulating raster graphics. 
-            It encapsulates the details of SVG element creation and exposes a generic interface for specifying the width, height, and virtual pixel size of your grid, as well as the color of each pixel at integer coordinates.
+            Building on <code>svgutils.js</code>, the <code>svg-grid-grapher.js</code> library provides a higher-level abstraction for creating raster graphics.  
+            <i>(Actually, <em>simulating</em> raster graphics for now, since SVG is a vector format.)</i> 
+            This new library encapsulates the details of SVG element creation and exposes a <em>generic</em> interface for specifying the width, height,
+            and virtual pixel size of your grid, as well as the color of each pixel at integer coordinates.
         </p>
         <p>
             A key architectural point is that <code>svg-grid-grapher.js</code> encapsulates <code>svgutils.js</code> using generic methods. 
-            This means that, in the future, we can swap out the underlying graphics implementation (for example, to use Canvas or WebGL) without changing the interface our code relies on.
+            This means that, in the future, we can swap out the underlying graphics implementation (for example, to use Canvas or WebGL) without changing
+            the interface our code relies on.
         </p>
         <h4>Practical Details</h4>
         <ul class="narrative-list">
@@ -42,7 +48,8 @@
                 (Internally, colors are converted to hex strings like <code style="color: #4caf50">#4caf50</code>, but you provide the color as three separate values.)
             </li>
             <li>
-                Note that the vertical coordinate system is <b>top-to-bottom</b> (row 0 is at the top).
+                Note that the vertical coordinate system is <b>top-to-bottom</b> (row 0 is at the top), which corresponds to the 
+                coordinate system used in the SVG format.
             </li>
         </ul>
         <h4>Virtual Pixels</h4>

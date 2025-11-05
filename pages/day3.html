@@ -30,7 +30,6 @@
             based on mathematical functions, user interactions, or any other programmatic logic. The same techniques we develop here 
             will later be applied to more sophisticated rendering systems, including the ray tracing.
         </p>
-        
         <p>
             The image below is generated entirely by JavaScript when the page loads, and, as before, the controls allow you to interact with 
             individual elements of the image.  View the source of this page to see for yourself that there is no longer
@@ -65,11 +64,13 @@
     <p style="margin-top: 45px; margin-bottom: 5px">Note this one important line below from the
         <code>createRectangleAt()</code> function above.  This line alone is responsible for 
         determining the color of the pixel based only on its coordinates (in this case,
-        <code>c</code> and <code>r</code>).  In essence, this line along determines the most 
+        <code>c</code> and <code>r</code>).  In essence, this line alone determines the most 
         fundamental aspect of what image is generated.  It alone defines the relationship between 
         the Cartesian position on the image and the color at that position.  All of the rest of 
         the code deals with other aspects of the image such as its size, aspect ratio, and the 
-        size of the virtual pixel.  Fundamentally, though, <em>this line alone defines the image</em>.
+        size of the virtual pixel.
+    </p>
+    <p>
         In later pages, as we dive further into the details of image creation, it will become increasingly 
         important and convenient to separate the other peripheral aspects of image creation from 
         this one core important function - a function that maps coordinates (x, y) to a color.  
