@@ -7,6 +7,7 @@ import BiVariantGrapher from "../day20/bivargrapher.js"
 import OpticalEnvironment from "../day22/optical-env.js"
 import Plane from "../day22/plane.js"
 import ReflectiveSphere from "../day20/reflective-sphere.js"
+import RefractiveSphere from "../day22/refractive-sphere.js"
 import SunnySky from "../day25/sunny-sky.js"
 import NightSky from "../day25/night-sky.js"
 import CanvasGridGrapher from "../day16/canvas-grid-grapher.js"
@@ -233,7 +234,7 @@ function initEnvironment(image = null) {
         cameraOrigin,
         cameraDirection
     )
-    optEnv.setCamera(cameraRay, 0, cameraOriginDistance)
+    optEnv.setCamera(cameraRay, 0.1, cameraOriginDistance)
     
     // Add image plane or checkered plane at y = -1
     if (image) {
@@ -242,15 +243,22 @@ function initEnvironment(image = null) {
         optEnv.addOpticalObject(new Plane(-1, 1, 0.5))
     }
     
-    // Add reflective sphere at (0,0,0) with radius 1 and color (0.8,0.8,0.8)
-    const sphereColor = new Color(0.8, 0.8, 0.8)
+    const reflSphereColor = new Color(0.8, 0.8, 0.8)
     const reflectiveSphere = new ReflectiveSphere(
         new Vector3D(-0.5, 0.8, 0), 
         1, 
-        sphereColor
+        reflSphereColor
     )
     optEnv.addOpticalObject(reflectiveSphere)
     
+    const refractiveSphere = new RefractiveSphere(
+        new Vector3D(0.8, 0.2, -0.5),
+        0.5,
+        new Color(0.1, 0.16, 0.12),
+        1.5
+    )
+    optEnv.addOpticalObject(refractiveSphere)
+
     // Add sky based on day/night mode
     if (isNightMode()) {
         optEnv.addOpticalObject(new NightSky())
