@@ -14,6 +14,8 @@ import CanvasGridGrapher from "../day16/canvas-grid-grapher.js"
 import ImagePlane from "./image-plane.js"
 import { saveRayTraceImage, DAY_TYPES } from "../utils/image-saver.js"
 
+const DEFAULT_IMAGE_FILE_LOCATION = '../assets/images/phillyjs.png'
+
 const IMG_PARA_ID = 'imgpara'
 const STATUS_BAR_ID = 'statbar'
 const DURATION_TEXT_ID = 'dur'
@@ -65,11 +67,9 @@ onload = async () => {
         insertBlankCanvas()
         handleDayNightModeChange()
         
-        // TEMPORARY CODE START - Load phillyjs.png image and create ImagePlane
-        const phillyjsImage = await loadPhillyJSImage()
-        // TEMPORARY CODE END
+        const imageFromFile = await loadImageFromFile()
         
-        initEnvironment(phillyjsImage)
+        initEnvironment(imageFromFile)
         await processImage(imgParagraph, durationElem)
         enableButton(lowQualityButton, false)
         dayModeSelect.addEventListener('change', () => {
@@ -81,7 +81,7 @@ onload = async () => {
             targetImageHeight = dimensions.targetHeight
             pixelSize = dimensions.pixelSize
             antiAlias = dimensions.antiAlias
-            initEnvironment(phillyjsImage)
+            initEnvironment(imageFromFile)
             await processImage(imgParagraph, durationElem)
             enableButton(highQualityButton, true)
             enableButton(lowQualityButton, false)
@@ -323,8 +323,7 @@ function randomSunDirection() {
     }
 }
 
-// TEMPORARY CODE START - Load phillyjs.png image
-async function loadPhillyJSImage() {
+async function loadImageFromFile() {
     try {
         // Create HTMLImageElement
         const img = new Image()
@@ -336,7 +335,7 @@ async function loadPhillyJSImage() {
         })
         
         // Set the source to load the image
-        img.src = '../assets/images/phillyjs.png'
+        img.src = DEFAULT_IMAGE_FILE_LOCATION
         
         // Wait for image to load
         await imageLoaded
@@ -348,4 +347,3 @@ async function loadPhillyJSImage() {
         return null
     }
 }
-// TEMPORARY CODE END 
