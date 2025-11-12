@@ -23,6 +23,7 @@ const LO_QUALITY_BUTTON_ID = 'lowqbtn'
 const SAVE_IMAGE_BUTTON_ID = 'savebtn'
 const MODE_SELECT_ID = 'daymodeselect'
 const IMG_FILE_ID = 'imgfile'
+const RESET_IMG_BUTTON_ID = 'imgfilereset'
 
 const MIRROR_BALL_COLOR = new Color(0.8, 0.8, 0.8);
 const CLEAR_BALL_COLOR = new Color(0.1, 0.16, 0.12);
@@ -42,6 +43,7 @@ let imgParagraph = null
 let durationElem = null
 let statusBar = null
 let imgFileInput = null
+let imgFileResetButton = null
 
 onload = async () => {
     try {
@@ -54,6 +56,7 @@ onload = async () => {
         durationElem = linkElement(DURATION_TEXT_ID)
         statusBar = new GraphicStatusReportBar(STATUS_BAR_ID)
         imgFileInput = linkElement(IMG_FILE_ID)
+        imgFileResetButton = linkElement(RESET_IMG_BUTTON_ID)
         const dimensions = setImageDimensions(imgParagraph, false, DEFAULT_IMAGE_WIDTH)
         targetImageWidth = dimensions.targetWidth
         targetImageHeight = dimensions.targetHeight
@@ -150,7 +153,8 @@ async function processImage(imgParagraph, durationElem) {
     enableButton(lowQualityButton, false)
     enableButton(saveImageButton, false)
     imgFileInput.disabled = true
-    
+    enableButton(imgFileResetButton, false)
+
     const startTime = new Date()
     
     const gridder = new CanvasGridGrapher()
@@ -184,6 +188,7 @@ async function processImage(imgParagraph, durationElem) {
     enableButton(lowQualityButton, true)
     enableButton(saveImageButton, true)
     imgFileInput.disabled = false
+    enableButton(imgFileResetButton, true)
 }
 
 function insertBlankCanvas() {
