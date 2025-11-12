@@ -22,6 +22,7 @@ const HI_QUALITY_BUTTON_ID = 'highqbtn'
 const LO_QUALITY_BUTTON_ID = 'lowqbtn'
 const SAVE_IMAGE_BUTTON_ID = 'savebtn'
 const MODE_SELECT_ID = 'daymodeselect'
+const IMG_FILE_ID = 'imgfile'
 
 const DEFAULT_IMAGE_WIDTH = 1024
 let targetImageWidth = null
@@ -37,6 +38,7 @@ let saveImageButton = null
 let imgParagraph = null
 let durationElem = null
 let statusBar = null
+let imgFileInput = null
 
 onload = async () => {
     try {
@@ -47,7 +49,8 @@ onload = async () => {
         dayModeSelect = linkElement(MODE_SELECT_ID)
         saveImageButton = linkElement(SAVE_IMAGE_BUTTON_ID)
         durationElem = linkElement(DURATION_TEXT_ID)
-        statusBar = new GraphicStatusReportBar(STATUS_BAR_ID);
+        statusBar = new GraphicStatusReportBar(STATUS_BAR_ID)
+        imgFileInput = linkElement(IMG_FILE_ID)
         const dimensions = setImageDimensions(imgParagraph, false, DEFAULT_IMAGE_WIDTH)
         targetImageWidth = dimensions.targetWidth
         targetImageHeight = dimensions.targetHeight
@@ -76,6 +79,10 @@ onload = async () => {
             await processImage(imgParagraph, durationElem)
             enableButton(highQualityButton, true)
             enableButton(lowQualityButton, false)
+            imgFileInput.disabled = true
+        })
+        imgFileInput.addEventListener('change', () => {
+            goAgainButton.click();
         })
         highQualityButton.addEventListener('click', async () => {
             const dimensions = setImageDimensions(imgParagraph, true, DEFAULT_IMAGE_WIDTH)
@@ -86,6 +93,7 @@ onload = async () => {
             await processImage(imgParagraph, durationElem)
             enableButton(highQualityButton, false)
             enableButton(lowQualityButton, true)
+            imgFileInput.disabled = true
         })
         lowQualityButton.addEventListener('click', async () => {
             const dimensions = setImageDimensions(imgParagraph, false, DEFAULT_IMAGE_WIDTH)
@@ -96,6 +104,7 @@ onload = async () => {
             await processImage(imgParagraph, durationElem)
             enableButton(highQualityButton, true)
             enableButton(lowQualityButton, false)
+            imgFileInput.disabled = true
         })
         saveImageButton.addEventListener('click', async () => {
             enableButton(goAgainButton, false)
@@ -109,6 +118,7 @@ onload = async () => {
             enableButton(goAgainButton, true)
             enableButton(highQualityButton, hiIsEnabled)
             enableButton(lowQualityButton, loIsEnabled)
+            imgFileInput.disabled = false
         })
     } catch (err) {
         console.error('err = ', err)

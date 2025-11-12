@@ -6,6 +6,21 @@
     <title>Ray by Day JS - Image File Data in Planes</title>
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="icon" type="image/icon" href="../assets/images/icon/ray-trace-icon.ico">
+    <style>
+        input[type="file"]::file-selector-button {
+            padding: 3px 10px;
+            margin: 4px 15px 4px 1px;
+        }
+        input[type="file"] {
+            width: 90%;
+            padding-left: 20px;
+            border-color: #cbecff;
+            border-style: solid;
+            margin-top: 3px;
+            font-weight: bold;
+            color: #7e96b2;
+        }
+    </style>
 </head>
 <body>
     <h1 class="subduedh1">Ray by Day JS</h1>
@@ -23,6 +38,10 @@
                 <option value="day" selected>Day</option>
                 <option value="night">Night</option>
             </select>
+        </p>
+        <p>
+            <label for="imgfile">Image file for tiling: </label>
+            <input type="file" id="imgfile" accept="image/*" />
         </p>
     </div>
     <div class="settingsbox">
