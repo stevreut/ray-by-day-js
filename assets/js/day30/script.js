@@ -47,6 +47,8 @@ let statusBar = null
 let imgFileInput = null
 let imgFileResetButton = null
 
+let fileUrl = null
+
 onload = async () => {
     try {
         imgParagraph = linkElement(IMG_PARA_ID)
@@ -89,7 +91,8 @@ onload = async () => {
             enableButton(highQualityButton, true)
             enableButton(lowQualityButton, false)
         })
-        imgFileInput.addEventListener('change', () => {
+        imgFileInput.addEventListener('change', (event) => {
+            fileUrl = URL.createObjectURL(event.target.files[0])
             if (imgFileInput.value.trim() != '') {
                 enableButton(imgFileResetButton, true)
             }
@@ -98,6 +101,7 @@ onload = async () => {
         imgFileResetButton.addEventListener('click', () => {
             imgFileInput.value = ''
             enableButton(imgFileResetButton, false)
+            goAgainButton.click()
         })
         highQualityButton.addEventListener('click', async () => {
             const dimensions = setImageDimensions(imgParagraph, true, DEFAULT_IMAGE_WIDTH)
@@ -338,19 +342,15 @@ async function loadImageFromFile() {
         })
         
         // Set the source to load the image
-        const useDefault = (imgFileInput.value.trim() == '')
-        img.src = (useDefault?DEFAULT_IMAGE_FILE_LOCATION:imgFileInput.value)
+        const useDefault = (imgFileInput.value.trim() == '' || fileUrl === null)
+        img.src = (useDefault?DEFAULT_IMAGE_FILE_LOCATION:fileUrl)
 
-        // TEMPORARY:
-        console.log("img.src = ", img.src, " at ", (new Date())) // TODO
-        
         // Wait for image to load
         await imageLoaded
         
-        console.log('PhillyJS image loaded successfully')
         return img
     } catch (error) {
-        console.error('Error loading phillyjs.png:', error)
+        console.error('Error loading image:', error)
         return null
     }
 }
