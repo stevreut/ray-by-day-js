@@ -79,7 +79,6 @@ onload = async () => {
             await processImage(imgParagraph, durationElem)
             enableButton(highQualityButton, true)
             enableButton(lowQualityButton, false)
-            imgFileInput.disabled = true
         })
         imgFileInput.addEventListener('change', () => {
             goAgainButton.click();
@@ -93,7 +92,6 @@ onload = async () => {
             await processImage(imgParagraph, durationElem)
             enableButton(highQualityButton, false)
             enableButton(lowQualityButton, true)
-            imgFileInput.disabled = true
         })
         lowQualityButton.addEventListener('click', async () => {
             const dimensions = setImageDimensions(imgParagraph, false, DEFAULT_IMAGE_WIDTH)
@@ -104,7 +102,6 @@ onload = async () => {
             await processImage(imgParagraph, durationElem)
             enableButton(highQualityButton, true)
             enableButton(lowQualityButton, false)
-            imgFileInput.disabled = true
         })
         saveImageButton.addEventListener('click', async () => {
             enableButton(goAgainButton, false)
@@ -118,7 +115,6 @@ onload = async () => {
             enableButton(goAgainButton, true)
             enableButton(highQualityButton, hiIsEnabled)
             enableButton(lowQualityButton, loIsEnabled)
-            imgFileInput.disabled = false
         })
     } catch (err) {
         console.error('err = ', err)
@@ -150,6 +146,7 @@ async function processImage(imgParagraph, durationElem) {
     enableButton(highQualityButton, false)
     enableButton(lowQualityButton, false)
     enableButton(saveImageButton, false)
+    imgFileInput.disabled = true
     
     const startTime = new Date()
     
@@ -183,6 +180,7 @@ async function processImage(imgParagraph, durationElem) {
     enableButton(highQualityButton, true)
     enableButton(lowQualityButton, true)
     enableButton(saveImageButton, true)
+    imgFileInput.disabled = false
 }
 
 function insertBlankCanvas() {
