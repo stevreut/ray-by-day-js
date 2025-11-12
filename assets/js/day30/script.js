@@ -24,6 +24,9 @@ const SAVE_IMAGE_BUTTON_ID = 'savebtn'
 const MODE_SELECT_ID = 'daymodeselect'
 const IMG_FILE_ID = 'imgfile'
 
+const MIRROR_BALL_COLOR = new Color(0.8, 0.8, 0.8);
+const CLEAR_BALL_COLOR = new Color(0.1, 0.16, 0.12);
+
 const DEFAULT_IMAGE_WIDTH = 1024
 let targetImageWidth = null
 let targetImageHeight = null
@@ -251,18 +254,17 @@ function initEnvironment(image = null) {
         optEnv.addOpticalObject(new Plane(-1, 1, 0.5))
     }
     
-    const reflSphereColor = new Color(0.8, 0.8, 0.8)
     const reflectiveSphere = new ReflectiveSphere(
         new Vector3D(-0.5, 0.8, 0), 
         1, 
-        reflSphereColor
+        MIRROR_BALL_COLOR
     )
     optEnv.addOpticalObject(reflectiveSphere)
     
     const refractiveSphere = new RefractiveSphere(
         new Vector3D(0.8, 0.2, -0.5),
         0.5,
-        new Color(0.1, 0.16, 0.12),
+        CLEAR_BALL_COLOR,
         1.5
     )
     optEnv.addOpticalObject(refractiveSphere)
