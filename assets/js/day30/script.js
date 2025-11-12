@@ -81,6 +81,9 @@ onload = async () => {
             targetImageHeight = dimensions.targetHeight
             pixelSize = dimensions.pixelSize
             antiAlias = dimensions.antiAlias
+
+            const imageFromFile = await loadImageFromFile()
+
             initEnvironment(imageFromFile)
             await processImage(imgParagraph, durationElem)
             enableButton(highQualityButton, true)
@@ -335,7 +338,11 @@ async function loadImageFromFile() {
         })
         
         // Set the source to load the image
-        img.src = DEFAULT_IMAGE_FILE_LOCATION
+        const useDefault = (imgFileInput.value.trim() == '')
+        img.src = (useDefault?DEFAULT_IMAGE_FILE_LOCATION:imgFileInput.value)
+
+        // TEMPORARY:
+        console.log("img.src = ", img.src, " at ", (new Date())) // TODO
         
         // Wait for image to load
         await imageLoaded
