@@ -87,7 +87,14 @@ onload = async () => {
             enableButton(lowQualityButton, false)
         })
         imgFileInput.addEventListener('change', () => {
+            if (imgFileInput.value.trim() != '') {
+                enableButton(imgFileResetButton, true)
+            }
             goAgainButton.click();
+        })
+        imgFileResetButton.addEventListener('click', () => {
+            imgFileInput.value = ''
+            enableButton(imgFileResetButton, false)
         })
         highQualityButton.addEventListener('click', async () => {
             const dimensions = setImageDimensions(imgParagraph, true, DEFAULT_IMAGE_WIDTH)
@@ -188,7 +195,7 @@ async function processImage(imgParagraph, durationElem) {
     enableButton(lowQualityButton, true)
     enableButton(saveImageButton, true)
     imgFileInput.disabled = false
-    enableButton(imgFileResetButton, true)
+    enableButton(imgFileResetButton, (imgFileInput.value.trim() != ''))
 }
 
 function insertBlankCanvas() {
