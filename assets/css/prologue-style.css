@@ -1,3 +1,7 @@
+:root {
+    --body-before-filter: grayscale(30%) brightness(60%);
+}
+
 body {
   /* Ensure the body is the relative container for the background */
   position: relative; 
@@ -5,9 +9,14 @@ body {
   background-color: transparent;
 }
 
-p, h2, .dayh2, i, a {
+p, h2, .dayh2, i {
     background-color: transparent;
     color: #e2e2e2;
+}
+
+a {
+    background-color: transparent;
+    color: #777;
 }
 
 .dayh2 {
@@ -40,5 +49,5 @@ body::before {
   
   /* Muting effects */
   opacity: 0.7;
-  filter: grayscale(30%) brightness(60%);
+  filter: var(--body-before-filter);
 }
