@@ -12,6 +12,9 @@ body {
     border: solid 1px #aaa;
     border-radius: 3mm;
 }
+a {
+    color: #1552cc;
+}
 .subduedh1 {
     color: #aaa;
     margin-bottom: 1cm;

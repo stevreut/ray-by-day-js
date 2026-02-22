@@ -3,7 +3,7 @@ onload = () => {
 }
 
 function fadeIntoView() {
-    const bright0 = 150, brightF = 60;
+    const bright0 = 150, brightF = 40;
     const gray0 = 0, grayF = 30;
     const loopCount = 50;
     let n = 0;
@@ -13,10 +13,10 @@ function fadeIntoView() {
     for (elem of elemList) {
         elem.style.opacity = 0;
     }
-    // After a delay of 3 seconds, fade the
+    // After a delay of 1.5 seconds, fade the
     // text content into view and fade the background
     // image to be darker and less saturated over
-    // a period of 10 seconds.
+    // a period of 5 seconds.
     setTimeout(()=> {
         let timer = setInterval(()=>{
             n++;
@@ -38,6 +38,6 @@ function fadeIntoView() {
                     }
                 }
             }
-        },200);
-    },3000);
+        },100);
+    },1500);
 }

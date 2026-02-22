@@ -39,6 +39,11 @@ input {
     background-color: #69697e;
     color: #000;
 }
+label {
+    color: #888;
+    background-color: #000;
+    margin-left: 30px;
+}
 .hopdiv {
     background-color: #777;
 }

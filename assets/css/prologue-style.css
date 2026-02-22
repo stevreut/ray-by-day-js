@@ -16,7 +16,7 @@ p, h2, .dayh2, i {
 
 a {
     background-color: transparent;
-    color: #777;
+    color: #8fbaff;
 }
 
 .dayh2 {
@@ -31,6 +31,10 @@ em {
     padding: 7px;
     border-radius: 5px;
     opacity: 70%;
+}
+
+em>a {
+    color: #005bff;
 }
 
 body::before {
