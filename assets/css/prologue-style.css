@@ -1,5 +1,6 @@
 :root {
     --body-before-filter: grayscale(30%) brightness(60%);
+    --box-bg-color: #ccc;
 }
 
 body {
@@ -35,6 +36,14 @@ em {
 
 em>a {
     color: #005bff;
+}
+
+.footnote {
+    border-radius: 1.5mm;
+}
+
+.footnote, .footnote *, .hopdiv {
+    background-color: var(--box-bg-color);
 }
 
 body::before {
