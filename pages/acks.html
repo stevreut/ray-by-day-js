@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ray by Day JS - Acknowledgments</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="icon" type="image/icon" href="../assets/images/icon/ray-trace-icon.ico">
+    <style>
+        li {
+            margin-top: 25px;
+            list-style-type: none;
+        }
+        img {
+            margin: 3px 6px -3px 6px;
+            height: 30px;
+        }
+        .ack-item-container {
+            border: solid 2px #ccc;
+            border-radius: 6px;
+            padding: 13px;
+            margin-top: 10px; 
+        }
+        .ack-item-container, .ack-item-container * {
+            background-color: #f0f8ff;
+        }
+        a>cite {
+            color: inherit;
+        }
+        cite {
+            color: #1552cc;
+        }
+        em {
+            color: #000;
+            font-style: normal;
+            font-weight: bold;
+        }
+        li {
+            margin: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 class="subduedh1">Ray by Day JS</h1>
+    <h2><span class="dayh2">Acknowledgments</span></h2>
+    <p>
+        Although the work on these pages is entirely my own creation, it has also been a
+        stubborn exercise in reinventing what I knew must have been done before
+        and likely done much better. I had challenged myself to see if I could figure out ray-tracing
+        from the ground up without "outside help" and these pages are the result of that challenge. 
+        Working in this way, from scratch, has certainly been at the cost of creating something better,
+        but I have no regrets since I thoroughly enjoyed the challenge and the journey.
+    </p>
+    <p>
+        Even so, there are a couple of resources that contributed to my efforts, and I would be 
+        remiss not to mention them:
+    </p>
+    <p>
+        <div class="ack-item-container">
+            <img src="../assets/images/Shield_of_the_University_of_Pennsylvania.svg"/>
+            <a href="https://lpsonline.sas.upenn.edu/">University of Pennsylvania LPS 
+                Full Stack Web Development Boot Camp</a>
+            <p>Prior to attending this intensive web development course, I had only the briefest
+                knowledge of simple HTML.  In the three months of the course I gained the JavaScript
+                skills needed to build this site, as well a number front-end and back-end development
+                skills not used here.
+            </p>
+        </div>
+        <div class="ack-item-container">
+            <img src="../assets/images/one-weekend-exc.jpeg"/>
+            <a href="https://raytracing.github.io/books/RayTracingInOneWeekend.html"><cite>Ray Tracing in One Weekend</cite></a>
+            <p>Early in this project I stumbled upon <cite>Ray Tracing in One Weekend</cite> by <em>Peter Shirley, Trevor David Black,
+                and Steve Hollasch</em> - a site which explores ray-tracing
+                in C++ and does so much more thoroughly than I have done.  Mostly I chose not to "cheat" by reviewing 
+                the site while working on my own project, but I did take inspiration from one aspect - the authors'
+                approach of using randomly generated rays to simulate depth of field, a much more efficient approach
+                than what I had originally planned to do.  Also, ultimately, I plan to follow the authors' example
+                and introduce the PPM graphics format in this site.
+            </p>
+            <p>After completing this site, I returned to the <cite>Ray Tracing in One Weekend</cite> site and was impressed by
+                how well-organized, thorough, and readable it is.  The site is only the first in a series of
+                sites (and corresponding books) on the topic of ray tracing, and I encourage taking a look at 
+                all three sites:
+                <ul>
+                    <li><a href="https://raytracing.github.io/books/RayTracingInOneWeekend.html"><cite>Ray Tracing in One Weekend</cite></a></li>
+                    <li><a href="https://raytracing.github.io/books/RayTracingTheNextWeek.html"><cite>Ray Tracing: The Next Week</cite></a></li>
+                    <li><a href="https://raytracing.github.io/books/RayTracingTheRestOfYourLife.html"><cite>Ray Tracing: The Rest of Your Life</cite></a></li>
+                </ul>
+            </p>
+        </div>
+    </p>
+    <div class="hopdiv">
+        <a href="./day30.html">Prev</a>
+        <a href="../index.html">Home</a>
+    </div>
+</body>
+
+</html>
