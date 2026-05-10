@@ -28,7 +28,7 @@
         <p>
             This approach provides the maximum flexibility for graphics programming. We can implement algorithms that generate images 
             based on mathematical functions, user interactions, or any other programmatic logic. The same techniques we develop here 
-            will later be applied to more sophisticated rendering systems, including the ray tracing.
+            will later be applied to more sophisticated rendering systems, including ray tracing.
         </p>
         <p>
             The image below is generated entirely by JavaScript when the page loads, and, as before, the controls allow you to interact with 
@@ -43,7 +43,7 @@
             Each of those pixels is given an <code>id=</code> attribute with a value in the form "r99c99" where the numbers after "r" and "c" 
             are the row and column of the pixel, thus each will have a unique ID (e.g. the pixel at row <span style="color:red;">5</span>
             and column <span style="color:#4a4;">11</span> will have
-            <code>id="r<span style="color:red;">5</span>c<span style="color:#4a4;">11</span></code>).
+            <code>id="r<span style="color:red;">5</span>c<span style="color:#4a4;">11</span></code>").
         </p>
     </div>
     
@@ -61,29 +61,32 @@
         </div>
     </div>
     <div id="dynsvgcode"></div>
-    <p style="margin-top: 45px; margin-bottom: 5px">Note this one important line below from the
+    <p style="margin-top: 45px; margin-bottom: 5px">Note this one important line of code below from the
         <code>createRectangleAt()</code> function above.  This line alone is responsible for 
-        determining the color of the pixel based only on its coordinates (in this case,
-        <code>c</code> and <code>r</code>).  In essence, this line alone determines the most 
-        fundamental aspect of what image is generated.  It alone defines the relationship between 
+        determining the color of the pixel based only on the pixel's coordinates (in this case,
+        <code>c</code> and <code>r</code>).  In essence, this line of code by itself determines 
+        the most fundamental aspect of what image is generated.  It defines the relationship between 
         the Cartesian position on the image and the color at that position.  All of the rest of 
-        the code deals with other aspects of the image such as its size, aspect ratio, and the 
-        size of the virtual pixel.
+        the code deals with other aspects of the image creation such as its size, aspect ratio, and the 
+        size of the virtual pixels.
     </p>
     <p>
         In later pages, as we dive further into the details of image creation, it will become increasingly 
         important and convenient to separate the other peripheral aspects of image creation from 
-        this one core important function - a function that maps coordinates (x, y) to a color.  
-        In this case, that it is a relatively simple function, but will definitely not be 
-        the case going forward.
+        this one core function - a function that maps coordinates (x, y) to a color.  
+        In this case, that it is a relatively simple function, but that will definitely not be 
+        the case going forward.  In fact, the ray-tracing aspect of image creation will ultimately
+        be embedded entirely within a coordinate-to-color mapping function, as will be seen on
+        later pages.
     </p>
     <div id="dynsvgcode2"></div>
     <p>The function <code>setDropDown()</code> below is executed when the page loads.  Initially,
-        prior to this function being called, the dropdown has no options.  (You can see this
+        prior to this function being called, the dropdown has no selectable options.  (You can see this
         in the HTML code.). This function finds each pixel element (<code>&lt;svg&gt;&lt;rect/&gt;</code>)
         in the page, gets its id= value, creates an <code>&lt;option&gt;</code> in the dropdown 
         for that id, and adds a listener for that value option which will set the "fill" attribute for that
-        id to "red" when the option is selected.
+        id to "red" when the option is selected.  (Try it by selecting one of the id= values from the dropdown
+        list and observing how the displayed image is altered by that selection.)
     </p>
     <div id="dynsvgcode3"></div>
     <h3 class="resource-index-header">Resources used in this page</h3>

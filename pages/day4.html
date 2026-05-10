@@ -24,6 +24,12 @@
             Instead of manually constructing SVG markup or calling <code>document.createElementNS()</code> for every shape, we just call utility functions
             in this new library to create and configure SVG elements.
         </p>
+        <p>
+            (Note that <code>svgutils.js</code>) is not imported directly by <code>script.js</code>.  Instead,
+            <code>svgutils.js</code> is called by aspects of the <code>svg-grid-grapher.js</code> library
+            described below, but we could also have chosen to call <code>svgutils.js</code> directly if we
+            had wanted to.)
+        </p>
         <h4>svg-grid-grapher.js: Abstracting Raster Graphics</h4>
         <p>
             Building on <code>svgutils.js</code>, the <code>svg-grid-grapher.js</code> library provides a higher-level abstraction for creating raster graphics.  
@@ -57,11 +63,10 @@
             A <b>virtual pixel</b> serves as a stand-in for a physical pixel, but is intentionally larger—often spanning several real screen pixels. This makes it much easier to see and experiment with the behavior of individual "pixels" in our simulated raster grid. As we continue, this approach will be especially handy for testing and visualizing our graphics algorithms before we move on to higher resolutions or more advanced rendering techniques.
         </p>
         <p>
-            The relationship is straightforward: the <b>physical dimensions</b> of the SVG image are just the grid width and height multiplied by the virtual pixel size. For example, a grid of 20×15 with a virtual pixel size of 7 yields an SVG that's 140×105 pixels. This scaling lets us easily observe and interact with each virtual pixel during development.
+            The relationship is straightforward: the <b>physical dimensions</b> of the SVG image are just the grid width and height multiplied by the virtual pixel size. For example, a grid of 20×15 with a virtual pixel size of 7 yields an SVG that is 140×105 pixels. This scaling lets us easily observe and interact with each virtual pixel during development.
         </p>
         <p>
-            By using these libraries, we can focus on the logic of our graphics algorithms, rather than the mechanics of SVG element creation. 
-            This abstraction is a crucial step toward more advanced rendering techniques.
+            By using these libraries, we can focus on the logic of our graphics algorithms, rather than the mechanics of SVG element creation.
         </p>
     </div>
     

@@ -16,11 +16,12 @@ class TableGridGraph extends GenericGridGrapher {
         if (this.arr.length !== this.pixelCount) {
             throw 'unexpected length'
         }
-        let valid = true
         const tbl = document.createElement('table')
+        tbl.style.tableLayout = 'fixed'
         const tbody = document.createElement('tbody')
         for (let row=0;row<this.height;row++) {
             const trow = document.createElement('tr')
+            trow.style.height = this.tdDim + 'px'
             for (let col=0;col<this.width;col++) {
                 const tdata = document.createElement('td')
                 const idx = row*this.width+col
@@ -31,8 +32,8 @@ class TableGridGraph extends GenericGridGrapher {
                 this.arr[idx].forEach(itm=>bgColr+=itm.toString(16).padStart(2,'0'))
                 tdata.style.backgroundColor = bgColr
                 tdata.style.margin = '0.5px'
-                tdata.style.width = 'auto'
-                tdata.style.height = 'auto'
+                tdata.style.width = this.tdDim + 'px'
+                tdata.style.height = this.tdDim + 'px'
                 trow.appendChild(tdata)
             }
             tbody.appendChild(trow)

@@ -20,8 +20,15 @@
       <li>The color for each sub-pixel is calculated, and then all are averaged together for the final display.</li>
     </ul>
     <p><strong>Trade-offs:</strong><br>
-    While anti-aliasing greatly improves image quality, it comes at a computational cost. The number of calculations increases by a factor of <strong>n²</strong> (for example, a factor of 4 means 16 times as many color calculations per pixel). This can make rendering slower, especially for high anti-aliasing settings.</p>
+    While anti-aliasing greatly improves image quality, it comes at a computational cost. The number of calculations increases
+    by a factor of <strong>n²</strong> (for example, a factor of 4 means 16 times as many color calculations
+    per pixel). This can make rendering slower, especially for high anti-aliasing settings.  Later, when we implement
+    ray-tracing into our code, the calculation of the color of each "sub-pixel" will become increasingly computationally
+    expensive, so managing the computational expense (i.e. CPU time) will become increasingly important.</p>
     <p>Try toggling anti-aliasing on and off, and experiment with different factors to see the effect on both image quality and performance.</p>
+    <p>Note, by the way, that anti-aliasing factors above 3 result in relatively little observable improvement in 
+      the quality of the image and so, given computation cost, there is rarely a need for using a level abobe 3.
+    </p>
     <div class="imgdiv">
         <h3>SVG dynamically created on this page by JavaScript making
             use of <code>svgutils.js</code>, <code>svg-grid-grapher.js</code> and
@@ -38,7 +45,6 @@
                 <option value="4">4</option>
                 <option value="5">5</option>
             </select>
-            <button id="chgbtn">Toggle graphed function</button>
         </p>
         <p>
             <label for="dur">Duration to redraw: </label>
@@ -55,8 +61,7 @@
             "../assets/js/day6/script.js",
             "../assets/js/day6/bivargrapher.js",
             "../assets/js/day4/svg-grid-grapher.js",
-            "../assets/js/day4/svgutils.js",
-    
+            "../assets/js/day4/svgutils.js"
         ]);
     </script>
     <div class="hopdiv">

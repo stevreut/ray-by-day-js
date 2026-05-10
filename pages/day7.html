@@ -17,12 +17,17 @@
     To demonstrate the power and flexibility of this abstraction, you can use the toggle below to switch between two different implementations:</p>
     <ul class="narrative-list">
       <li><strong>SVGGridGrapher:</strong> Renders the grid using SVG, as in previous days.</li>
-      <li><strong>TableGridGraph:</strong> Renders the same function using an HTML <code>&lt;table&gt;</code>. This is intentionally a "silly and pointless" implementation, included only to show how easy it is to swap out rendering methods when using an abstract base class.</li>
+      <li><strong>TableGridGraph:</strong> Renders the same function using an HTML <code>&lt;table&gt;</code>. This implementation is not meant to be taken too seriously, 
+        other than that it demonstrates that we can have more than one implementation of <code>GenericGridGrapher</code> and thereby can easily
+        swap between implementations without having to rework the rest of our code.  (In fact, <code>TableGridGraph</code> has some known issues with\
+        respect to not correctly maintaining aspect ratio.  But it makes no difference since we will not be 
+        using this class again beyond this page.)
+    </li>
     </ul>
     <p><strong>Why does this matter?</strong><br>
     This exercise highlights the benefits of object-oriented programming (OOP) principles like abstraction and polymorphism. By coding to an abstract interface, you can easily extend or modify your program's behavior without changing its core logic.</p>
     
-    <p>Starting from <a href="./day16.html">day 16</a>, we'll see more of the benefit of the <code>GenericGridGrapher</code> class. The abstract interface it provides allows us to switch between different rendering backends while keeping the same high-level code structure.</p>
+    <p>Starting from <a href="./day16.html">day 16</a>, we will see more of the benefit of the <code>GenericGridGrapher</code> class. The abstract interface it provides allows us to switch between different rendering backends while keeping the same high-level code structure.</p>
     
     <p>Try toggling between the two implementations and observe how the same function is rendered in completely different ways. Consider how this approach could be used to add new rendering methods in the future.</p>
     <div class="imgdiv">

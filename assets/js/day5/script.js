@@ -25,24 +25,15 @@ function createSvgElemAt(anch) {
         virtualPixelSize = Math.max(4, Math.floor(contentWidth / PIXELS_WIDTH));
     }
     
-    let graph = new BiVariantGrapher(PIXELS_WIDTH, PIXELS_HEIGHT, virtualPixelSize, PIXELS_HEIGHT*0.4)
-    graph.setFunction(localFunc2)
-    let svgElem = graph.drawGraph()
+    let grapher = new BiVariantGrapher(PIXELS_WIDTH, PIXELS_HEIGHT, virtualPixelSize, PIXELS_HEIGHT*0.4)
+    grapher.setFunction(localFunc)
+    let svgElem = grapher.drawGraph()
     return svgElem
-}
-
-function localFunc1(x,y) {
-    let insideCircle = (x*x+y*y<=1)
-    if (insideCircle) {
-        return [(x+1)/2,0.5,(y+1)/2]
-    } else {
-        return [(5-x)/8,(5-y)/10,0.2]
-    }
 }
 
 let lightVector = [5,3,1]
 
-function localFunc2(x,y) {
+function localFunc(x,y) {
     const r2 = x*x+y*y
     const insideCircle = (r2<=1)
     if (!insideCircle) {
