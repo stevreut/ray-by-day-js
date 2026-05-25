@@ -7,16 +7,6 @@
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/day13-style.css">
     <link rel="icon" type="image/icon" href="../assets/images/icon/ray-trace-icon.ico">
-    <style>
-        .symbolhi {
-            background-color: #ddd;
-            border-radius: 2px;
-            border: solid 1px #bbb;
-            padding: 2px 6px;
-        }
-    </style>
-
-    </style>
 </head>
 <body>
     <h1 class="subduedh1">Ray by Day JS</h1>
@@ -155,6 +145,29 @@
                     and differing from the "dot product" in that it returns a vector
                     rather than a scalar (number).  The cross product is usually denoted
                     by a <span class="symbolhi">&#x2A2F;</span>
+                </td>
+            </tr>
+            <tr>
+                <td><code>magn()</code></td>
+                <td><i>N/A</i></td>
+                <td>number (floating point, always &gt;= zero)</td>
+                <td><em>magnitude</em> of the vector on which the method is called, 
+                    length of the vector - obtained by taking the sum of the squares 
+                    of each of its components, and then taking the square root of
+                    that sum.  In standard notation, the notation for magnitude
+                    is similar to the notation for absolute value, so the magnitude 
+                    of vector <b>v</b> would be denoted as
+                    <span class="symbolhi">&Vert;<b style="background-color: inherit;">v</b>&Vert;</span></td>
+            </tr>
+            <tr>
+                <td><code>magnSqr()</code></td>
+                <td><i>N/A</i></td>
+                <td>number (floating point, always &gt;= zero)</td>
+                <td>square of the <em>magnitude</em> of the vector on which the method is called.  Note,
+                    as discused above, that, though equivalent to the square of the magnitude, 
+                    the implementation of the calculation is optimized and the magnitude is 
+                    not actually calculated first.  Denoted
+                    <span class="symbolhi">(&Vert;<b style="background-color: inherit;">v</b>&Vert;)<sup style="background-color: inherit;">2</sup></span></td>
                 </td>
             </tr>
         </tbody>
