@@ -7,10 +7,158 @@
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/day13-style.css">
     <link rel="icon" type="image/icon" href="../assets/images/icon/ray-trace-icon.ico">
+    <style>
+        .symbolhi {
+            background-color: #ddd;
+            border-radius: 2px;
+            border: solid 1px #bbb;
+            padding: 2px 6px;
+        }
+    </style>
+
+    </style>
 </head>
 <body>
     <h1 class="subduedh1">Ray by Day JS</h1>
     <h2><span class="dayh2">Day 13</span> - class Vector3D</h2>
+    <p>
+        In mathematics, a vector can be thought of as an arrow that proceeds in some direction for some length.  If 
+        two vectors have the same direction and have the same length then they are considered equal, but <em>only</em>
+        if <em>both</em> direction and length are equal, or if both have zero length in which case direction
+        is meaningless.  Vector math provides for a number of operations and functions that return vectors or numbers.
+        (Since vector math often deals with vectors in combination with simple real numbers, real numbers are
+        referred to as "scalars" when used in the context of vector math.)
+    </p>
+    <p>
+        The power and utility of vector math is that vectors, vector operations, and vector functions
+        generally have both a numeric and a geometric aspect.  That being the case, vectors provide an elegant
+        way for modelling the geometric notions of position and direction in a way that lends itself to pure numeric
+        representation and calculation.  It is this marriage of geometry and pure numeric calculation that makes vectors so useful in the context of 
+        ray tracing graphics.
+    </p>
+    <p>
+        I won't try to give a full lesson on vectors in this site.  However, having at least a basic familiarity with
+        vectors is probably a good idea before diving into how they are used in graphics and, specifically, 
+        in ray-tracing.  Following are a few resources that might be useful but there are many others as 
+        well so I encourage either using these resources or finding some others that suit you.
+    </p>
+    <h3>Some vector resources</h3>
+    <ul class="narrative-list">
+        <li><a href="https://mathinsight.org/vector_introduction">Math Insight - An Introduction to Vectors</a> - a simple
+            introduction to vectors with illustrations</li>
+        <li><a href="https://www.vectorvisualizer.com/visualizer">Vector Visualizer</a> - a tool that interactively 
+            demonstrates the relationships between the numeric and geometric aspects of vectors, enabling 
+            experimenting with the use of various vector operations and functions</li>
+        <li>For a quick introduction to vectors, I particularly like 
+            <a href="https://youtu.be/fNk_zzaMoSs?si=QqT956fP1W3-BcDe">Vectors</a> from the 
+            <a href="https://www.youtube.com/@3blue1brown">3Blue1Brown</a> channel on YouTube by Grant Sanderson.
+    </ul></li>
+    <h3>class Vector3D</h3>
+    <p>
+        For the purposes of this site, we need a JavaScript class for representing the attributes and 
+        behaviors of vectors.  Specficially, since we will be modelling a virtual three-dimensional 
+        environment, we are implementing a class specifically tailored to modelling vectors in a 
+        three-dimensional space.  Note that vectors can be defined to have any degree of dimensionality and,
+        regardless of the number of dimensions, all vectors have certain shared characteristics and 
+        operations ("methods" for our purposes).  Arguably, a more disciplined implementation would have
+        have had us implement a more generic <code>class Vector</code> first and then extend that to a more specialized
+        3D vector class, but I've chosen to skip that step and have gone straight to implementing
+        <code>class Vector3D</code> without implementing a super class.  See the <em>vector3d.js</em> link
+        in the <a href="#resource-index">Resources used in this page</a> section at the bottom page to see the full implementation.
+    </p>
+    <p>
+        Essentially, a <code>Vector3D</code> object is an encapsulation of a set of three real (floating point)
+        numbers.  The <code>Vector3D</code> objects are <em>immutable</em>, meaning that the defining attributes
+        of a <code>Vector3D</code> object (its x, y, and z coordinates) cannot be changed once that object 
+        is created/instantiated.  This is done to minimize the amount of unnecessary repeated calculation.
+    </p>
+    <p>
+        An example:  the <code>magn()</code> method returns the "magnitude" of the vector (it's length).
+        Calculating the magnitude requires three multiplications, two additions, and a square root, 
+        and every one of those operations eats up a little CPU time - especially the square root.  In this 
+        implementation, the private attribute <code>#magnVal</code> is initially set to <code>null</code>.
+        When <code>magn()</code> is called, if <code>#magnVal</code> is <code>null</code> then the full magnitude 
+        calculation is executed but, before returning the resulting value, <code>#magnVal</code> is assigned 
+        that value.  So next time <code>magn()</code> is called for that particular vector object, the
+        method will detect that <code>#magnVal</code> is non-null and will simply return that value 
+        rather than recalculate it.  Because the <code>Vector3D</code> object is immutable, it can be
+        reliably assumed that the magnitude also has not changed.  Now any code using the
+        <code>Vector3D</code> class can call <code>magn()</code> knowing that there will be no 
+        unnecessary redundant calcuation of the vector's magnitude.
+    </p>
+    <p>
+        Managing the amount of calculation is key in ray-tracing and eliminating redundant or
+        unnecessary calculations becomes increasingly important as the virtual environments
+        we create become more complex and the resolution of the images increases.
+    </p>
+    <p>
+        Another example of built-in elimination of unnecessary calculation is illustrated by
+        the inclusion of the <code>magnSqr()</code> method.  This method returns the 
+        square of the magnitude.  This is not really a standard vector function, but it 
+        comes up often enough to justify a special method for returning this value.  It turns 
+        out that the square of the magnitude is less computationally expensive than the 
+        magnitude is.  This is because the magnitude is the <em>square root</em> of the 
+        sum of the squares of the components and, consequently, the square of the magnitude 
+        is the square of that square root - i.e. the end result of the same calculation but 
+        without the final square root applied.  We could have defined <code>magnSqr()</code>
+        as returning the square the result from <code>magn()</code> but that would have 
+        required considerably more CPU time.  Also, as with <code>magn()</code>, we rely 
+        on the immutability of <code>Vector3D</code> objects so that we never calculate the 
+        value returned by <code>magnSqr()</code> more than once.  (The relationship between
+        <code>magn()</code> and <code>magnSqr()</code> and related private variables actually 
+        goes a bit deeper, so feel free to look at the code.)
+    </p>
+    <h4>Table of class Vector3D Methods</h4>
+    <table class="codetable">  <!-- TODO -->
+        <thead>
+            <tr>
+                <th>Method</th>
+                <th>Arguments</th>
+                <th>Return type</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>add()</code></td>
+                <td><code>Vector3D</code>, <code>Vector3D</code></td>
+                <td><code>Vector3D</code></td>
+                <td><em>vector addition</em>, usually denoted in math by <span class="symbolhi">+</span></td>
+            </tr>
+            <tr>
+                <td><code>subt()</code></td>
+                <td><code>Vector3D</code>, <code>Vector3D</code></td>
+                <td><code>Vector3D</code></td>
+                <td><em>vector subtraction</em>, usually denoted in math by <span class="symbolhi">-</span></td>
+            </tr>
+            <tr>
+                <td><code>scalarMult()</code></td>
+                <td>number (floating point)</td>
+                <td><code>Vector3D</code></td>
+                <td><em>scalar multiplication</em>, returns a vector having the same direction
+                    but with a length that is multiplied by the scalar factor argument</td>
+            </tr>
+            <tr>
+                <td><code>dot()</code></td>
+                <td><code>Vector3D</code>, <code>Vector3D</code></td>
+                <td>number (floating point) (a "scalar")</td>
+                <td><em>scalar product</em>, colloquially referred to in math as a "dot product"
+                    (Compare this to <em>vector product below</em>.)  In standard notation, this is 
+                    denoted by a centered dot <span class="symbolhi">&sdot;</span>
+                </td>
+            </tr>
+            <tr>
+                <td><code>cross()</code></td>
+                <td><code>Vector3D</code>, <code>Vector3D</code></td>
+                <td><code>Vector3D</code></td>
+                <td><em>vector product</em>, colloquially referred to in math as a "cross product"
+                    and differing from the "dot product" in that it returns a vector
+                    rather than a scalar (number).  The cross product is usually denoted
+                    by a <span class="symbolhi">&#x2A2F;</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
     <div class="imgdiv">
         <h3>Graphic created making use of <code>class Vector3D</code> in 
             module <code>vector3d.js</code>
